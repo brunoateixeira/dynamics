@@ -1,0 +1,11 @@
+docs_list_title: ACME Documentation
+docs:
+
+- title: Introduction
+  url: introduction.html
+
+- title: ConfigVendasuration
+  url: vendas.html
+
+- title: Vendas com Produtos
+  url: deplovendas-com-produtosyment.html
