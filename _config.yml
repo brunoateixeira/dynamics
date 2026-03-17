@@ -1,2 +1,13 @@
 title: Dynamics Docs
-theme: minima   # ou outro tema
+remote_theme: mmistakes/minimal-mistakes@4.26.2   # ou versão mais recente
+# Ou se preferir instalar localmente: gem "minimal-mistakes-jekyll"
+
+# Configuração do sidebar (exemplo)
+defaults:
+  - scope:
+      path: ""
+    values:
+      sidebar_main_nav: main   # ou o nome que você usar
+
+# Ou use isso para sidebar simples:
+minimal_mistakes_skin: "default"  # ou air, neon, etc.
