@@ -1,0 +1,30 @@
+name: Build and Deploy DocFX
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'   # ou a versão que preferir
+
+    - name: Install DocFX
+      run: dotnet tool install --global docfx
+
+    - name: Build DocFX
+      run: docfx docfx.json --force
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: _site           # pasta padrão de saída do docfx
+        # publish_branch: gh-pages   # opcional, se quiser outra branch
