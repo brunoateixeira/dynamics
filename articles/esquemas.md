@@ -4,10 +4,13 @@
 - --
 
 ### Campos para Ligações
-| Coluna | Tipo de Dados | Permite Nulo | Descrição |
+
+Estes campos serão utilizados para ligar outras tabelas no banco de dados.
+
+| Coluna | Tipo de Dados | Permite Nulo | Tabela Origem |
 |--------|---------------|--------------|-----------|
 | Entrega_Parcial_Ordem_Operacao_Anterior | int | SIM | |
-| Ordem | int | NÃO | PK |
+| Ordem (PK) | int | NÃO | PK |
 | Ordem_Caixa | int | NÃO | |
 | Ordem_Centro_Custo | int | SIM | |
 | Ordem_Cli_For | int | NÃO | |
@@ -45,6 +48,7 @@
 | Ordem_Vendedor2 | int | NÃO | |
 
 ### Campos de Data
+
 | Coluna | Tipo de Dados | Permite Nulo | Descrição |
 |--------|---------------|--------------|-----------|
 | Data | datetime | SIM | |
@@ -64,6 +68,7 @@
 | Data_Sincronizacao | datetime | SIM | |
 
 ### Campos de Valores
+
 | Coluna | Tipo de Dados | Permite Nulo | Descrição |
 |--------|---------------|--------------|-----------|
 | Acrescimo_Total_Geral | money | NÃO | |
@@ -230,6 +235,7 @@
 | Retencao_Produto_PIS_Valor_Somado | money | SIM | |
 
 ### Campos Gerais
+
 | Coluna | Tipo de Dados | Permite Nulo | Descrição |
 |--------|---------------|--------------|-----------|
 | Alteracoes_Offline | bit | NÃO | |

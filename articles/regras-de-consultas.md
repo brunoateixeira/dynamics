@@ -1,6 +1,11 @@
 # Regras de Consultas e Negócios
 - --
-### Regras Básicas
+## Regras Básicas
+
+Considere as regras abaixo como obrigatórias.
+
+### Regras para Relatórios de Vendas
+
 - Data_Passou_Efetivacao_Estoque é a primeira opção para datas de venda.
 - Data_Efetivado_Financeiro é a data de venda a ser considerada para considerar a data de recebimento.
 - Em relatórios de venda, sempre é deduzido devoluções, a não ser que seja solicitado o contrário.
@@ -13,14 +18,37 @@
 - Sempre converta campos de data em DD/MM/YYYY utilizando CONVERT(VARCHAR(10),Campo_de_Data,103).
 
 - -- 
-### Filtros obrigatórios para Vendas
+### Regras para os Filtros do Relatórios de Vendas
+
+As seguintes regras serão aplicadas ao utilizar a cláusula WHERE do Relatório de Vendas.
+
 - Movimento.Apagado = 0 
+
+Precisa ser utilizado para não mostrar vendas apagadas no sistema.
+
 - Movimento.Situacao_Expedicao <> 'A' 
+
+Venda com "Expedição em Aberto" são vendas que ainda não estão concluídas e, por isso, não devem ser apresentadas.
+
 - (Filiais.Ordem = @Filial OR @Filial IS NULL)
+
+O filtro de filial permite ver a venda de cada loja individualmente. Porém, o "OR @Filial IS NULL" permite ver a venda de todas as lojas se desejado.
+
 - Movimento.Data_Passou_Desefetivacao_Estoque IS NULL
+
+Vendas "Desefetivadas" são vendas desfeitas e não devem aparecer. Se houver data de desefetivação, então a venda foi desfeita.
+
 - Movimento.Data_Passou_Efetivacao_Estoque >= @Data_Inicial
 - Movimento.Data_Passou_Efetivacao_Estoque < DATEADD(DAY,1,@Data_Final)
+
+Deve haver um período de datas para a consulta, para que não puxe uma quantidade desnecessária de dados.
+
+A data final sempre será apenas menor (e não menor igual) "<", pois estará acompanhado da função DATEADD(DAY,1,@Data_Final). Isto é necessário por conta da estrutura do banco de dados que carimba a hora final como meia-noite do dia apontado. 
+
 - Movimento_Prod_Serv.Linha_Excluida = 0 (Caso tenha produtos na consulta)
+
+Itens excluídos são itens que são removidos ou relançados nas vendas, eles não foram efetivamente vendidos.
+
 - --
 ### Tratamento de devoluções e correções
 
