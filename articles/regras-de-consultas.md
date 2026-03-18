@@ -10,6 +10,7 @@
 - Vendas desefetivadas (desfeitas) não são apresentadas.
 - Nem toda venda terá nota fiscal.
 - Quando listados produtos na consulta, os campos de valores são da tabela Movimento_Prod_Serv e devem ser somados.
+- Sempre converta campos de data em DD/MM/YYYY utilizando CONVERT(VARCHAR(10),Campo_de_Data,103).
 
 - -- 
 ### Filtros obrigatórios para Vendas

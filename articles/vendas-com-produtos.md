@@ -27,9 +27,9 @@ Produtos excluidos das movimentações devem ser ignorados.
 
 ### Ligações
 ```sql
-Movimento.Ordem_Filial = Filiais.Ordem
-Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento
-Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem
+INNER JOIN Filiais ON Movimento.Ordem_Filial = Filiais.Ordem
+INNER JOIN Movimento_Prod_Serv ON Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento
+INNER JOIN Prod_Serv ON Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem
 ```
 
 ### SQL
@@ -82,9 +82,9 @@ São adicionadas as operações 'DEV' e 'CVE' na busca da consulta. As movimenta
 
 ### Ligações
 ```sql
-Movimento.Ordem_Filial = Filiais.Ordem
-Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento
-Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem
+INNER JOIN Filiais ON Movimento.Ordem_Filial = Filiais.Ordem
+INNER JOIN Movimento_Prod_Serv ON Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento
+INNER JOIN Prod_Serv ON Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem
 ```
 
 ### SQL
@@ -138,10 +138,10 @@ Por conta do tamanho do campo, é preferível utilizar Funcionarios.Apelido ao i
 
 ### Ligações
 ```sql
-Movimento.Ordem_Filial = Filiais.Ordem
-Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento
-Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem
-Movimento_Prod_Serv.Ordem_Vendedor = Funcionarios.Ordem
+INNER JOIN Filiais ON Movimento.Ordem_Filial = Filiais.Ordem
+INNER JOIN Movimento_Prod_Serv ON Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento
+INNER JOIN Prod_Serv ON Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem
+INNER JOIN Movimento_Prod_Serv.Ordem_Vendedor = Funcionarios.Ordem
 ```
 
 ### SQL
@@ -206,9 +206,9 @@ Exemplo: (Prod_Serv.Ordem_Classe = @Classe OR @Classe IS NULL)
 
 ### Ligações
 ```sql
-Movimento.Ordem_Filial = Filiais.Ordem
-Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento
-Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem
+INNER JOIN Filiais ON Movimento.Ordem_Filial = Filiais.Ordem
+INNER JOIN Movimento_Prod_Serv ON Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento
+INNER JOIN Prod_Serv ON Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem
 ```
 
 ### SQL
