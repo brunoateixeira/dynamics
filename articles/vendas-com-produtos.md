@@ -1,6 +1,11 @@
-# Movimento
+# Tabelas: Movimento, Movimento_Prod_Serv
 
-## Vendas com Produtos Base
+### Esquema
+- [Movimento](articles/esquemas.md)
+- [Movimento_Prod_Serv](articles/esquemas.md)
+
+- --
+## Exemplo 1: Vendas com Produtos
 
 ### Descrição
 
@@ -56,8 +61,8 @@ ORDER BY
 Valor_Produto_Somado DESC
 
 ```
-
-## Vendas com Produtos com Devolução
+- --
+## Exemplo 2: Vendas com Produtos com Devolução
 
 ### Descrição
 
@@ -109,8 +114,8 @@ Prod_Serv.Nome
 ORDER BY 
 Valor_Produto_Somado DESC
 ```
-
-## Vendas com Produtos com Vendedor
+- --
+## Exemplo 3: Vendas com Produtos com Vendedor
 
 ### Descrição
 
@@ -173,8 +178,8 @@ ORDER BY
 Funcionarios.Codigo,
 Valor_Produto_Somado DESC
 ```
-
-## Vendas com Filtros de Classificação de Produtos
+- --
+## Exemplo 4: Vendas com Filtros de Classificação de Produtos
 
 ### Descrição
 

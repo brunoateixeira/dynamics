@@ -1,10 +1,15 @@
-# Movimento
+# Tabela: Movimento
 
-## Vendas Base
+### Esquema
+- [Movimento](articles/esquemas.md)
 
-### Observações
+- --
 
-Vendas apagadas e desfeitas (desefetivadas) são ignoradas.
+## Exemplo 1: Relatório de Vendas
+
+### Descrição
+
+Retorna as informações e movimentações de venda, sem abater devoluções. 
 
 ### Parâmetros
 
@@ -38,7 +43,9 @@ AND Movimento.Data_Passou_Efetivacao_Estoque < DATEADD(DAY,1,@Data_Final)
 AND Movimento.Tipo_Operacao IN ('VND','VPC','VEF')
 AND (Filiais.Ordem = @Filial OR @Filial IS NULL)
 ```
-## Vendas com Devolução   
+- --
+
+## Exemplo 2: Relatório de Vendas com Devolução   
 
 ### Descrição
 
@@ -81,14 +88,13 @@ AND Movimento.Data_Passou_Efetivacao_Estoque < DATEADD(DAY,1,@Data_Final)
 AND Movimento.Tipo_Operacao IN ('VND','VPC','VEF', 'DEV', 'CVE')
 AND (Filiais.Ordem = @Filial OR @Filial IS NULL)
 ```
+- --
 
-## Vendas com Cliente
-
-### Descrição
-
-Retorna as informações e movimentações de venda, abatendo o valor de devoluções e incluindo os dados do cliente da movimentação.
+## Exemplo 3: Relatório de Vendas com Cliente
 
 ### Observações
+
+Inclui os dados do cliente da movimentação.
 
 Clientes inativos são ignorados.
 
@@ -130,12 +136,15 @@ AND Movimento.Tipo_Operacao IN ('VND','VPC','VEF', 'DEV', 'CVE')
 AND (Filiais.Ordem = @Filial OR @Filial IS NULL)
 AND Cli_For.Inativo = 0
 ```
+- --
 
-## Vendas com Vendedor
+## Exemplo 4: Relatório de Vendas com Vendedor
 
 ### Descrição
 
-Retorna as informações e movimentações de venda, abatendo o valor de devoluções e incluindo os dados do vendedor da movimentação.
+Inclui os dados do vendedor da movimentação.
+
+### Observações
 
 Por conta do tamanho do campo, é preferível utilizar Funcionarios.Apelido ao invés de Funcionarios.Nome.
 
@@ -176,3 +185,4 @@ AND Movimento.Data_Passou_Efetivacao_Estoque < DATEADD(DAY,1,@Data_Final)
 AND Movimento.Tipo_Operacao IN ('VND','VPC','VEF', 'DEV', 'CVE')
 AND (Filiais.Ordem = @Filial OR @Filial IS NULL)
 ```
+- --
