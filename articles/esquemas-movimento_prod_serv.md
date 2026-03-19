@@ -36,8 +36,9 @@ Estes campos serão utilizados para ligar outras tabelas no banco de dados.
 
 As Colunas com nome "Ordem_*" são chaves estrangeiras.
 
+
 | Coluna | Tipo de Dados | Permite Nulo | Tabela Origem |
-|--------|---------------|--------------|-----------|
+|--------|---------------|--------------|---------------|
 | Ordem (PK) | int | NÃO | |
 | Ordem_CEST | int | SIM | dbo.CEST |
 | Ordem_CFOP_Prod_NF | int | NÃO | dbo.CFOP |
