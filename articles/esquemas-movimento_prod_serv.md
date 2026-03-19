@@ -1,4 +1,16 @@
-# Esquema Tabela dbo.Movimento
+# Esquema Tabela dbo.Movimento_Prod_Serv
+
+Contém os dados individuais dos itens de cada movimento.
+
+### Relacionamentos Críticos:
+
+dbo.Movimento 1:N dbo.Movimento_Prod_Serv
+
+→ Uma venda pode possuir vários itens
+
+dbo.Prod_Serv 1:N dbo.Movimento_Prod_Serv
+
+→ Um produto pode aparecer em vários itens de vendas
 
 ### Regra para Campos com Três Versões:
 
@@ -22,45 +34,42 @@ A prioridade de uso nesse exemplo seria Qtde_Total_Serv.
 
 Estes campos serão utilizados para ligar outras tabelas no banco de dados.
 
+As Colunas com nome "Ordem_*" são chaves estrangeiras.
+
 | Coluna | Tipo de Dados | Permite Nulo | Tabela Origem |
 |--------|---------------|--------------|-----------|
-| Entrega_Parcial_Ordem_Operacao_Anterior | int | SIM | dbo.Operacoes |
-| Ordem (PK) | int | NÃO | ? |
-| Ordem_Caixa | int | NÃO | dbo.Caixas |
-| Ordem_Centro_Custo | int | SIM | dbo.Centro_Custo |
-| Ordem_Cli_For | int | NÃO | dbo.Cli_For |
+| Ordem (PK) | int | NÃO | |
+| Ordem_CEST | int | SIM | dbo.CEST |
+| Ordem_CFOP_Prod_NF | int | NÃO | dbo.CFOP |
+| Ordem_CFOP_Serv_NF | int | NÃO | dbo.CFOP |
+| Ordem_Classe_Imposto | int | NÃO | dbo.Classe_Imposto |
 | Ordem_Comissionado | int | NÃO | dbo.Cli_For |
-| Ordem_Credito_Cli_For | int | NÃO | dbo.Credito_Cli_For |
-| Ordem_Filial | int | NÃO | dbo.Filiais |
-| Ordem_Financeiro | int | NÃO | ? |
-| Ordem_Financeiro_Conta_Frete_Emitente | int | SIM | ? |
-| Ordem_Financeiro_Frete | int | NÃO | ? |
+| Ordem_Cor | int | NÃO | dbo.Cores |
+| Ordem_Edicao | int | NÃO | dbo.Prod_Serv_Edicao |
+| Ordem_Enquadramento_IPI | int | SIM | dbo.Enquadramento_IPI |
+| Ordem_Filial_Estoque | int | SIM | dbo.Filiais |
 | Ordem_Funcionario_Alteracao | int | NÃO | dbo.Funcionarios |
-| Ordem_Funcionario_Cancelou_Devolucao_Simplificada | int | SIM | dbo.Funcionarios |
-| Ordem_Funcionario_Checkout | int | NÃO | dbo.Funcionarios |
-| Ordem_Funcionario_Conferencia_Confirmou | int | SIM | dbo.Funcionarios |
-| Ordem_Funcionario_Desefetivacao | int | SIM | dbo.Funcionarios |
-| Ordem_Funcionario_Efetivacao_Estoque | int | SIM | dbo.Funcionarios |
-| Ordem_Funcionario_Efetivacao_Financeiro | int | SIM | dbo.Funcionarios |
-| Ordem_Funcionario_Imprimiu_Ticket | int | SIM | dbo.Funcionarios |
-| Ordem_Funcionario_Liberacao | int | SIM | dbo.Funcionarios |
-| Ordem_Funcionario_Processou_Devolucao_Simplificada | int | SIM | dbo.Funcionarios |
-| Ordem_Intermediador | int | SIM | dbo.Intermediadores |
-| Ordem_Motivo_Cancelamento_Orcamento | int | SIM | dbo.Motivo_Cancelamento_Orcamento |
-| Ordem_Motivo_Desefetivacao | int | SIM | dbo.Motivo_Desefetivacao |
-| Ordem_Movimento_Referenciado | int | SIM | dbo.Movimento |
-| Ordem_Operacao | int | NÃO | dbo.Operacoes |
-| Ordem_Operador | int | NÃO | dbo.Funcionarios |
-| Ordem_Origem_Venda | int | SIM | dbo.Origem_Vendas |
-| Ordem_Plano_Contas3 | int | SIM | dbo.Plano_Contas3 |
-| Ordem_Plano_Contas3_Parcelas_Saida | int | SIM | dbo.Plano_Contas3 |
-| Ordem_Rec_Pag | int | NÃO | ? |
-| Ordem_Tabela_Custo | int | SIM | dbo.Tabelas_Preco |
-| Ordem_Tabela_Custo_Medio | int | SIM | dbo.Tabelas_Preco |
+| Ordem_Funcionario_Digitado_Por | int | SIM | dbo.Funcionarios |
+| Ordem_Grupo_CC_CF | int | SIM | ? |
+| Ordem_Grupo_CC_NF | int | SIM | ? |
+| Ordem_Lote | int | NÃO | dbo.Prod_Serv_Lote |
+| Ordem_Motivo_Desconto | int | SIM | dbo.Motivo_Desconto |
+| Ordem_Motivo_Devolucao | int | SIM | dbo.Motivo_Devolucao |
+| Ordem_Motivo_Promocao | int | SIM | dbo.Motivo_Desconto |
+| Ordem_Movimento | int | NÃO | dbo.Movimento |
+| Ordem_Movimento_Prod_Serv_Importado | int | SIM | ? |
+| Ordem_NBS | int | NÃO | dbo.NBS |
+| Ordem_NCM | int | NÃO | dbo.NCM |
+| Ordem_Prod_Serv | int | NÃO | dbo.Prod_Serv |
+| Ordem_Tabela_PMC | int | NÃO | dbo.Tabelas_Preco |
 | Ordem_Tabela_Preco | int | NÃO | dbo.Tabelas_Preco |
-| Ordem_Vendedor1 | int | NÃO | dbo.Funcionarios |
+| Ordem_Tabela_Preco_Custo | int | NÃO | dbo.Tabelas_Preco |
+| Ordem_Tabela_Preco_Custo_Medio | int | NÃO | dbo.Tabelas_Preco |
+| Ordem_Tamanho | int | NÃO | dbo.Tamanhos |
+| Ordem_Tecnico1 | int | NÃO | dbo.Funcionarios |
+| Ordem_Tecnico2 | int | NÃO | dbo.Funcionarios |
+| Ordem_Vendedor | int | NÃO | dbo.Funcionarios |
 | Ordem_Vendedor2 | int | NÃO | dbo.Funcionarios |
-
 ### Campos de Data
 
 #### Regra para Datas
@@ -68,21 +77,14 @@ Os campo de data devem sempre ser convertido em DD/MM/AAAA, utilizando a funçã
 
 | Coluna | Tipo de Dados | Permite Nulo | Descrição |
 |--------|---------------|--------------|-----------|
-| Data | datetime | SIM | Data da última gravação do Movimento (essa data deve ser priorizada em relatórios de Orçamentos e relatórios de movimentações não efetivadas) |
-| Data_Acerto_Emprestimo | datetime | SIM | Data do Acerto da Consignação |
-| Data_Alteracao | datetime | SIM | Data da última alteração do Movimento |
-| Data_Conferencia_Confirmou | datetime | SIM | Data de quando a Conferência foi realizada |
-| Data_Criacao | datetime | SIM | Data de Criação do Movimento |
-| Data_Desefetivado_Estoque | datetime | SIM | Data quando o Estoque foi Desefetivado |
-| Data_Desefetivado_Financeiro | datetime | SIM | Data quando o Financeiro foi Desefetivado |
-| Data_Efetivado_Estoque | datetime | SIM | Data quando o Estoque foi Efetivado |
-| Data_Efetivado_Financeiro | datetime | SIM | Data quando o Financeiro foi Efetivado |
-| Data_Entrega | datetime | SIM | ? |
-| Data_Imprimiu_Ticket | date | SIM | Data que o Ticket foi Impresso na Saída |
-| Data_Passou_Desefetivacao_Estoque | datetime | SIM | Data de quando o Movimento foi Desefetivado|
-| Data_Passou_Efetivacao_Estoque | datetime | SIM | Data que considera primeiro a data de efetivação do estoque e, se não houver movimento de estoque, considera a data de efetivação de financeiro (essa data é deve ser priorizada em relatórios de vendas) |
-| Data_Previsao_Recebimento | datetime | SIM | ? |
-| Data_Sincronizacao | datetime | SIM | Data de quando a venda foi Sincronizada de módulos externos |
+| Data_Alteracao | datetime | NÃO | |
+| Data_Desefetivacao_Estoque | datetime | SIM | |
+| Data_Efetivacao_Estoque | datetime | SIM | |
+| Data_Passou_Desefetivacao_Estoque | datetime | SIM | |
+| Data_Passou_Efetivacao_Estoque | datetime | SIM | |
+| Data_Servico_Concluido | datetime | SIM | |
+| Periodo_Desconto_Data_Final | date | SIM | |
+| Periodo_Desconto_Data_Inicial | date | SIM | |
 
 ### Campos de Valores
 
@@ -92,30 +94,43 @@ Deve ser respeitado a Regra para Campos com Três Versões.
 
 | Coluna | Tipo de Dados | Permite Nulo | Descrição |
 |--------|---------------|--------------|-----------|
-| Acrescimo_Valor_Somado | money | NÃO | Usado apenas em Entradas Importadas do Exterior. Há um campo próprio chamado "Acréscimo" |
-| Cubagem_Final | money | NÃO | Cubagem Total das Mercadorias |
-| Desconto_Total_Prod | money | NÃO | Desconto Total só para Produtos |
-| Desconto_Total_Serv | money | NÃO | Desconto Total só para Serviços |
-| Desconto_Valor_Somado | money | NÃO | Desconto Total para Produtos e Serviços (Esse campo deve ser priorizado para mostrar o desconto total da movimentação) |
-| Despesa_Acessoria | money | NÃO | Valor Total de Despesas Acessórias |
-| Frete_Valor_Separado_Somado | money | NÃO | Valor de Frete pago à parte, não incluso no total da Movimentação |
-| Frete_Valor_Somado | money | NÃO | Valor de Frete incluso no total na Movimentação (Esse campo deve ser priorizado para mostrar o total de frte da movimentação) |
-| Peso_Final | money | NÃO | Peso Bruto Total das Mercadorias  |
-| Peso_Liquido_Final | money | NÃO | Peso Líquido Total das Mercadorias  |
-| Preco_Custo_Medio_Somado | money | NÃO | Custo Médio Total das mercadorias movimentadas |
-| Preco_Custo_Somado | money | NÃO | Custo Total das mercadorias movimentadas |
-| Preco_Final_Somado | money | NÃO | Valor Líquido. Valor Total da Movimentação. Considera valor dos itens + impostos - descontos. (Esse campo deve ser somado para mostrar o Valor Total de movimentações) |
-| Preco_Total_Com_Desconto_Somado | money | NÃO | Valor Total de Produtos e Serviços com Desconto considerado |
-| Preco_Total_Sem_Desconto_Somado | money | NÃO | Valor Bruto. Valor Total de Produtos e Serviços sem Desconto considerado |
-| Preco_Total_Prod | money | NÃO | Valor Total de Produtos com Desconto considerado |
-| Preco_Total_Prod_Sem_Desconto_Somado | money | NÃO | Valor Total de Produtos sem Desconto considerado |
-| Preco_Total_Serv | money | NÃO | Valor Total de Serviços com Desconto considerado |
-| Preco_Total_Serv_Sem_Desconto_Somado | money | NÃO | Valor Total de Serviços sem Desconto considerado |
-| Qtde_Total_Geral | money | NÃO | Quantidade Total em Unidades de Produtos e Serviços (Esse campo deve ser priorizado para mostrar a quantidade total de itens da movimentação) |
-| Qtde_Total_Prod | money | NÃO | Quantidade Total em Unidades só de Produtos |
-| Qtde_Total_Serv | money | NÃO | Quantidade Total em Unidades só de Serviços |
-| Valor_Container | money | SIM | Utilizado apenas em Saídas de Exportação ao Exterior |
-| Valor_Pagamento_Ecommerce_Integracoes | money | SIM | Utilizado em Movimentações que foram criadas pelo módulo Integrações |
+| Acrescimo_Percentual | money | NÃO | |
+| Acrescimo_Valor | money | NÃO | |
+| Comissao_Comissionado | money | NÃO | |
+| Comissao_Tecnico1 | money | NÃO | |
+| Comissao_Tecnico2 | money | NÃO | |
+| Comissao_Vendedor1 | money | NÃO | |
+| Comissao_Vendedor2 | money | NÃO | |
+| Cubagem | money | NÃO | |
+| Custo_Adicional | money | SIM | |
+| Custo_Adicional_Valor | money | SIM | |
+| Desconto_Percentual | money | NÃO | |
+| Desconto_Percentual_Calculado | money | NÃO | |
+| Desconto_Percentual_Promocoes_Especiais | money | SIM | |
+| Desconto_Valor | money | NÃO | |
+| Desconto_Valor_Promocoes_Especiais | money | SIM | |
+| Desp_Aduaneira_II | money | NÃO | |
+| Despesas_Valor | money | NÃO | |
+| Frete_Valor | money | NÃO | |
+| Frete_Valor_Separado | money | NÃO | |
+| Margem_Flex_Valor | money | SIM | |
+| Peso_Bruto | money | NÃO | |
+| Peso_Liquido | money | SIM | |
+| Preco_Custo | money | NÃO | |
+| Preco_Custo_Mantido_Orcamento | bit | SIM | |
+| Preco_Custo_Medio | money | NÃO | |
+| Preco_Final | money | NÃO | |
+| Preco_Final_Relatorio | money | SIM | |
+| Preco_Final_Sem_Frete | money | SIM | |
+| Preco_PMC | money | NÃO | |
+| Preco_Por_Caixa | money | NÃO | |
+| Preco_Total_Com_Desconto | money | NÃO | |
+| Preco_Total_Sem_Desconto | money | NÃO | |
+| Preco_Unitario | money | NÃO | |
+| Preco_Unitario_Original | money | SIM | |
+| Quantidade | money | NÃO | |
+| Quantidade_Caixas_Com | money | NÃO | |
+| Quantidade_Itens | money | NÃO | |
 
 ### Campos de Impostos
 
@@ -127,196 +142,338 @@ Deve ser respeitado a Regra para Campos com Três Versões.
 
 | Coluna | Tipo de Dados | Permite Nulo | Descrição |
 |--------|---------------|--------------|-----------|
-| CBS_Base_Somado | money | SIM | |
-| CBS_CredPres_CondSus_Valor_Somado | money | SIM | |
-| CBS_CredPres_Valor_Somado | money | SIM | |
-| CBS_Devolucao_Tributos_Valor_Somado | money | SIM | |
-| CBS_Diferido_Valor_Somado | money | SIM | |
-| CBS_Monofasico_Retencao_Valor_Somado | money | SIM | |
-| CBS_Monofasico_Retido_Valor_Somado | money | SIM | |
-| CBS_Monofasico_Valor_Somado | money | SIM | |
-| CBS_Valor_Somado | money | SIM | |
-| Carga_Tributaria | money | NÃO | |
-| Carga_Tributaria_Estadual | money | NÃO | |
-| Carga_Tributaria_Federal | money | NÃO | |
-| Carga_Tributaria_Municipal | money | NÃO | |
-| Codigo_MunIBS | varchar | SIM | |
-| COFINS_Normal_Base_Prod_Somado | money | NÃO | |
-| COFINS_Normal_Base_Serv_Somado | money | NÃO | |
-| COFINS_Normal_Base_Somado | money | NÃO | |
-| COFINS_Normal_Valor_Prod_Somado | money | NÃO | |
-| COFINS_Normal_Valor_Serv_Somado | money | NÃO | |
-| COFINS_Normal_Valor_Somado | money | NÃO | |
-| COFINS_Subst_Base_Prod_Somado | money | NÃO | |
-| COFINS_Subst_Base_Serv_Somado | money | NÃO | |
-| COFINS_Subst_Base_Somado | money | NÃO | |
-| COFINS_Subst_Valor_Prod_Somado | money | NÃO | |
-| COFINS_Subst_Valor_Serv_Somado | money | NÃO | |
-| COFINS_Subst_Valor_Somado | money | NÃO | |
-| COFINS_Subst_Valor_Somado_Total | money | SIM | |
-| CSOSN_Base_Somado | money | NÃO | |
-| CSOSN_Valor_Somado | money | NÃO | |
-| FCP_Normal_Base_Somado | money | SIM | |
-| FCP_Normal_Valor_Somado | money | SIM | |
-| FCP_Retido_Base_Somado | money | SIM | |
-| FCP_Retido_Valor_Converteu_CST_60_XML_Somado | money | SIM | |
-| FCP_Retido_Valor_Somado | money | SIM | |
-| FCP_ST_Base_Somado | money | SIM | |
-| FCP_ST_Valor_Somado | money | SIM | |
-| FET_Base | money | SIM | |
-| FET_Valor | money | SIM | |
-| IBS_Est_Base_Somado | money | SIM | |
-| IBS_Est_Devolucao_Tributos_Valor_Somado | money | SIM | |
-| IBS_Est_Diferido_Valor_Somado | money | SIM | |
-| IBS_Est_Valor_Somado | money | SIM | |
-| IBS_Monofasico_Retencao_Valor_Somado | money | SIM | |
-| IBS_Monofasico_Retido_Valor_Somado | money | SIM | |
-| IBS_Monofasico_Valor_Somado | money | SIM | |
-| IBS_Mun_Base_Somado | money | SIM | |
-| IBS_Mun_CredPres_CondSus_Valor_Somado | money | SIM | |
-| IBS_Mun_CredPres_Valor_Somado | money | SIM | |
-| IBS_Mun_Devolucao_Tributos_Valor_Somado | money | SIM | |
-| IBS_Mun_Diferido_Valor_Somado | money | SIM | |
-| IBS_Mun_Valor_Somado | money | SIM | |
-| IBS_Valor_Somado | money | SIM | |
-| ICMS_Base_Efetivo_Somado | money | SIM | |
-| ICMS_Desonerado_Valor_Somado | money | NÃO | |
-| ICMS_Desonerado_Valor_Subtrair_Total_Somado | money | NÃO | |
-| ICMS_Diferido_Base_Somado | money | NÃO | |
-| ICMS_Diferido_Normal_Valor_Somado | money | NÃO | |
-| ICMS_Diferido_Valor_Diferimento_Somado | money | NÃO | |
-| ICMS_Diferido_Valor_Operacao_Somado | money | NÃO | |
-| ICMS_FCP_Valor_Somado | money | SIM | |
-| ICMS_Monofasico_Normal_Base_Somado | money | SIM | |
-| ICMS_Monofasico_Normal_Valor_Somado | money | SIM | |
-| ICMS_Monofasico_Retencao_Base_Somado | money | SIM | |
-| ICMS_Monofasico_Retencao_Valor_Somado | money | SIM | |
-| ICMS_Monofasico_Retido_Base_Somado | money | SIM | |
-| ICMS_Monofasico_Retido_Valor_Somado | money | SIM | |
-| ICMS_Normal_Base_Somado | money | NÃO | |
-| ICMS_Normal_Valor_Somado | money | NÃO | |
-| ICMS_Partilhado_Base_Somado | money | SIM | |
-| ICMS_Partilhado_Valor_Destino_Somado | money | SIM | |
-| ICMS_Partilhado_Valor_Remetente_Somado | money | SIM | |
-| ICMS_Retido_Base_Somado | money | NÃO | |
-| ICMS_Retido_Valor_Somado | money | NÃO | |
-| ICMS_Simples_Base_Somado | money | NÃO | |
-| ICMS_Simples_Valor_Somado | money | NÃO | |
-| ICMS_Subst_Base_Somado | money | NÃO | |
-| ICMS_Subst_Valor_Somado | money | NÃO | |
-| ICMS_Valor_Efetivo_Somado | money | SIM | |
-| II_Base_Somado | money | NÃO | |
-| II_Valor_Somado | money | NÃO | |
-| INSS_Base | money | SIM | |
-| INSS_Valor | money | SIM | |
-| INSS_Valor_Subtrair_Total_Somado | money | SIM | |
-| IPI_Base_Somado | money | NÃO | |
-| IPI_Valor_Devolvido_Somado | money | SIM | |
-| IPI_Valor_Somado | money | NÃO | |
-| IR_Base | money | NÃO | |
-| IR_Valor | money | NÃO | |
-| IS_Base_Somado | money | SIM | |
-| IS_Valor_Somado | money | SIM | |
-| ISS_Base | money | NÃO | |
-| ISS_Valor | money | NÃO | |
-| ISS_Valor_Sem_Arredondar | money | SIM | |
-| ISS_Valor_Subtrair_Total_Somado | money | SIM | |
-| PIS_Normal_Base_Prod_Somado | money | NÃO | |
-| PIS_Normal_Base_Serv_Somado | money | NÃO | |
-| PIS_Normal_Base_Somado | money | NÃO | |
-| PIS_Normal_Valor_Prod_Somado | money | NÃO | |
-| PIS_Normal_Valor_Serv_Somado | money | NÃO | |
-| PIS_Normal_Valor_Somado | money | NÃO | |
-| PIS_Subst_Base_Prod_Somado | money | NÃO | |
-| PIS_Subst_Base_Serv_Somado | money | NÃO | |
-| PIS_Subst_Base_Somado | money | NÃO | |
-| PIS_Subst_Valor_Prod_Somado | money | NÃO | |
-| PIS_Subst_Valor_Serv_Somado | money | NÃO | |
-| PIS_Subst_Valor_Somado | money | NÃO | |
-| PIS_Subst_Valor_Somado_Total | money | SIM | |
-| Retencao_COFINS | money | NÃO | |
-| Retencao_CSLL | money | NÃO | |
-| Retencao_INSS | money | SIM | |
-| Retencao_INSS_Aliquota | money | SIM | |
-| Retencao_PIS | money | NÃO | |
-| Retencao_Produto_COFINS_Base_Somado | money | SIM | |
-| Retencao_Produto_COFINS_Valor_Somado | money | SIM | |
-| Retencao_Produto_CSLL_Base_Somado | money | SIM | |
-| Retencao_Produto_CSLL_Valor_Somado | money | SIM | |
-| Retencao_Produto_IR_Base_Somado | money | SIM | |
-| Retencao_Produto_IR_Valor_Somado | money | SIM | |
-| Retencao_Produto_PIS_Base_Somado | money | SIM | |
-| Retencao_Produto_PIS_Valor_Somado | money | SIM | |
+Base_BFCP | money | SIM |
+Base_II | money | NÃO |
+Carga_Tributaria | money | NÃO |
+Carga_Tributaria_Chave | varchar | NÃO |
+Carga_Tributaria_Estadual_Perc | money | NÃO |
+Carga_Tributaria_Estadual_Valor | money | NÃO |
+Carga_Tributaria_Federal_Perc | money | NÃO |
+Carga_Tributaria_Federal_Valor | money | NÃO |
+Carga_Tributaria_Fonte | varchar | NÃO |
+Carga_Tributaria_Fonte2 | varchar | NÃO |
+Carga_Tributaria_Municipal_Perc | money | NÃO |
+Carga_Tributaria_Municipal_Valor | money | NÃO |
+Carga_Tributaria_Percentual | money | NÃO |
+CBS_Aliquota_Efetiva_Percentual | money | SIM |
+CBS_Aliquota_Efetiva_TribRegular_Percentual | money | SIM |
+CBS_Base | money | SIM |
+CBS_Calcula_CredPres | bit | SIM |
+CBS_CredPres_Classif | varchar | SIM |
+CBS_CredPres_CondSus_Valor | money | SIM |
+CBS_CredPres_Percentual | money | SIM |
+CBS_CredPres_Valor | money | SIM |
+CBS_Devolucao_Tributos_Valor | money | SIM |
+CBS_Diferido_Percentual | money | SIM |
+CBS_Diferido_Valor | money | SIM |
+CBS_Monofasico_Aliquota_AdRem | money | SIM |
+CBS_Monofasico_Aliquota_AdRem_Retencao | money | SIM |
+CBS_Monofasico_Aliquota_AdRem_Retido | money | SIM |
+CBS_Monofasico_Diferido_Percentual | money | SIM |
+CBS_Monofasico_Diferido_Valor | money | SIM |
+CBS_Monofasico_Retencao_Valor | money | SIM |
+CBS_Monofasico_Retido_Valor | money | SIM |
+CBS_Monofasico_Total | money | SIM |
+CBS_Monofasico_Valor | money | SIM |
+CBS_Percentual | money | SIM |
+CBS_Reducao_Aliquota_Percentual | money | SIM |
+CBS_TransfCred_Valor | money | SIM |
+CBS_TribCompraGov_Percentual | money | SIM |
+CBS_TribCompraGov_Valor | money | SIM |
+CBS_TribRegular_Valor | money | SIM |
+CBS_Valor | money | SIM |
+CEST | varchar | SIM |
+CFOP_CF | varchar | NÃO |
+CFOP_NF | varchar | NÃO |
+CFOP_Prod_Serv_Composto | bit | SIM |
+Cod_Classifica_Serv | varchar | SIM |
+Codigo_Beneficio_Fiscal | varchar | SIM |
+Codigo_Tributacao_ISS | varchar | SIM |
+COFINS_Calcula_Subs | bit | NÃO |
+COFINS_Normal_Base | money | NÃO |
+COFINS_Normal_Percentual | money | NÃO |
+COFINS_Normal_Valor | money | NÃO |
+COFINS_Subst_Base | money | NÃO |
+COFINS_Subst_Percentual | money | NÃO |
+COFINS_Subst_Soma_Total | bit | SIM |
+COFINS_Subst_Valor | money | NÃO |
+Converteu_Em_CST_60_XML | bit | SIM |
+FCI | varchar | NÃO |
+FCI_Perc_Importado | money | NÃO |
+FCP_Normal_Base | money | SIM |
+FCP_Normal_Percentual | money | SIM |
+FCP_Normal_Valor | money | SIM |
+FCP_Retido_Base | money | SIM |
+FCP_Retido_Percentual | money | SIM |
+FCP_Retido_Valor | money | SIM |
+FCP_ST_Base | money | SIM |
+FCP_ST_Percentual | money | SIM |
+FCP_ST_Valor | money | SIM |
+IBS_Calcula_CredPres | bit | SIM |
+IBS_CredPresZFM_Tipo | varchar | SIM |
+IBS_CredPresZFM_Valor | money | SIM |
+IBS_Est_Aliquota_Efetiva_Percentual | money | SIM |
+IBS_Est_Aliquota_Efetiva_TribRegular_Percentual | money | SIM |
+IBS_Est_Base | money | SIM |
+IBS_Est_Devolucao_Tributos_Valor | money | SIM |
+IBS_Est_Diferido_Percentual | money | SIM |
+IBS_Est_Diferido_Valor | money | SIM |
+IBS_Est_Percentual | money | SIM |
+IBS_Est_Reducao_Aliquota_Percentual | money | SIM |
+IBS_Est_TribCompraGov_Percentual | money | SIM |
+IBS_Est_TribCompraGov_Valor | money | SIM |
+IBS_Est_TribRegular_Valor | money | SIM |
+IBS_Est_Valor | money | SIM |
+IBS_Monofasico_Aliquota_AdRem | money | SIM |
+IBS_Monofasico_Aliquota_AdRem_Retencao | money | SIM |
+IBS_Monofasico_Aliquota_AdRem_Retido | money | SIM |
+IBS_Monofasico_Diferido_Percentual | money | SIM |
+IBS_Monofasico_Diferido_Valor | money | SIM |
+IBS_Monofasico_Retencao_Valor | money | SIM |
+IBS_Monofasico_Retido_Valor | money | SIM |
+IBS_Monofasico_Total | money | SIM |
+IBS_Monofasico_Valor | money | SIM |
+IBS_Mun_Aliquota_Efetiva_Percentual | money | SIM |
+IBS_Mun_Aliquota_Efetiva_TribRegular_Percentual | money | SIM |
+IBS_Mun_Base | money | SIM |
+IBS_Mun_CredPres_Classif | varchar | SIM |
+IBS_Mun_CredPres_CondSus_Valor | money | SIM |
+IBS_Mun_CredPres_Percentual | money | SIM |
+IBS_Mun_CredPres_Valor | money | SIM |
+IBS_Mun_Devolucao_Tributos_Valor | money | SIM |
+IBS_Mun_Diferido_Percentual | money | SIM |
+IBS_Mun_Diferido_Valor | money | SIM |
+IBS_Mun_Percentual | money | SIM |
+IBS_Mun_Reducao_Aliquota_Percentual | money | SIM |
+IBS_Mun_TribCompraGov_Percentual | money | SIM |
+IBS_Mun_TribCompraGov_Valor | money | SIM |
+IBS_Mun_TribRegular_Valor | money | SIM |
+IBS_Mun_Valor | money | SIM |
+IBS_TransfCred_Valor | money | SIM |
+IBS_Valor | money | SIM |
+IBSCBS_Base_Credito_Presumido | money | SIM |
+IBSCBS_Calcula_CredPres | bit | SIM |
+IBSCBS_Calcula_Diferimento | bit | SIM |
+IBSCBS_Calcula_Reducao | bit | SIM |
+IBSCBS_Calcula_TribReg | bit | SIM |
+IBSCBS_ClassTrib | varchar | SIM |
+IBSCBS_ClassTrib_TribRegular | varchar | SIM |
+IBSCBS_CST | varchar | SIM |
+IBSCBS_CST_TribRegular | varchar | SIM |
+IBSCBS_IVA_Dual | money | SIM |
+IBSCBS_IVA_Dual_Valor | money | SIM |
+IBSCBS_Monofasico_Base | money | SIM |
+IBSCBS_Monofasico_Retencao_Base | money | SIM |
+IBSCBS_Monofasico_Retido_Base | money | SIM |
+ICMS_Carga_Media_Percentual | money | NÃO |
+ICMS_CST_CSOSN | varchar | NÃO |
+ICMS_Desonerado_Valor | money | NÃO |
+ICMS_Diferido_Base | money | NÃO |
+ICMS_Diferido_Modalidade_Base | int | NÃO |
+ICMS_Diferido_Normal_Percentual | money | NÃO |
+ICMS_Diferido_Normal_Valor | money | NÃO |
+ICMS_Diferido_Percentual | money | NÃO |
+ICMS_Diferido_Valor_Diferimento | money | NÃO |
+ICMS_Diferido_Valor_Operacao | money | NÃO |
+ICMS_Efetivo_Base | money | SIM |
+ICMS_Efetivo_Percentual | money | SIM |
+ICMS_Efetivo_Valor | money | SIM |
+ICMS_FCP_Percentual | money | SIM |
+ICMS_FCP_Valor | money | SIM |
+ICMS_Monofasico_Diferido_Percentual_Diferimento | money | SIM |
+ICMS_Monofasico_Diferido_Valor | money | SIM |
+ICMS_Monofasico_Diferido_Valor_ICMS_Devido | money | SIM |
+ICMS_Monofasico_Normal_Aliquota_AdRem | money | SIM |
+ICMS_Monofasico_Normal_Base | money | SIM |
+ICMS_Monofasico_Normal_Valor | money | SIM |
+ICMS_Monofasico_Reducao_Aliquota_AdRem | money | SIM |
+ICMS_Monofasico_Reducao_Motivo | varchar | SIM |
+ICMS_Monofasico_Retencao_Aliquota_AdRem | money | SIM |
+ICMS_Monofasico_Retencao_Base | money | SIM |
+ICMS_Monofasico_Retencao_Valor | money | SIM |
+ICMS_Monofasico_Retido_Aliquota_AdRem | money | SIM |
+ICMS_Monofasico_Retido_Base | money | SIM |
+ICMS_Monofasico_Retido_Valor | money | SIM |
+ICMS_Motivo_Desoneracao | varchar | NÃO |
+ICMS_Norm_Omitir_Opcionais_51 | bit | SIM |
+ICMS_Normal_Base | money | NÃO |
+ICMS_Normal_Base_Sem_Reducao | money | NÃO |
+ICMS_Normal_Codigo_Beneficio_Reducao | varchar | SIM |
+ICMS_Normal_Modalidade_Base | int | NÃO |
+ICMS_Normal_Perc_Reducao | money | NÃO |
+ICMS_Normal_Percentual | money | NÃO |
+ICMS_Normal_Percentual_Desoneracao | money | SIM |
+ICMS_Normal_Percentual_Efetivo_SAT | money | SIM |
+ICMS_Normal_Soma_Despesas | bit | SIM |
+ICMS_Normal_Soma_Frete | bit | SIM |
+ICMS_Normal_Soma_IPI | bit | SIM |
+ICMS_Normal_Subtrair_Valor_Desonerado_Total_Nota | bit | SIM |
+ICMS_Normal_Valor | money | NÃO |
+ICMS_Partilhado_Base | money | SIM |
+ICMS_Partilhado_Perc_Reducao | money | SIM |
+ICMS_Partilhado_Percentual | money | SIM |
+ICMS_Partilhado_Percentual_Interestadual | money | SIM |
+ICMS_Partilhado_Percentual_Partilha | money | SIM |
+ICMS_Partilhado_Valor_Destino | money | SIM |
+ICMS_Partilhado_Valor_Remetente | money | SIM |
+ICMS_Reducao_Efetivo_Percentual | money | SIM |
+ICMS_Retido_Base | money | NÃO |
+ICMS_Retido_Modalidade_Base | int | NÃO |
+ICMS_Retido_Percentual | money | NÃO |
+ICMS_Retido_Valor | money | NÃO |
+ICMS_Simples_Base | money | NÃO |
+ICMS_Simples_Percentual | money | NÃO |
+ICMS_Simples_Valor | money | NÃO |
+ICMS_Subst_Base | money | NÃO |
+ICMS_Subst_Base_Sem_Reducao | money | NÃO |
+ICMS_Subst_Modalidade_Base | int | NÃO |
+ICMS_Subst_Perc_Reducao | money | NÃO |
+ICMS_Subst_Percentual | money | NÃO |
+ICMS_Subst_Percentual_MVA | money | NÃO |
+ICMS_Subst_Valor | money | NÃO |
+ICMS_Substituto_Valor | money | SIM |
+ICMSST_Repasse_Base | money | SIM |
+ICMSST_Repasse_Calcular | bit | SIM |
+ICMSST_Repasse_Percentual | money | SIM |
+ICMSST_Repasse_Valor | money | SIM |
+INSS_Base | money | SIM |
+INSS_Percentual | money | SIM |
+INSS_Valor | money | SIM |
+Invalido | bit | NÃO |
+IOF_II | money | NÃO |
+IPI_Base | money | NÃO |
+IPI_CST | varchar | NÃO |
+IPI_Manualmente_Entrada | bit | SIM |
+IPI_Percentual | money | NÃO |
+IPI_Valor | money | NÃO |
+IPI_Valor_Devolvido | money | NÃO |
+IS_Base | money | SIM |
+IS_ClassTrib | varchar | SIM |
+IS_CST | varchar | SIM |
+IS_Percentual | money | SIM |
+IS_Percentual_Especial | money | SIM |
+IS_Quantidade_Tributavel | money | SIM |
+IS_Unidade_Medida_Tributavel | varchar | SIM |
+IS_Valor | money | SIM |
+ISS_Base | money | NÃO |
+ISS_Indicador_Exigibilidade | int | NÃO |
+ISS_Indicador_Incentivo_Fiscal | int | NÃO |
+ISS_Percentual | money | NÃO |
+ISS_Percentual_Deducao | money | SIM |
+ISS_Valor | money | NÃO |
+ISS_Valor_Sem_Arredondar | money | SIM |
+ISS_Valor_Subtrair_Total | money | SIM |
+Natureza_Operacao_ISSQN | int | SIM |
+NBS | varchar | NÃO |
+NCM | varchar | NÃO |
+Numero_RECOPI | varchar | NÃO |
+Origem_Mercadoria |  |  |
+Perc_BFCP | money | SIM |
+Percentual_Difal | money | SIM |
+PIS_Calcula_Subs | bit | NÃO |
+PIS_COFINS_CST | varchar | NÃO |
+PIS_COFINS_Natureza_Base_Credito | varchar | SIM |
+PIS_Normal_Base | money | NÃO |
+PIS_Normal_Percentual | money | NÃO |
+PIS_Normal_Valor | money | NÃO |
+PIS_Subst_Base | money | NÃO |
+PIS_Subst_Percentual | money | NÃO |
+PIS_Subst_Soma_Total | bit | SIM |
+PIS_Subst_Valor | money | NÃO |
+Retencao_Calcular | bit | SIM |
+Retencao_Calcular_Produtos_Com_Desconto | bit | SIM |
+Retencao_Produto_COFINS_Base | money | SIM |
+Retencao_Produto_COFINS_Percentual | money | SIM |
+Retencao_Produto_COFINS_Valor | money | SIM |
+Retencao_Produto_CSLL_Base | money | SIM |
+Retencao_Produto_CSLL_Percentual | money | SIM |
+Retencao_Produto_CSLL_Valor | money | SIM |
+Retencao_Produto_IR_Base | money | SIM |
+Retencao_Produto_IR_Percentual | money | SIM |
+Retencao_Produto_IR_Valor | money | SIM |
+Retencao_Produto_IR_Valor_Minimo | money | SIM |
+Retencao_Produto_PIS_Base | money | SIM |
+Retencao_Produto_PIS_COFINS_CSLL_Valor_Minimo | money | SIM |
+Retencao_Produto_PIS_Percentual | money | SIM |
+Retencao_Produto_PIS_Valor | money | SIM |
+Valor_BFCP | money | SIM |
+Valor_Deducao_Configurado | money | SIM |
+Valor_II | money | NÃO |
+Valor_II_Soma_Total | bit | NÃO |
+Valores_Antes_Converter_CTS60 | varchar | SIM |
 
 ### Campos Gerais
 
 | Coluna | Tipo de Dados | Permite Nulo | Descrição |
 |--------|---------------|--------------|-----------|
-| Alteracoes_Offline | bit | NÃO | |
-| Apagado | bit | NÃO | Utilizado para localizar saídas apagadas |
-| Arquivo_XML_Importado | varchar | NÃO | |
-| Bipagem_Efetuada | bit | SIM | |
-| Bipagem_Liberada | bit | SIM | |
-| Cidade_Prestacao | varchar | SIM | |
-| Cidade_Recolhimento | varchar | SIM | |
-| Comissao_Perc | money | NÃO | |
-| Conferencia_Confirmou | bit | SIM | |
-| CRMBONUS_Acumulou | bit | SIM | |
-| CRMBONUS_Cancelou | bit | SIM | |
-| CRMBONUS_Celular | varchar | SIM | |
-| CRMBONUS_Flag_Acumular_Bonus | bit | SIM | |
-| CRMBONUS_ID_Bonus | varchar | SIM | |
-| CRMBONUS_ID_Bonus_Utilizado | varchar | SIM | |
-| CRMBONUS_ID_Cliente | int | SIM | |
-| CRMBONUS_Pin_Master | bit | SIM | |
-| CRMBONUS_Restricao_Horario | bit | SIM | |
-| CRMBONUS_SMS | varchar | SIM | |
-| CRMBONUS_Utilizou | bit | SIM | |
-| CRMBONUS_Valor | money | SIM | |
-| Criado_Por | varchar | NÃO | Funcionário que criou o movimento. |
-| Descricao_Servicos_NFSe_Interna | varchar | SIM | |
-| Desefetivado_Estoque | bit | SIM | |
-| Desefetivado_Financeiro | bit | NÃO | |
-| Efetivado_Estoque | bit | SIM | |
-| Efetivado_Financeiro | bit | NÃO | |
-| Envia_NFSe | bit | SIM | |
-| Entrada_Vinculou_Pedido_Compra | bit | SIM | |
-| Entrega_Parcial_Gerou_Entregas | bit | SIM | |
-| Entrega_Parcial_Tipo | varchar | SIM | |
-| Estado_Prestacao | varchar | SIM | |
-| Estado_Recolhimento | varchar | SIM | |
-| FCI_Desefetivou_Qtde | bit | SIM | |
-| FCI_Efetivou_Qtde | bit | SIM | |
-| Gerou_Transferencias_Automaticas | bit | SIM | |
-| Hora_Imprimiu_Ticket | time | SIM | Hora de impressão do Ticket |
-| Indicador_Destino | varchar | NÃO | |
-| Indicador_Presencial | varchar | NÃO | |
-| Informacoes_Adicionais_Fisco | varchar | SIM | |
-| Informacoes_Fisco | varchar | NÃO | |
-| Local_Despacho | varchar | NÃO | |
-| Local_Exportacao | varchar | NÃO | |
+| Agrupador | varchar | SIM | |
+| Codigo_Enquadramento_IPI | int | SIM | |
+| Codigo_Motivo_Desconto | varchar | SIM | |
+| Codigo_Motivo_Promocao | varchar | SIM | |
+| Codigo_Prod_Serv_Importado_Xml | varchar | SIM | |
+| Complemento | varchar | NÃO | |
+| Complemento_Extra | varchar | SIM | |
+| Conferencia_Inserido_Posteriomente | bit | SIM | |
+| Conferencia_Qtde_Conferida | money | SIM | |
+| CRM_BONUS | bit | SIM | |
+| Devolucao_IPI_Soma_ICMS_Normal | bit | SIM | |
+| Devolucao_IPI_Soma_ICMS_ST | bit | SIM | |
+| Devolucao_Simplificada_Nota_Vinculada | varchar | SIM | |
+| Devolucao_Simplificada_Numero_Linha_Considerar | int | SIM | |
+| Devolucao_Simplificada_Numero_Linha_Vinculado | int | SIM | |
+| Devolucao_Simplificada_Ordem_Movimento_Prod_Serv_Considerar | int | SIM | |
+| Devolucao_Simplificada_Sequencia_Considerar | int | SIM | |
+| Devolucao_Simplificada_Sequencia_Vinculada | int | SIM | |
+| Estoque_Desefetivado | bit | NÃO | |
+| Estoque_Efetivado | bit | NÃO | |
+| Estoque_Efetivado_OS | bit | NÃO | |
+| Ex_Tipi | varchar | NÃO | |
+| Linha_Excluida | bit | NÃO | |
+| Medicamento | bit | NÃO | |
+| Numero_Item_Pedido | int | NÃO | |
+| Numero_Item_Pedido_V2 | varchar | SIM | |
+| Numero_Linha | int | NÃO | |
+| Numero_Linha_Pai | int | SIM | |
+| Numero_Ordem_Servico | int | NÃO | |
 | Observacao | varchar | NÃO | |
-| Observacao_Fiscal | varchar | NÃO | |
-| Observacao_Liberacao | varchar | SIM | |
-| Operacao_Consumidor_Final | bit | NÃO | |
-| Operacao_Grava_Custo | bit | SIM | |
-| Operacao_Grava_Custo_Medio | bit | SIM | |
-| Operacao_Grava_Custo_Produtos_Fracionados | bit | SIM | |
-| Operacao_Lotes_Tela_Expedicao | bit | SIM | |
-| Operacao_Permite_Gerar_Credito_Cliente | bit | SIM | |
-| Operacao_Series_Tela_Expedicao | bit | SIM | |
-| Orcamento_Mantido | bit | SIM | |
-| Orcamento_Venda_Passou_Liberacao_Remota_Autorizada | bit | SIM | |
-| Referencia_Interna | varchar | NÃO | |
-| Sequencia | int | NÃO | Campo que identifica no sistema e impressões de tickets o numero da movimentação. |
-| Situacao_Expedicao | varchar | NÃO | |
-| Situacao_Liberacao_Permissoes | varchar | SIM | |
-| Situacao_VEF | varchar | NÃO | |
-| Tipo_Operacao | varchar | NÃO | Tipo da Operação da Movimentação. Exemplos: VND, VPC, VEF |
-| Tipo_Recebimento_Frete | varchar | NÃO | |
-| Versao_Efetivacao_Estoque | varchar | NÃO | Versão do Shop 9. |
-| Versao_Efetivacao_Financeiro | varchar | NÃO | Versão do Shop 9. |
-| Versao_Gravacao | varchar | NÃO | Versão do Shop 9. |
+| Pedido | varchar | NÃO | |
+| Percentual_Devolvido | money | NÃO | |
+| Periodo_Desconto_Percentual | money | SIM | |
+| Periodo_Desconto_Possui_Limite | bit | SIM | |
+| Prod_Serv_Controla_Estoque | bit | NÃO | |
+| Servico_Concluido | bit | NÃO | |
+| Status_Remessa | int | SIM | |
+| Tipo_Retirada | varchar | SIM | |
+| Tipo_Tributacao_Servico | int | SIM | |
+| Totalizador_Parcial | varchar | NÃO | |
+| Utilizou_Codigo_Promocional | bit | SIM | |
+| Utilizou_Comissao_Por_Filial | bit | SIM | |
+| Utilizou_Preco_Promocional | bit | NÃO | |
 
+### Campos com pouca recorrência
 
-
+| Coluna | Tipo de Dados | Permite Nulo | Descrição |
+|--------|---------------|--------------|-----------|
+| Difal_Base_Modo_Calculo | varchar | SIM | |
+| Diferenca_Cupom | money | NÃO | |
+| Discriminacao_Servico | varchar | SIM | |
+| Enviar_BFCP | bit | SIM | |
+| Enviar_ICMSSubstituto | bit | SIM | |
+| Enviar_ICMSSubstituto_Zerado | bit | SIM | |
+| Etiqueta | int | NÃO | |
+| Excluido_Pelo_Shop | bit | NÃO | |
+| Identificador_Kit | int | SIM | |
+| Identificadores_Promocao_DS | varchar | SIM | |
+| Imp_Fiscal_Base | money | NÃO | |
+| Imp_Fiscal_Percentual | money | NÃO | |
+| Imp_Fiscal_Tipo | varchar | NÃO | |
+| Imp_Fiscal_Valor | money | NÃO | |
+| Impostos_Configurados | bit | SIM | |
+| JSON_Lista_Etapas_Calculos_Personalizados | varchar | SIM | |
+| Largura_Digitada | money | SIM | |
+| Luxottica_Cliente_Deixou_Aro_Uso | bit | SIM | |
+| Pedido_Garantia | bit | SIM | |
+| Reservado_Loja | bit | SIM | |
+| Valida_R05 | varchar | NÃO | |
+| Valida_R05V2 | varchar | SIM | |
+| Validacao | varchar | NÃO | |

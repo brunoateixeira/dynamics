@@ -1,5 +1,7 @@
 # Esquema Tabela dbo.Movimento
 
+Contém os dados principais e totalizados das vendas.
+
 ### Regra para Campos com Três Versões:
 
 Alguns campos terão três versões: 

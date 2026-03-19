@@ -23,7 +23,7 @@ Produtos excluidos das movimentações devem ser ignorados.
 |----|----|----|
 | @Data_Inicial | DATE | Data Inicial |
 | @Data_Final | DATE | Data Final |
-| @Filial | INT | Código da Filial |
+| @Filial | INT | Ordem da Filial |
 
 ### Ligações
 ```sql
@@ -78,7 +78,7 @@ São adicionadas as operações 'DEV' e 'CVE' na busca da consulta. As movimenta
 |----|----|----|
 | @Data_Inicial | DATE | Data Inicial |
 | @Data_Final | DATE | Data Final |
-| @Filial | INT | Código da Filial |
+| @Filial | INT | Ordem da Filial |
 
 ### Ligações
 ```sql
@@ -133,7 +133,7 @@ Por conta do tamanho do campo, é preferível utilizar Funcionarios.Apelido ao i
 |----|----|----|
 | @Data_Inicial | DATE | Data Inicial |
 | @Data_Final | DATE | Data Final |
-| @Filial | INT | Código da Filial |
+| @Filial | INT | Ordem da Filial |
 | @Vendedor | INT | Código do Vendedor |
 
 ### Ligações
@@ -197,7 +197,7 @@ Exemplo: (Prod_Serv.Ordem_Classe = @Classe OR @Classe IS NULL)
 |----|----|----|
 | @Data_Inicial | DATE | Data Inicial |
 | @Data_Final | DATE | Data Final |
-| @Filial | INT | Código da Filial |
+| @Filial | INT | Ordem da Filial |
 | @Classe | INT | Código da Classe |
 | @Subclasse | INT | Código da Subclasse |
 | @Grupo | INT | Código da Grupo |
@@ -260,6 +260,67 @@ ORDER BY
 Valor_Produto_Somado DESC
 ```
 
+## Exemplo 5: Relatório de Vendas de Produtos com Valor Bruto e Valor Líquido
+
+### Descrição
+
+Retorna as informações dos produtos vendidos com Valor Bruto, percentual de desconto aplicado e o Valor Líquido das mercadorias.
+
+### Observações
+
+O campo Movimento_Prod_Serv.Desconto_Percentual já tem o percentual que foi aplicado e não é preciso realizar nenhum cálculo sobre ele.
+
+### Parâmetros
+
+| Nome | Tipo | Descrição |
+|----|----|----|
+| @Data_Inicial | DATE | Data Inicial |
+| @Data_Final | DATE | Data Final |
+| @Filial | INT | Ordem da Filial |
+
+### Ligações
+```sql
+INNER JOIN Movimento_Prod_Serv ON Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento
+INNER JOIN Prod_Serv ON Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem
+INNER JOIN Filiais ON Movimento.Ordem_Filial = Filiais.Ordem
+```
+
+### SQL
+
+```sql
+SELECT 
+    Movimento.Sequencia,
+    Prod_Serv.Codigo AS Codigo_Produto,
+    Prod_Serv.Nome AS Nome_Produto,
+    SUM(CASE WHEN Movimento.Tipo_Operacao IN ('VND', 'VPC', 'VEF') 
+             THEN Movimento_Prod_Serv.Preco_Total_Sem_Desconto 
+             ELSE -Movimento_Prod_Serv.Preco_Total_Sem_Desconto END) AS Valor_Bruto_Produto,
+    Movimento_Prod_Serv.Desconto_Percentual AS Percentual_Desconto_Produto,
+    SUM(CASE WHEN Movimento.Tipo_Operacao IN ('VND', 'VPC', 'VEF') 
+             THEN Movimento_Prod_Serv.Preco_Final_Relatorio 
+             ELSE -Movimento_Prod_Serv.Preco_Final_Relatorio END) AS Valor_Liquido_Produto
+FROM Movimento
+INNER JOIN Movimento_Prod_Serv ON Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento
+INNER JOIN Prod_Serv ON Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem
+INNER JOIN Filiais ON Movimento.Ordem_Filial = Filiais.Ordem
+WHERE 
+    Movimento.Apagado = 0
+    AND Movimento.Situacao_Expedicao <> 'A'
+    AND Movimento.Data_Passou_Desefetivacao_Estoque IS NULL
+    AND Movimento.Data_Efetivado_Financeiro >= @Data_Inicial
+    AND Movimento.Data_Efetivado_Financeiro < DATEADD(DAY, 1, @Data_Final)
+    AND Movimento.Tipo_Operacao IN ('VND', 'VPC', 'VEF', 'DEV', 'CVE')
+    AND Movimento_Prod_Serv.Linha_Excluida = 0
+    AND (Filiais.Ordem = @Filial OR @Filial IS NULL)
+GROUP BY 
+    Movimento.Sequencia,
+    Prod_Serv.Codigo,
+    Prod_Serv.Nome,
+    Movimento_Prod_Serv.Desconto_Percentual
+ORDER BY 
+    Movimento.Sequencia;
+```
+
 ## Exemplo: Relatório de Vendas de Produtos de Grade
 
 ## Exemplo: Relatório de Vendas de Produtos de Série
@@ -275,6 +336,8 @@ Valor_Produto_Somado DESC
 ## Exemplo: Relatório de Vendas de Produtos ABC
 
 ## Exemplo: Relatório de Comissões de Venda por Produtos
+
+
 
 
 
