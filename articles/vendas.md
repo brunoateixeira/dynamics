@@ -208,4 +208,11 @@ AND (Filiais.Ordem = @Filial OR @Filial IS NULL)
 
 ## Exemplo: Relatório Comparativo Anual de Vendas
 
+## Exemplo: Relatório de Vendas com Nota Fiscal
+
+## Exemplo: Relatório de Vendas por CFOP
+
+## Exemplo: Relatório de Vendas com Liberação Remota
+
+## Exemplo: Relatório de Meta de Vendas
 
