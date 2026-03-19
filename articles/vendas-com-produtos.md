@@ -5,7 +5,7 @@
 - [Movimento_Prod_Serv](articles/esquemas.md)
 
 - --
-## Exemplo 1: Vendas com Produtos
+## Exemplo 1: Relatório de Vendas com Produtos
 
 ### Descrição
 
@@ -62,7 +62,7 @@ Valor_Produto_Somado DESC
 
 ```
 - --
-## Exemplo 2: Vendas com Produtos com Devolução
+## Exemplo 2: Relatório de Vendas com Produtos considerando Devolução
 
 ### Descrição
 
@@ -115,7 +115,7 @@ ORDER BY
 Valor_Produto_Somado DESC
 ```
 - --
-## Exemplo 3: Vendas com Produtos com Vendedor
+## Exemplo 3: Relatório de Vendas com Produtos e Vendedor
 
 ### Descrição
 
@@ -141,7 +141,7 @@ Por conta do tamanho do campo, é preferível utilizar Funcionarios.Apelido ao i
 INNER JOIN Filiais ON Movimento.Ordem_Filial = Filiais.Ordem
 INNER JOIN Movimento_Prod_Serv ON Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento
 INNER JOIN Prod_Serv ON Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem
-INNER JOIN Movimento_Prod_Serv.Ordem_Vendedor = Funcionarios.Ordem
+INNER JOIN Funcionarios ON Movimento_Prod_Serv.Ordem_Vendedor = Funcionarios.Ordem
 ```
 
 ### SQL
@@ -158,7 +158,7 @@ FROM Movimento
 INNER JOIN Filiais ON Movimento.Ordem_Filial = Filiais.Ordem
 INNER JOIN Movimento_Prod_Serv ON Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento
 INNER JOIN Prod_Serv ON Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem
-INNER JOIN Movimento_Prod_Serv.Ordem_Vendedor = Funcionarios.Ordem
+INNER JOIN Funcionarios ON Movimento_Prod_Serv.Ordem_Vendedor = Funcionarios.Ordem
 WHERE
 Movimento.Apagado = 0
 AND Movimento.Situacao_Expedicao <> 'A'
@@ -179,7 +179,7 @@ Funcionarios.Codigo,
 Valor_Produto_Somado DESC
 ```
 - --
-## Exemplo 4: Vendas com Filtros de Classificação de Produtos
+## Exemplo 4: Relatório de Vendas com Classificação de Produtos
 
 ### Descrição
 
@@ -209,7 +209,14 @@ Exemplo: (Prod_Serv.Ordem_Classe = @Classe OR @Classe IS NULL)
 INNER JOIN Filiais ON Movimento.Ordem_Filial = Filiais.Ordem
 INNER JOIN Movimento_Prod_Serv ON Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento
 INNER JOIN Prod_Serv ON Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem
+LEFT JOIN Classes ON Classes.Ordem = Prod_Serv.Ordem_Classe
+LEFT JOIN Subclasses ON Subclasses.Ordem = Prod_Serv.Ordem_Subclasse
+LEFT JOIN Grupos ON Grupos.Ordem = Prod_Serv.Ordem_Grupo
+LEFT JOIN Familias ON Familias.Ordem = Prod_Serv.Ordem_Familia
+LEFT JOIN Fabricantes ON Fabricantes.Ordem = Prod_Serv.Ordem_Fabricante
 ```
+
+As ligações de classificações (Classe, Subclasse, Grupo, Família, Fabricante) são realizadas com LEFT JOIN para localizar os itens que também estão sem classificações cadastradas.
 
 ### SQL
 
@@ -217,12 +224,19 @@ INNER JOIN Prod_Serv ON Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem
 SELECT
 Prod_Serv.Codigo AS Codigo_Produto,
 Prod_Serv.Nome AS Nome_Produto,
+Classes.Codigo as Codigo_Classe,
+Classes.Nome AS Nome_Classe,
 SUM(CASE WHEN Movimento.Tipo_Operacao IN ('VND','VPC','VEF') THEN Movimento_Prod_Serv.Quantidade ELSE -Movimento_Prod_Serv.Quantidade END) AS Quantidade_Produto_Somado,
 SUM(CASE WHEN Movimento.Tipo_Operacao IN ('VND','VPC','VEF') THEN Movimento_Prod_Serv.Preco_Final_Relatorio ELSE -Movimento_Prod_Serv.Preco_Final_Relatorio END) AS Valor_Produto_Somado
 FROM Movimento
 INNER JOIN Filiais ON Movimento.Ordem_Filial = Filiais.Ordem
 INNER JOIN Movimento_Prod_Serv ON Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento
 INNER JOIN Prod_Serv ON Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem
+LEFT JOIN Classes ON Classes.Ordem = Prod_Serv.Ordem_Classe
+LEFT JOIN Subclasses ON Subclasses.Ordem = Prod_Serv.Ordem_Subclasse
+LEFT JOIN Grupos ON Grupos.Ordem = Prod_Serv.Ordem_Grupo
+LEFT JOIN Familias ON Familias.Ordem = Prod_Serv.Ordem_Familia
+LEFT JOIN Fabricantes ON Fabricantes.Ordem = Prod_Serv.Ordem_Fabricante
 WHERE
 Movimento.Apagado = 0
 AND Movimento.Situacao_Expedicao <> 'A'
@@ -239,10 +253,31 @@ AND (Prod_Serv.Ordem_Familia = @Família OR @Família IS NULL)
 AND (Prod_Serv.Ordem_Fabricante = @Fabricante OR @Fabricante IS NULL)
 GROUP BY
 Prod_Serv.Codigo,
-Prod_Serv.Nome
+Prod_Serv.Nome,
+Classes.Codigo,
+Classes.Nome 
 ORDER BY 
 Valor_Produto_Somado DESC
 ```
+
+## Exemplo: Relatório de Vendas de Produtos de Grade
+
+## Exemplo: Relatório de Vendas de Produtos de Série
+
+## Exemplo: Relatório de Vendas de Produtos de Lote
+
+## Exemplo: Relatório de Vendas de Produtos com Estoque
+
+## Exemplo: Relatório de Vendas de Produtos com Desconto
+
+## Exemplo: Relatório de Vendas de Produtos com Fornecedor
+
+## Exemplo: Relatório de Vendas de Produtos ABC
+
+## Exemplo: Relatório de Comissões de Venda por Produtos
+
+
+
 
 
 

@@ -184,3 +184,28 @@ AND Movimento.Tipo_Operacao IN ('VND','VPC','VEF', 'DEV', 'CVE')
 AND (Filiais.Ordem = @Filial OR @Filial IS NULL)
 ```
 - --
+
+
+## Exemplo: Relatório de Vendas por Tipo e Recebimento
+
+## Exemplo: Relatório de Vendas por Área
+
+## Exemplo: Relatório de Comissões de Venda
+
+## Exemplo: Relatório de Acompanhamento de Vendas
+
+## Exemplo: Relatório de Lucratividade de Vendas
+
+## Exemplo: Relatório de Vendas com Desconto
+
+## Exemplo: Relatório de Vendas com Frete Próprio
+
+## Exemplo: Relatório de Vendas por Grupo de Operações
+
+## Exemplo: Relatório de Vendas por Grupo de Filiais
+
+## Exemplo: Relatório Comparativo de Vendas e Compras
+
+## Exemplo: Relatório Comparativo Anual de Vendas
+
+

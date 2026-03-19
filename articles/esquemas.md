@@ -3,115 +3,130 @@
 ## Tabela: Movimento
 - --
 
-### Campos para Ligações
+### Regra para Campos com Três Versões:
+
+Alguns campos terão três versões: 
+Total do campo em Produtos
+Total do campo em Serviços
+Total do campo somando Produtos e Serviços
+
+A prioridade de uso é sempre o campo que some ambos Produtos e Serviços.
+
+Exemplo:
+Qtde_Total_Geral
+Qtde_Total_Prod
+Qtde_Total_Serv
+
+A prioridade de uso nesse exemplo seria Qtde_Total_Serv.
+
+- --
+
+### Campos para Ligações (Chave Primária e Chaves Estrangeiras)
 
 Estes campos serão utilizados para ligar outras tabelas no banco de dados.
 
 | Coluna | Tipo de Dados | Permite Nulo | Tabela Origem |
 |--------|---------------|--------------|-----------|
-| Entrega_Parcial_Ordem_Operacao_Anterior | int | SIM | |
-| Ordem (PK) | int | NÃO | PK |
-| Ordem_Caixa | int | NÃO | |
-| Ordem_Centro_Custo | int | SIM | |
-| Ordem_Cli_For | int | NÃO | |
-| Ordem_Comissionado | int | NÃO | |
-| Ordem_Credito_Cli_For | int | NÃO | |
-| Ordem_Filial | int | NÃO | |
-| Ordem_Filial_CD | int | SIM | |
-| Ordem_Financeiro | int | NÃO | |
-| Ordem_Financeiro_Conta_Frete_Emitente | int | SIM | |
-| Ordem_Financeiro_Frete | int | NÃO | |
-| Ordem_Funcionario_Alteracao | int | NÃO | |
-| Ordem_Funcionario_Cancelou_Devolucao_Simplificada | int | SIM | |
-| Ordem_Funcionario_Checkout | int | NÃO | |
-| Ordem_Funcionario_Conferencia_Confirmou | int | SIM | |
-| Ordem_Funcionario_Desefetivacao | int | SIM | |
-| Ordem_Funcionario_Efetivacao_Estoque | int | SIM | |
-| Ordem_Funcionario_Efetivacao_Financeiro | int | SIM | |
-| Ordem_Funcionario_Imprimiu_Ticket | int | SIM | |
-| Ordem_Funcionario_Liberacao | int | SIM | |
-| Ordem_Funcionario_Processou_Devolucao_Simplificada | int | SIM | |
-| Ordem_Intermediador | int | SIM | |
-| Ordem_Motivo_Cancelamento_Orcamento | int | SIM | |
-| Ordem_Motivo_Desefetivacao | int | SIM | |
-| Ordem_Movimento_Referenciado | int | SIM | |
-| Ordem_Operacao | int | NÃO | |
-| Ordem_Operador | int | NÃO | |
-| Ordem_Origem_Venda | int | SIM | |
-| Ordem_Plano_Contas3 | int | SIM | |
-| Ordem_Plano_Contas3_Parcelas_Saida | int | SIM | |
-| Ordem_Rec_Pag | int | NÃO | |
-| Ordem_Tabela_Custo | int | SIM | |
-| Ordem_Tabela_Custo_Medio | int | SIM | |
-| Ordem_Tabela_Preco | int | NÃO | |
-| Ordem_Vendedor1 | int | NÃO | |
-| Ordem_Vendedor2 | int | NÃO | |
+| Entrega_Parcial_Ordem_Operacao_Anterior | int | SIM | dbo.Operacoes |
+| Ordem (PK) | int | NÃO | ? |
+| Ordem_Caixa | int | NÃO | dbo.Caixas |
+| Ordem_Centro_Custo | int | SIM | dbo.Centro_Custo |
+| Ordem_Cli_For | int | NÃO | dbo.Cli_For |
+| Ordem_Comissionado | int | NÃO | dbo.Cli_For |
+| Ordem_Credito_Cli_For | int | NÃO | dbo.Credito_Cli_For |
+| Ordem_Filial | int | NÃO | dbo.Filiais |
+| Ordem_Financeiro | int | NÃO | ? |
+| Ordem_Financeiro_Conta_Frete_Emitente | int | SIM | ? |
+| Ordem_Financeiro_Frete | int | NÃO | ? |
+| Ordem_Funcionario_Alteracao | int | NÃO | dbo.Funcionarios |
+| Ordem_Funcionario_Cancelou_Devolucao_Simplificada | int | SIM | dbo.Funcionarios |
+| Ordem_Funcionario_Checkout | int | NÃO | dbo.Funcionarios |
+| Ordem_Funcionario_Conferencia_Confirmou | int | SIM | dbo.Funcionarios |
+| Ordem_Funcionario_Desefetivacao | int | SIM | dbo.Funcionarios |
+| Ordem_Funcionario_Efetivacao_Estoque | int | SIM | dbo.Funcionarios |
+| Ordem_Funcionario_Efetivacao_Financeiro | int | SIM | dbo.Funcionarios |
+| Ordem_Funcionario_Imprimiu_Ticket | int | SIM | dbo.Funcionarios |
+| Ordem_Funcionario_Liberacao | int | SIM | dbo.Funcionarios |
+| Ordem_Funcionario_Processou_Devolucao_Simplificada | int | SIM | dbo.Funcionarios |
+| Ordem_Intermediador | int | SIM | dbo.Intermediadores |
+| Ordem_Motivo_Cancelamento_Orcamento | int | SIM | dbo.Motivo_Cancelamento_Orcamento |
+| Ordem_Motivo_Desefetivacao | int | SIM | dbo.Motivo_Desefetivacao |
+| Ordem_Movimento_Referenciado | int | SIM | dbo.Movimento |
+| Ordem_Operacao | int | NÃO | dbo.Operacoes |
+| Ordem_Operador | int | NÃO | dbo.Funcionarios |
+| Ordem_Origem_Venda | int | SIM | dbo.Origem_Vendas |
+| Ordem_Plano_Contas3 | int | SIM | dbo.Plano_Contas3 |
+| Ordem_Plano_Contas3_Parcelas_Saida | int | SIM | dbo.Plano_Contas3 |
+| Ordem_Rec_Pag | int | NÃO | ? |
+| Ordem_Tabela_Custo | int | SIM | dbo.Tabelas_Preco |
+| Ordem_Tabela_Custo_Medio | int | SIM | dbo.Tabelas_Preco |
+| Ordem_Tabela_Preco | int | NÃO | dbo.Tabelas_Preco |
+| Ordem_Vendedor1 | int | NÃO | dbo.Funcionarios |
+| Ordem_Vendedor2 | int | NÃO | dbo.Funcionarios |
 
 ### Campos de Data
 
+#### Regra para Datas
+Os campo de data devem sempre ser convertido em DD/MM/AAAA, utilizando a função CONVERT(VARCHAR(10),Campo_de_Data,103).
+
 | Coluna | Tipo de Dados | Permite Nulo | Descrição |
 |--------|---------------|--------------|-----------|
-| Data | datetime | SIM | |
-| Data_Acerto_Emprestimo | datetime | SIM | |
-| Data_Alteracao | datetime | SIM | |
-| Data_Conferencia_Confirmou | datetime | SIM | |
-| Data_Criacao | datetime | SIM | |
-| Data_Desefetivado_Estoque | datetime | SIM | |
-| Data_Desefetivado_Financeiro | datetime | SIM | |
-| Data_Efetivado_Estoque | datetime | SIM | |
-| Data_Efetivado_Financeiro | datetime | SIM | |
-| Data_Entrega | datetime | SIM | |
-| Data_Imprimiu_Ticket | date | SIM | |
-| Data_Passou_Desefetivacao_Estoque | datetime | SIM | |
-| Data_Passou_Efetivacao_Estoque | datetime | SIM | |
-| Data_Previsao_Recebimento | datetime | SIM | |
-| Data_Sincronizacao | datetime | SIM | |
+| Data | datetime | SIM | Data da última gravação do Movimento (essa data deve ser priorizada em relatórios de Orçamentos e relatórios de movimentações não efetivadas) |
+| Data_Acerto_Emprestimo | datetime | SIM | Data do Acerto da Consignação |
+| Data_Alteracao | datetime | SIM | Data da última alteração do Movimento |
+| Data_Conferencia_Confirmou | datetime | SIM | Data de quando a Conferência foi realizada |
+| Data_Criacao | datetime | SIM | Data de Criação do Movimento |
+| Data_Desefetivado_Estoque | datetime | SIM | Data quando o Estoque foi Desefetivado |
+| Data_Desefetivado_Financeiro | datetime | SIM | Data quando o Financeiro foi Desefetivado |
+| Data_Efetivado_Estoque | datetime | SIM | Data quando o Estoque foi Efetivado |
+| Data_Efetivado_Financeiro | datetime | SIM | Data quando o Financeiro foi Efetivado |
+| Data_Entrega | datetime | SIM | ? |
+| Data_Imprimiu_Ticket | date | SIM | Data que o Ticket foi Impresso na Saída |
+| Data_Passou_Desefetivacao_Estoque | datetime | SIM | Data de quando o Movimento foi Desefetivado|
+| Data_Passou_Efetivacao_Estoque | datetime | SIM | Data que considera primeiro a data de efetivação do estoque e, se não houver movimento de estoque, considera a data de efetivação de financeiro (essa data é deve ser priorizada em relatórios de vendas) |
+| Data_Previsao_Recebimento | datetime | SIM | ? |
+| Data_Sincronizacao | datetime | SIM | Data de quando a venda foi Sincronizada de módulos externos |
 
 ### Campos de Valores
 
+Os campos de valores da tabela dbo.Movimento sempre serão a soma de todas as mercadorias da movimentação. Se refere as totalizações da movimentação.
+
+Deve ser respeitado a Regra para Campos com Três Versões.
+
 | Coluna | Tipo de Dados | Permite Nulo | Descrição |
 |--------|---------------|--------------|-----------|
-| Acrescimo_Total_Geral | money | NÃO | |
-| Acrescimo_Total_Prod | money | NÃO | |
-| Acrescimo_Total_Serv | money | NÃO | |
-| Acrescimo_Valor_Somado | money | NÃO | |
-| Cubagem_Final | money | NÃO | |
-| Desconto_Total_Geral | money | NÃO | |
-| Desconto_Total_Prod | money | NÃO | |
-| Desconto_Total_Serv | money | NÃO | |
-| Desconto_Valor_Somado | money | NÃO | |
-| Despesa_Acessoria | money | NÃO | |
-| Frete_Valor_Separado_Somado | money | NÃO | |
-| Frete_Valor_Somado | money | NÃO | |
-| II_Base_Somado | money | NÃO | |
-| II_Valor_Somado | money | NÃO | |
-| Peso_Final | money | NÃO | |
-| Peso_Liquido_Final | money | NÃO | |
-| Preco_Custo_Medio_Somado | money | NÃO | |
-| Preco_Custo_Medio_Somado | money | NÃO | |
-| Preco_Custo_Somado | money | NÃO | |
-| Preco_Custo_Somado | money | NÃO | |
-| Preco_Final_Somado | money | NÃO | |
-| Preco_Final_Somado | money | NÃO | |
-| Preco_Total_Com_Desconto_Somado | money | NÃO | |
-| Preco_Total_Com_Desconto_Somado | money | NÃO | |
-| Preco_Total_Prod | money | NÃO | |
-| Preco_Total_Prod | money | NÃO | |
-| Preco_Total_Prod_Sem_Desconto_Somado | money | NÃO | |
-| Preco_Total_Prod_Sem_Desconto_Somado | money | NÃO | |
-| Preco_Total_Sem_Desconto_Somado | money | NÃO | |
-| Preco_Total_Sem_Desconto_Somado | money | NÃO | |
-| Preco_Total_Serv | money | NÃO | |
-| Preco_Total_Serv | money | NÃO | |
-| Preco_Total_Serv_Sem_Desconto_Somado | money | NÃO | |
-| Preco_Total_Serv_Sem_Desconto_Somado | money | NÃO | |
-| Qtde_Total_Geral | money | NÃO | |
-| Qtde_Total_Prod | money | NÃO | |
-| Qtde_Total_Serv | money | NÃO | |
-| Valor_Container | money | SIM | |
-| Valor_Pagamento_Ecommerce_Integracoes | money | SIM | |
+| Acrescimo_Valor_Somado | money | NÃO | Usado apenas em Entradas Importadas do Exterior. Há um campo próprio chamado "Acréscimo" |
+| Cubagem_Final | money | NÃO | Cubagem Total das Mercadorias |
+| Desconto_Total_Prod | money | NÃO | Desconto Total só para Produtos |
+| Desconto_Total_Serv | money | NÃO | Desconto Total só para Serviços |
+| Desconto_Valor_Somado | money | NÃO | Desconto Total para Produtos e Serviços (Esse campo deve ser priorizado para mostrar o desconto total da movimentação) |
+| Despesa_Acessoria | money | NÃO | Valor Total de Despesas Acessórias |
+| Frete_Valor_Separado_Somado | money | NÃO | Valor de Frete pago à parte, não incluso no total da Movimentação |
+| Frete_Valor_Somado | money | NÃO | Valor de Frete incluso no total na Movimentação (Esse campo deve ser priorizado para mostrar o total de frte da movimentação) |
+| Peso_Final | money | NÃO | Peso Bruto Total das Mercadorias  |
+| Peso_Liquido_Final | money | NÃO | Peso Líquido Total das Mercadorias  |
+| Preco_Custo_Medio_Somado | money | NÃO | Custo Médio Total das mercadorias movimentadas |
+| Preco_Custo_Somado | money | NÃO | Custo Total das mercadorias movimentadas |
+| Preco_Final_Somado | money | NÃO | Valor Total da Movimentação. Considera valor dos itens + impostos - descontos. (Esse campo deve ser somado para mostrar o Valor Total de movimentações) |
+| Preco_Total_Com_Desconto_Somado | money | NÃO | Valor Total de Produtos e Serviços com Desconto considerado |
+| Preco_Total_Sem_Desconto_Somado | money | NÃO | Valor Total de Produtos e Serviços sem Desconto considerado |
+| Preco_Total_Prod | money | NÃO | Valor Total de Produtos com Desconto considerado |
+| Preco_Total_Prod_Sem_Desconto_Somado | money | NÃO | Valor Total de Produtos sem Desconto considerado |
+| Preco_Total_Serv | money | NÃO | Valor Total de Serviços com Desconto considerado |
+| Preco_Total_Serv_Sem_Desconto_Somado | money | NÃO | Valor Total de Serviços sem Desconto considerado |
+| Qtde_Total_Geral | money | NÃO | Quantidade Total em Unidades de Produtos e Serviços (Esse campo deve ser priorizado para mostrar a quantidade total de itens da movimentação) |
+| Qtde_Total_Prod | money | NÃO | Quantidade Total em Unidades só de Produtos |
+| Qtde_Total_Serv | money | NÃO | Quantidade Total em Unidades só de Serviços |
+| Valor_Container | money | SIM | Utilizado apenas em Saídas de Exportação ao Exterior |
+| Valor_Pagamento_Ecommerce_Integracoes | money | SIM | Utilizado em Movimentações que foram criadas pelo módulo Integrações |
 
 ### Campos de Impostos
+
+Valores individuais de cada imposto da movimentação. 
+
+Esses valores já estão inclusos no campo Preco_Final_Somado e não precisar ser somados à ele novamente.
+
+Deve ser respeitado a Regra para Campos com Três Versões.
 
 | Coluna | Tipo de Dados | Permite Nulo | Descrição |
 |--------|---------------|--------------|-----------|
@@ -193,6 +208,8 @@ Estes campos serão utilizados para ligar outras tabelas no banco de dados.
 | ICMS_Subst_Base_Somado | money | NÃO | |
 | ICMS_Subst_Valor_Somado | money | NÃO | |
 | ICMS_Valor_Efetivo_Somado | money | SIM | |
+| II_Base_Somado | money | NÃO | |
+| II_Valor_Somado | money | NÃO | |
 | INSS_Base | money | SIM | |
 | INSS_Valor | money | SIM | |
 | INSS_Valor_Subtrair_Total_Somado | money | SIM | |
@@ -239,7 +256,7 @@ Estes campos serão utilizados para ligar outras tabelas no banco de dados.
 | Coluna | Tipo de Dados | Permite Nulo | Descrição |
 |--------|---------------|--------------|-----------|
 | Alteracoes_Offline | bit | NÃO | |
-| Apagado | bit | NÃO | |
+| Apagado | bit | NÃO | Utilizado para localizar saídas apagadas |
 | Arquivo_XML_Importado | varchar | NÃO | |
 | Bipagem_Efetuada | bit | SIM | |
 | Bipagem_Liberada | bit | SIM | |
@@ -259,7 +276,7 @@ Estes campos serão utilizados para ligar outras tabelas no banco de dados.
 | CRMBONUS_SMS | varchar | SIM | |
 | CRMBONUS_Utilizou | bit | SIM | |
 | CRMBONUS_Valor | money | SIM | |
-| Criado_Por | varchar | NÃO | |
+| Criado_Por | varchar | NÃO | Funcionário que criou o movimento. |
 | Descricao_Servicos_NFSe_Interna | varchar | SIM | |
 | Desefetivado_Estoque | bit | SIM | |
 | Desefetivado_Financeiro | bit | NÃO | |
@@ -274,7 +291,7 @@ Estes campos serão utilizados para ligar outras tabelas no banco de dados.
 | FCI_Desefetivou_Qtde | bit | SIM | |
 | FCI_Efetivou_Qtde | bit | SIM | |
 | Gerou_Transferencias_Automaticas | bit | SIM | |
-| Hora_Imprimiu_Ticket | time | SIM | |
+| Hora_Imprimiu_Ticket | time | SIM | Hora de impressão do Ticket |
 | Indicador_Destino | varchar | NÃO | |
 | Indicador_Presencial | varchar | NÃO | |
 | Informacoes_Adicionais_Fisco | varchar | SIM | |
@@ -294,15 +311,15 @@ Estes campos serão utilizados para ligar outras tabelas no banco de dados.
 | Orcamento_Mantido | bit | SIM | |
 | Orcamento_Venda_Passou_Liberacao_Remota_Autorizada | bit | SIM | |
 | Referencia_Interna | varchar | NÃO | |
-| Sequencia | int | NÃO | |
+| Sequencia | int | NÃO | Campo que identifica no sistema e impressões de tickets o numero da movimentação. |
 | Situacao_Expedicao | varchar | NÃO | |
 | Situacao_Liberacao_Permissoes | varchar | SIM | |
 | Situacao_VEF | varchar | NÃO | |
-| Tipo_Operacao | varchar | NÃO | |
+| Tipo_Operacao | varchar | NÃO | Tipo da Operação da Movimentação. Exemplos: VND, VPC, VEF |
 | Tipo_Recebimento_Frete | varchar | NÃO | |
-| Versao_Efetivacao_Estoque | varchar | NÃO | |
-| Versao_Efetivacao_Financeiro | varchar | NÃO | |
-| Versao_Gravacao | varchar | NÃO | |
+| Versao_Efetivacao_Estoque | varchar | NÃO | Versão do Shop 9. |
+| Versao_Efetivacao_Financeiro | varchar | NÃO | Versão do Shop 9. |
+| Versao_Gravacao | varchar | NÃO | Versão do Shop 9. |
 
 
 

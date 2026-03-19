@@ -1,10 +1,8 @@
 # Regras de Consultas e Negócios
 - --
-## Regras Básicas
-
 Considere as regras abaixo como obrigatórias.
 
-### Regras para Relatórios de Vendas
+## Regras para Relatórios de Vendas
 
 - Data_Passou_Efetivacao_Estoque é a primeira opção para datas de venda.
 - Data_Efetivado_Financeiro é a data de venda a ser considerada para considerar a data de recebimento.
@@ -18,39 +16,50 @@ Considere as regras abaixo como obrigatórias.
 - Sempre converta campos de data em DD/MM/YYYY utilizando CONVERT(VARCHAR(10),Campo_de_Data,103).
 
 - -- 
-### Regras para os Filtros do Relatórios de Vendas
+## Regras para os Filtros nos Relatórios de Vendas
 
-As seguintes regras serão aplicadas ao utilizar a cláusula WHERE do Relatório de Vendas.
+As seguintes regras serão aplicadas ao utilizar a cláusula WHERE nos Relatórios de Vendas.
 
-- Movimento.Apagado = 0 
-
+```sql
+Movimento.Apagado = 0 
+```
 Precisa ser utilizado para não mostrar vendas apagadas no sistema.
 
-- Movimento.Situacao_Expedicao <> 'A' 
-
+```sql
+Movimento.Situacao_Expedicao <> 'A' 
+```
 Venda com "Expedição em Aberto" são vendas que ainda não estão concluídas e, por isso, não devem ser apresentadas.
 
-- (Filiais.Ordem = @Filial OR @Filial IS NULL)
-
+```sql
+(Filiais.Ordem = @Filial OR @Filial IS NULL)
+```
 O filtro de filial permite ver a venda de cada loja individualmente. Porém, o "OR @Filial IS NULL" permite ver a venda de todas as lojas se desejado.
 
-- Movimento.Data_Passou_Desefetivacao_Estoque IS NULL
+Quando na solicitação for explícito o código das filiais (Ex: "Quero relatório das filiais 1 e 2...") deve ser utilizado o campo Filiais.Codigo. 
 
+```sql
+Movimento.Data_Passou_Desefetivacao_Estoque IS NULL
+```
 Vendas "Desefetivadas" são vendas desfeitas e não devem aparecer. Se houver data de desefetivação, então a venda foi desfeita.
 
-- Movimento.Data_Passou_Efetivacao_Estoque >= @Data_Inicial
-- Movimento.Data_Passou_Efetivacao_Estoque < DATEADD(DAY,1,@Data_Final)
-
+```sql
+Movimento.Data_Passou_Efetivacao_Estoque >= @Data_Inicial
+Movimento.Data_Passou_Efetivacao_Estoque < DATEADD(DAY,1,@Data_Final)
+```
 Deve haver um período de datas para a consulta, para que não puxe uma quantidade desnecessária de dados.
 
 A data final sempre será apenas menor (e não menor igual) "<", pois estará acompanhado da função DATEADD(DAY,1,@Data_Final). Isto é necessário por conta da estrutura do banco de dados que carimba a hora final como meia-noite do dia apontado. 
 
-- Movimento_Prod_Serv.Linha_Excluida = 0 (Caso tenha produtos na consulta)
+```sql
+Movimento_Prod_Serv.Linha_Excluida = 0 
+```
 
 Itens excluídos são itens que são removidos ou relançados nas vendas, eles não foram efetivamente vendidos.
 
+Essa linha deve ser adicionada apenas se houver produtos na consulta ou quando a tabela for ligada na consulta.
+
 - --
-### Tratamento de devoluções e correções
+## Tratamento de devoluções e correções
 
 As consultas de venda devem considerar devoluções por padrão:
 
@@ -63,6 +72,7 @@ CASE WHEN Movimento.Tipo_Operacao IN ('VND','VPC','VEF')
      ELSE -coluna_de_valor
 END
 ```
-
+- --
+## Tipos de Operações de Movimentação
 
 
