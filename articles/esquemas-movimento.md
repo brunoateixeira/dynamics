@@ -1,7 +1,4 @@
-# Esquemas
-- --
-## Tabela: Movimento
-- --
+# Esquema Tabela dbo.Movimento
 
 ### Regra para Campos com Três Versões:
 
@@ -107,9 +104,9 @@ Deve ser respeitado a Regra para Campos com Três Versões.
 | Peso_Liquido_Final | money | NÃO | Peso Líquido Total das Mercadorias  |
 | Preco_Custo_Medio_Somado | money | NÃO | Custo Médio Total das mercadorias movimentadas |
 | Preco_Custo_Somado | money | NÃO | Custo Total das mercadorias movimentadas |
-| Preco_Final_Somado | money | NÃO | Valor Total da Movimentação. Considera valor dos itens + impostos - descontos. (Esse campo deve ser somado para mostrar o Valor Total de movimentações) |
+| Preco_Final_Somado | money | NÃO | Valor Líquido. Valor Total da Movimentação. Considera valor dos itens + impostos - descontos. (Esse campo deve ser somado para mostrar o Valor Total de movimentações) |
 | Preco_Total_Com_Desconto_Somado | money | NÃO | Valor Total de Produtos e Serviços com Desconto considerado |
-| Preco_Total_Sem_Desconto_Somado | money | NÃO | Valor Total de Produtos e Serviços sem Desconto considerado |
+| Preco_Total_Sem_Desconto_Somado | money | NÃO | Valor Bruto. Valor Total de Produtos e Serviços sem Desconto considerado |
 | Preco_Total_Prod | money | NÃO | Valor Total de Produtos com Desconto considerado |
 | Preco_Total_Prod_Sem_Desconto_Somado | money | NÃO | Valor Total de Produtos sem Desconto considerado |
 | Preco_Total_Serv | money | NÃO | Valor Total de Serviços com Desconto considerado |

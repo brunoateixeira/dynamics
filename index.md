@@ -2,10 +2,13 @@
 _layout: landing
 ---
 
-- [Esquema Movimento](articles/esquemas.md)
+# Esquemas
+- [Tabela Movimento](articles/esquemas-movimento.html)
+- [Tabela Movimento_Prod_Serv](articles/esquemas-movimento_prod_serv.html)
 
-- [Regras de Consultas](articles/regras-de-consultas.md)
+# Regras de Consultas e Negócios
+- [Regras de Consultas](articles/regras-de-consultas.html)
 
-- [Relatórios de Vendas](articles/vendas.md)
-
-- [Relatórios de Vendas com Produtos](articles/vendas-com-produtos.md)
+# Exemplos de Relatórios
+- [Relatórios de Vendas](articles/vendas.html)
+- [Relatórios de Vendas com Produtos](articles/vendas-com-produtos.html)
