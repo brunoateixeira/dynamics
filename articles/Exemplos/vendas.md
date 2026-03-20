@@ -1,7 +1,7 @@
 # Tabela: Movimento
 
 ### Esquema
-- [Movimento](articles/esquemas.md)
+- [Movimento](articles/esquemas/esquemas-movimento.html)
 
 - --
 

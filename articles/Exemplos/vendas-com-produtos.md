@@ -1,8 +1,8 @@
 # Tabelas: Movimento, Movimento_Prod_Serv
 
 ### Esquema
-- [Movimento](articles/esquemas.md)
-- [Movimento_Prod_Serv](articles/esquemas.md)
+- [Movimento](articles/esquemas/esquemas-movimento.html)
+- [Movimento_Prod_Serv](articles/esquemas/esquemas-movimento_prod_serv.html)
 
 - --
 ## Exemplo 1: Relatório de Vendas com Produtos
