@@ -34,8 +34,6 @@ Venda com "Expedição em Aberto" são vendas que ainda não estão concluídas 
 (Filiais.Ordem = @Filial OR @Filial IS NULL)
 ```
 
-
-
 O filtro de filial permite ver a venda de cada loja individualmente. Porém, o "OR @Filial IS NULL" permite ver a venda de todas as lojas se desejado.
 
 Quando na solicitação for explícito o código das filiais (Ex: "Quero relatório das filiais 1 e 2...") deve ser utilizado o campo Filiais.Codigo. 

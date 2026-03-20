@@ -25,7 +25,7 @@ A prioridade de uso nesse exemplo seria Qtde_Total_Serv.
 Estes campos serão utilizados para ligar outras tabelas no banco de dados.
 
 | Coluna | Tipo de Dados | Permite Nulo | Tabela Origem |
-|--------|---------------|--------------|-----------|
+|--------|---------------|--------------|---------------|
 | Entrega_Parcial_Ordem_Operacao_Anterior | int | SIM | dbo.Operacoes |
 | Ordem (PK) | int | NÃO | ? |
 | Ordem_Caixa | int | NÃO | dbo.Caixas |

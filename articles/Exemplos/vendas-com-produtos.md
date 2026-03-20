@@ -20,7 +20,7 @@ Produtos excluidos das movimentações devem ser ignorados.
 ### Parâmetros
 
 | Nome | Tipo | Descrição |
-|----|----|----|
+|------|------|-----------|
 | @Data_Inicial | DATE | Data Inicial |
 | @Data_Final | DATE | Data Final |
 | @Filial | INT | Ordem da Filial |
