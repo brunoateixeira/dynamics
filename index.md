@@ -11,6 +11,8 @@ _layout: landing
 - [Regras de Consultas](articles/regras-de-consultas.html)
 
 # Exemplos de Relatórios
+- [Relatórios de Cadastro de Produtos](articles/exemplos/produtos.html)
 - [Relatórios de Vendas](articles/exemplos/vendas.html)
-- [Relatórios de Vendas com Produtos](articles/exemplos/vendas-com-produtos.html)
+- [Relatórios de Vendas com Produtos](articles/exemplos/contas-recebidas.html)
+- [Relatórios de Contas Recebidas](articles/exemplos/produtos.html)
 - [Relatórios utilizando Log](articles/exemplos/log_v2.html)
