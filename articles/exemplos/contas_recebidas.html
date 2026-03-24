@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Financeiro_Contas — Documentação Text-to-SQL</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@400;600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e29;
+    --border: #252a38;
+    --accent: #4ade80;
+    --accent2: #38bdf8;
+    --accent3: #f59e0b;
+    --accent4: #f87171;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --text-dim: #94a3b8;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Inter', sans-serif;
+    --display: 'Syne', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* SIDEBAR */
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 28px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .sidebar-logo {
+    padding: 0 20px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  .sidebar-logo .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .sidebar-logo h1 {
+    font-family: var(--display);
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  .sidebar-section {
+    padding: 0 20px;
+    margin-bottom: 24px;
+  }
+
+  .sidebar-section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+
+  .sidebar-link:hover { background: var(--surface2); color: var(--text); }
+  .sidebar-link.active { background: rgba(74,222,128,0.1); color: var(--accent); }
+
+  .sidebar-link .num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    min-width: 18px;
+  }
+
+  /* MAIN */
+  .main {
+    flex: 1;
+    padding: 40px 48px;
+    max-width: 960px;
+  }
+
+  /* PAGE HEADER */
+  .page-header {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .breadcrumb {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  .breadcrumb span { color: var(--accent); }
+
+  .page-title {
+    font-family: var(--display);
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    color: var(--text-dim);
+    font-size: 15px;
+    max-width: 560px;
+  }
+
+  .meta-row {
+    display: flex;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .meta-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .meta-pill .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 52px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .tag-global { background: rgba(74,222,128,0.12); color: var(--accent); }
+  .tag-example { background: rgba(56,189,248,0.12); color: var(--accent2); }
+  .tag-rule { background: rgba(245,158,11,0.12); color: var(--accent3); }
+  .tag-bug { background: rgba(248,113,113,0.12); color: var(--accent4); }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* CALLOUT */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: rgba(74,222,128,0.05);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .callout.warn {
+    border-color: var(--accent3);
+    background: rgba(245,158,11,0.05);
+  }
+
+  .callout.info {
+    border-color: var(--accent2);
+    background: rgba(56,189,248,0.05);
+  }
+
+  .callout strong { color: var(--text); }
+
+  /* ENUM GRID */
+  .enum-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .enum-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+
+  .enum-key {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent2);
+    min-width: 28px;
+    background: rgba(56,189,248,0.08);
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .enum-val {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  /* TABLE */
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+
+  .doc-table th {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 8px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .doc-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+    vertical-align: top;
+  }
+
+  .doc-table tr:last-child td { border-bottom: none; }
+  .doc-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .doc-table td code {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent2);
+    background: rgba(56,189,248,0.08);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .doc-table td strong { color: var(--text); }
+
+  /* CODE BLOCK */
+  .code-wrap {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .code-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: var(--surface2);
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .copy-btn {
+    cursor: pointer;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    transition: color 0.15s;
+    padding: 0;
+  }
+
+  .copy-btn:hover { color: var(--accent); }
+
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0 0 8px 8px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--text-dim);
+  }
+
+  .kw { color: #c792ea; }       /* keyword */
+  .fn { color: #82aaff; }       /* function */
+  .str { color: #c3e88d; }      /* string */
+  .cmt { color: #546e7a; font-style: italic; } /* comment */
+  .col { color: var(--text); }  /* column */
+  .tbl { color: var(--accent2); }/* table */
+  .num { color: var(--accent3); }/* number */
+  .op  { color: #89ddff; }      /* operator */
+
+  /* EXAMPLE CARD */
+  .example-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .example-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent2), transparent);
+  }
+
+  .example-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+
+  .example-title {
+    font-family: var(--display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .example-desc {
+    color: var(--text-dim);
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+
+  .tag-chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--surface2);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    letter-spacing: 0.5px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 24px 0;
+  }
+
+  .sub-section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* RULE BLOCK */
+  .rule-block {
+    background: rgba(245,158,11,0.05);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .rule-block strong { color: var(--accent3); font-family: var(--mono); font-size: 12px; }
+
+  .rule-block ul {
+    margin-top: 8px;
+    padding-left: 18px;
+  }
+
+  .rule-block ul li { margin-bottom: 4px; }
+
+  /* JOIN BLOCK */
+  .join-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    flex-wrap: wrap;
+  }
+
+  .join-block .arrow { color: var(--accent); font-size: 16px; }
+  .join-block .tname { color: var(--accent2); }
+  .join-block .purpose { font-family: var(--sans); font-size: 11px; color: var(--text-muted); margin-left: auto; }
+
+  /* PARAM LIST */
+  .param-list { margin-bottom: 20px; }
+
+  .param-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .param-item:last-child { border-bottom: none; }
+
+  .param-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent2);
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+
+  .param-type {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent3);
+    min-width: 50px;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+
+  .param-desc { color: var(--text-dim); font-size: 13px; }
+  .param-note { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="tag">Text-to-SQL Docs</span>
+      <h1>Financeiro_Contas</h1>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Referência Global</div>
+      <a href="#enums" class="sidebar-link">
+        <span class="num">◆</span> ENUMs &amp; Valores
+      </a>
+      <a href="#joins" class="sidebar-link">
+        <span class="num">◆</span> Ligações Disponíveis
+      </a>
+      <a href="#filtro-padrao" class="sidebar-link">
+        <span class="num">◆</span> Filtro Padrão de Recebidos
+      </a>
+      <a href="#regra-agrupamento" class="sidebar-link">
+        <span class="num">◆</span> Regra: Contas Agrupadas
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Exemplos</div>
+      <a href="#ex1" class="sidebar-link">
+        <span class="num">01</span> Recebíveis Baixados
+      </a>
+      <a href="#ex2" class="sidebar-link">
+        <span class="num">02</span> Com Tipo de Conta
+      </a>
+      <a href="#ex3" class="sidebar-link">
+        <span class="num">03</span> Com Forma de Recebimento
+      </a>
+      <a href="#ex4" class="sidebar-link">
+        <span class="num">04</span> Com Cliente
+      </a>
+      <a href="#ex5" class="sidebar-link">
+        <span class="num">05</span> Com Vendedor
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="breadcrumb">dynamics / tabelas / <span>Financeiro_Contas</span></div>
+      <h1 class="page-title">Contas Recebidas</h1>
+      <p class="page-subtitle">Documentação AI-friendly e Text-to-SQL para consultas na tabela <code style="font-family:var(--mono);font-size:13px;color:var(--accent2)">Financeiro_Contas</code>, focada em recebimentos baixados (quitados).</p>
+      <div class="meta-row">
+        <span class="meta-pill"><span class="dot"></span> SQL Server (T-SQL)</span>
+        <span class="meta-pill"><span class="dot" style="background:var(--accent2)"></span> 5 Exemplos</span>
+        <span class="meta-pill"><span class="dot" style="background:var(--accent3)"></span> Módulo: Financeiro</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════ REFERÊNCIA GLOBAL ═══════════════════════ -->
+
+    <!-- ENUMS -->
+    <div class="section" id="enums">
+      <div class="section-header">
+        <span class="section-tag tag-global">Global</span>
+        <h2 class="section-title">ENUMs e Valores das Colunas</h2>
+      </div>
+
+      <div class="callout info">
+        <strong>Para uso em Text-to-SQL:</strong> sempre referencie estes mapeamentos ao gerar filtros ou CASE WHEN envolvendo as colunas abaixo. Nunca assuma valores não listados aqui.
+      </div>
+
+      <!-- Tipo_Conta -->
+      <div class="sub-section-title">Financeiro_Contas.Tipo_Conta</div>
+      <div class="enum-grid">
+        <div class="enum-item"><span class="enum-key">'A'</span><span class="enum-val">Conta Agrupada</span></div>
+        <div class="enum-item"><span class="enum-key">'B'</span><span class="enum-val">Boleto</span></div>
+        <div class="enum-item"><span class="enum-key">'N'</span><span class="enum-val">Carnê</span></div>
+        <div class="enum-item"><span class="enum-key">'R'</span><span class="enum-val">Carteira</span></div>
+        <div class="enum-item"><span class="enum-key">'C'</span><span class="enum-val">Cartão Crédito</span></div>
+        <div class="enum-item"><span class="enum-key">'D'</span><span class="enum-val">Cartão Débito</span></div>
+        <div class="enum-item"><span class="enum-key">'O'</span><span class="enum-val">Cartão Convênio</span></div>
+        <div class="enum-item"><span class="enum-key">'H'</span><span class="enum-val">Cheque</span></div>
+        <div class="enum-item"><span class="enum-key">'E'</span><span class="enum-val">Conta Caderno</span></div>
+        <div class="enum-item"><span class="enum-key">'F'</span><span class="enum-val">Diferença de Contas</span></div>
+        <div class="enum-item"><span class="enum-key">'G'</span><span class="enum-val">Crédito Gerado Entrada/Saída</span></div>
+      </div>
+
+      <!-- Tipo_Recebido_Pago -->
+      <div class="sub-section-title" style="margin-top:20px">Financeiro_Contas.Tipo_Recebido_Pago</div>
+      <div class="callout warn" style="margin-bottom:14px">
+        <strong>Atenção:</strong> registros com <code style="font-family:var(--mono);font-size:11px">'T' (Troca de Produto)</code> devem ser <strong>sempre excluídos</strong> das consultas de recebimento. Use o filtro padrão abaixo.
+      </div>
+      <div class="enum-grid">
+        <div class="enum-item"><span class="enum-key">'D'</span><span class="enum-val">Dinheiro</span></div>
+        <div class="enum-item"><span class="enum-key">'B'</span><span class="enum-val">Depósito</span></div>
+        <div class="enum-item"><span class="enum-key">'C'</span><span class="enum-val">Crédito</span></div>
+        <div class="enum-item"><span class="enum-key">'H'</span><span class="enum-val">Cheque de Cliente</span></div>
+        <div class="enum-item"><span class="enum-key">'V'</span><span class="enum-val">Vale</span></div>
+        <div class="enum-item"><span class="enum-key">'F'</span><span class="enum-val">Descontado na Fonte</span></div>
+        <div class="enum-item"><span class="enum-key">'R'</span><span class="enum-val">Conta Caderno</span></div>
+        <div class="enum-item"><span class="enum-key">'A'</span><span class="enum-val">Várias Contas</span></div>
+        <div class="enum-item"><span class="enum-key">'T'</span><span class="enum-val">⛔ Troca de Produto</span></div>
+      </div>
+
+      <!-- Situacao -->
+      <div class="sub-section-title" style="margin-top:20px">Financeiro_Contas.Situacao</div>
+      <div class="callout info" style="margin-bottom:14px">
+        Consultas de recebimentos baixados devem sempre filtrar <code style="font-family:var(--mono);font-size:11px">Situacao IN ('F','Q','I','X')</code>.
+      </div>
+      <div class="enum-grid">
+        <div class="enum-item"><span class="enum-key">'F'</span><span class="enum-val">Finalizado</span></div>
+        <div class="enum-item"><span class="enum-key">'Q'</span><span class="enum-val">Quitado</span></div>
+        <div class="enum-item"><span class="enum-key">'I'</span><span class="enum-val">Inativo</span></div>
+        <div class="enum-item"><span class="enum-key">'X'</span><span class="enum-val">Cancelado</span></div>
+        <div class="enum-item"><span class="enum-key">'A'</span><span class="enum-val">Aberto (em aberto)</span></div>
+      </div>
+
+      <!-- Pagar_Receber -->
+      <div class="sub-section-title" style="margin-top:20px">Financeiro_Contas.Pagar_Receber</div>
+      <div class="enum-grid" style="max-width:360px">
+        <div class="enum-item"><span class="enum-key">'R'</span><span class="enum-val">Receber (contas a receber)</span></div>
+        <div class="enum-item"><span class="enum-key">'P'</span><span class="enum-val">Pagar (contas a pagar)</span></div>
+      </div>
+    </div>
+
+    <!-- JOINS -->
+    <div class="section" id="joins">
+      <div class="section-header">
+        <span class="section-tag tag-global">Global</span>
+        <h2 class="section-title">Ligações Disponíveis</h2>
+      </div>
+
+      <div class="callout info">
+        Use apenas os JOINs necessários para o dado solicitado. Incluir JOINs desnecessários pode causar duplicidade de registros.
+      </div>
+
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>Tabela</th>
+            <th>Chave de Ligação</th>
+            <th>Quando Usar</th>
+            <th>Colunas Úteis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Filiais</code></td>
+            <td><code>Financeiro_Contas.Ordem_Filial = Filiais.Ordem</code></td>
+            <td>Quando precisar exibir ou filtrar por filial</td>
+            <td><code>Filiais.Nome</code>, <code>Filiais.Codigo</code></td>
+          </tr>
+          <tr>
+            <td><code>Cli_For</code></td>
+            <td><code>Financeiro_Contas.Ordem_Cli_For = Cli_For.Ordem</code></td>
+            <td>Quando precisar de dados do cliente</td>
+            <td><code>Cli_For.Nome</code>, <code>Cli_For.Codigo</code>, <code>Cli_For.Cnpj_Cpf</code></td>
+          </tr>
+          <tr>
+            <td><code>Funcionarios</code></td>
+            <td><code>Financeiro_Contas.Ordem_Vendedor1 = Funcionarios.Ordem</code></td>
+            <td>Quando precisar de dados do vendedor ou comissão</td>
+            <td><code>Funcionarios.Apelido</code>, <code>Funcionarios.Codigo</code>, <code>Funcionarios.Comissao_Venda</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FILTRO PADRÃO -->
+    <div class="section" id="filtro-padrao">
+      <div class="section-header">
+        <span class="section-tag tag-global">Global</span>
+        <h2 class="section-title">Filtro Padrão de Recebimentos Baixados</h2>
+      </div>
+
+      <div class="callout">
+        <strong>Use este bloco WHERE como base em todas as consultas de recebimentos.</strong> Ele garante que apenas contas a receber válidas, quitadas e sem duplicidade sejam retornadas.
+      </div>
+
+      <div class="rule-block">
+        <strong>REGRA — Parâmetro de filial opcional</strong>
+        <ul>
+          <li>Quando <code style="font-family:var(--mono);font-size:11px">@Filial</code> é <code style="font-family:var(--mono);font-size:11px">NULL</code> → retorna todas as filiais.</li>
+          <li>Quando <code style="font-family:var(--mono);font-size:11px">@Filial</code> é um inteiro → filtra pela filial específica.</li>
+          <li>Use a variante <code style="font-family:var(--mono);font-size:11px">IS NULL</code> para consistência no padrão desta documentação.</li>
+        </ul>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">
+          <span>T-SQL — WHERE base para recebimentos</span>
+          <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        </div>
+        <pre><span class="cmt">-- ─── PARÂMETROS ───────────────────────────────────────────────────</span>
+<span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>  <span class="cmt">-- NULL = todas as filiais</span>
+
+<span class="cmt">-- ─── WHERE BASE ────────────────────────────────────────────────────</span>
+<span class="kw">WHERE</span>
+    <span class="cmt">-- 1. Recebimentos no período pela data de quitação</span>
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">D</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+
+    <span class="cmt">-- 2. Somente contas a receber</span>
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Pagar_Receber</span> <span class="op">=</span> <span class="str">'R'</span>
+
+    <span class="cmt">-- 3. Tipos de conta válidos para recebimento</span>
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="kw">IN</span> (<span class="str">'A'</span>,<span class="str">'B'</span>,<span class="str">'C'</span>,<span class="str">'D'</span>,<span class="str">'O'</span>,<span class="str">'N'</span>,<span class="str">'H'</span>,<span class="str">'R'</span>)
+
+    <span class="cmt">-- 4. Situações de baixa válidas</span>
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Situacao</span> <span class="kw">IN</span> (<span class="str">'F'</span>,<span class="str">'Q'</span>,<span class="str">'I'</span>,<span class="str">'X'</span>)
+
+    <span class="cmt">-- 5. Excluir trocas de produto (não são recebimento financeiro)</span>
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">&lt;&gt;</span> <span class="str">'T'</span>
+
+    <span class="cmt">-- 6. Filtro de filial (NULL = todas)</span>
+    <span class="kw">AND</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Filial</span> <span class="op">=</span> <span class="col">@Filial</span> <span class="kw">OR</span> <span class="col">@Filial</span> <span class="kw">IS NULL</span>)
+
+    <span class="cmt">-- 7. Regra anti-duplicidade para Tipo_Conta = 'A' (ver seção abaixo)</span>
+    <span class="kw">AND</span> (
+        <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="kw">NOT IN</span> (<span class="str">'A'</span>)
+        <span class="kw">OR</span> (
+            <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="kw">IN</span> (<span class="str">'A'</span>)
+            <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">=</span> <span class="str">'C'</span>
+            <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Pai</span> <span class="kw">IS NOT NULL</span>
+            <span class="kw">AND</span> <span class="kw">EXISTS</span> (
+                <span class="kw">SELECT</span> <span class="num">1</span> <span class="kw">FROM</span> <span class="tbl">Financeiro_Contas</span> <span class="col">FC</span>
+                <span class="kw">WHERE</span> <span class="col">FC</span>.<span class="col">Ordem_Renegociado_Agrupado</span> <span class="op">=</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Pai</span>
+                <span class="kw">AND</span> <span class="col">FC</span>.<span class="col">Tipo_Conta</span> <span class="kw">IN</span> (<span class="str">'B'</span>,<span class="str">'C'</span>,<span class="str">'D'</span>,<span class="str">'O'</span>,<span class="str">'N'</span>,<span class="str">'H'</span>,<span class="str">'R'</span>)
+            )
+        )
+        <span class="kw">OR</span> (
+            <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="kw">IN</span> (<span class="str">'A'</span>)
+            <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">=</span> <span class="str">'C'</span>
+            <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tela_Origem</span> <span class="op">=</span> <span class="num">15</span> <span class="cmt">-- PDV</span>
+        )
+    )</pre>
+      </div>
+    </div>
+
+    <!-- REGRA AGRUPAMENTO -->
+    <div class="section" id="regra-agrupamento">
+      <div class="section-header">
+        <span class="section-tag tag-rule">Regra de Negócio</span>
+        <h2 class="section-title">Contas Agrupadas (Tipo_Conta = 'A')</h2>
+      </div>
+
+      <div class="callout warn">
+        <strong>Crítico para evitar duplicidade:</strong> Contas do tipo <code style="font-family:var(--mono);font-size:11px">'A'</code> são registros agrupadores. Se incluídas sem filtro, o valor aparecerá duplicado junto com os registros filhos.
+      </div>
+
+      <div class="rule-block">
+        <strong>CONTEXTO</strong>
+        <ul>
+          <li>Quando um cliente paga múltiplas parcelas juntas, o sistema gera um registro pai do tipo <code style="font-family:var(--mono);font-size:11px">'A'</code> e mantém os registros filhos com os tipos originais.</li>
+          <li>Incluir ambos somaria o valor duas vezes.</li>
+        </ul>
+      </div>
+
+      <div class="rule-block">
+        <strong>QUANDO incluir Tipo_Conta = 'A'</strong>
+        <ul>
+          <li><strong>Cenário 1 — Renegociação via crédito:</strong> O registro 'A' foi recebido via Crédito (<code style="font-family:var(--mono);font-size:11px">Tipo_Recebido_Pago = 'C'</code>), possui um <code style="font-family:var(--mono);font-size:11px">Ordem_Pai</code> válido, e existe ao menos um filho renegociado do tipo boleto/cartão/cheque etc.</li>
+          <li><strong>Cenário 2 — PDV:</strong> O registro 'A' foi gerado diretamente pelo PDV (<code style="font-family:var(--mono);font-size:11px">Tela_Origem = 15</code>) e recebido via Crédito.</li>
+        </ul>
+      </div>
+
+      <div class="rule-block">
+        <strong>QUANDO excluir Tipo_Conta = 'A'</strong>
+        <ul>
+          <li>Em todos os demais casos — o filtro padrão já trata isso com a cláusula <code style="font-family:var(--mono);font-size:11px">NOT IN ('A')</code> como caminho padrão.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════ EXEMPLOS ═══════════════════════ -->
+
+    <div class="section-header" style="margin-bottom:24px">
+      <span class="section-tag tag-example">Exemplos</span>
+      <h2 class="section-title">Consultas de Referência</h2>
+    </div>
+
+    <!-- EX 1 -->
+    <div class="example-card" id="ex1">
+      <div class="example-num">EXEMPLO 01</div>
+      <div class="example-title">Relatório de Recebíveis Baixados</div>
+      <div class="example-desc">Base para qualquer relatório de recebimentos. Exibe valores e datas das contas quitadas no período, filtradas pela data de quitação.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">recebimentos</span>
+        <span class="tag-chip">baixas</span>
+        <span class="tag-chip">quitações</span>
+        <span class="tag-chip">fluxo de caixa</span>
+        <span class="tag-chip">relatório financeiro</span>
+        <span class="tag-chip">período</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="sub-section-title">Parâmetros</div>
+      <div class="param-list">
+        <div class="param-item">
+          <span class="param-name">@Data_Inicial</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data inicial do período (por data de quitação)</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Data_Final</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data final do período (por data de quitação)</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Filial</span>
+          <span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem da filial</div><div class="param-note">NULL = todas as filiais</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section-title">Ligações</div>
+      <div class="join-block">
+        <span class="tname">Financeiro_Contas</span>
+        <span class="arrow">→</span>
+        <span class="tname">Filiais</span>
+        <span style="color:var(--text-muted)">ON Financeiro_Contas.Ordem_Filial = Filiais.Ordem</span>
+        <span class="purpose">Exibir nome da filial</span>
+      </div>
+
+      <div class="sub-section-title" style="margin-top:20px">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Data_Emissao</strong></td><td><code>Financeiro_Contas.Data_Emissao</code></td><td>Data de emissão da conta</td></tr>
+          <tr><td><strong>Data_Vencimento</strong></td><td><code>Financeiro_Contas.Data_Vencimento</code></td><td>Data de vencimento original</td></tr>
+          <tr><td><strong>Data_Quitacao</strong></td><td><code>Financeiro_Contas.Data_Quitacao</code></td><td>Data efetiva do recebimento</td></tr>
+          <tr><td><strong>Valor_Bruto</strong></td><td><code>Financeiro_Contas.Valor_Base</code></td><td>Valor original sem acréscimos ou descontos</td></tr>
+          <tr><td><strong>Valor_Liquido</strong></td><td>Valor_Base + Juros + Multa − Desconto</td><td>Valor efetivo a receber, com todos os ajustes</td></tr>
+          <tr><td><strong>Valor_Quitado</strong></td><td><code>Financeiro_Contas.Valor_Quitado</code></td><td>Valor que foi efetivamente recebido na baixa</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>
+
+<span class="kw">SELECT</span>
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Emissao</span>,   <span class="num">103</span>) <span class="kw">AS</span> <span class="col">Data_Emissao</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Vencimento</span>, <span class="num">103</span>) <span class="kw">AS</span> <span class="col">Data_Vencimento</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span>,   <span class="num">103</span>) <span class="kw">AS</span> <span class="col">Data_Quitacao</span>,
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Base</span>                                       <span class="kw">AS</span> <span class="col">Valor_Bruto</span>,
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Base</span>
+        <span class="op">+</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Juros</span>
+        <span class="op">+</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Multa</span>
+        <span class="op">-</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Desconto</span>                               <span class="kw">AS</span> <span class="col">Valor_Liquido</span>,
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Quitado</span>                                    <span class="kw">AS</span> <span class="col">Valor_Quitado</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Financeiro_Contas</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span> <span class="kw">ON</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Filial</span> <span class="op">=</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">D</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Pagar_Receber</span> <span class="op">=</span> <span class="str">'R'</span>
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="kw">IN</span> (<span class="str">'A'</span>,<span class="str">'B'</span>,<span class="str">'C'</span>,<span class="str">'D'</span>,<span class="str">'O'</span>,<span class="str">'N'</span>,<span class="str">'H'</span>,<span class="str">'R'</span>)
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Situacao</span> <span class="kw">IN</span> (<span class="str">'F'</span>,<span class="str">'Q'</span>,<span class="str">'I'</span>,<span class="str">'X'</span>)
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">&lt;&gt;</span> <span class="str">'T'</span>
+    <span class="kw">AND</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Filial</span> <span class="op">=</span> <span class="col">@Filial</span> <span class="kw">OR</span> <span class="col">@Filial</span> <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> (
+        <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="kw">NOT IN</span> (<span class="str">'A'</span>)
+        <span class="kw">OR</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="op">=</span> <span class="str">'A'</span> <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">=</span> <span class="str">'C'</span>
+             <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Pai</span> <span class="kw">IS NOT NULL</span>
+             <span class="kw">AND</span> <span class="kw">EXISTS</span> (<span class="kw">SELECT</span> <span class="num">1</span> <span class="kw">FROM</span> <span class="tbl">Financeiro_Contas</span> FC
+                         <span class="kw">WHERE</span> FC.<span class="col">Ordem_Renegociado_Agrupado</span> <span class="op">=</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Pai</span>
+                         <span class="kw">AND</span> FC.<span class="col">Tipo_Conta</span> <span class="kw">IN</span> (<span class="str">'B'</span>,<span class="str">'C'</span>,<span class="str">'D'</span>,<span class="str">'O'</span>,<span class="str">'N'</span>,<span class="str">'H'</span>,<span class="str">'R'</span>)))
+        <span class="kw">OR</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="op">=</span> <span class="str">'A'</span> <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">=</span> <span class="str">'C'</span>
+             <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tela_Origem</span> <span class="op">=</span> <span class="num">15</span>)
+    )
+<span class="kw">ORDER BY</span>
+    <span class="fn">CONVERT</span>(<span class="fn">DATE</span>, <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span>),
+    <span class="fn">CONVERT</span>(<span class="fn">DATE</span>, <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Emissao</span>)</pre>
+      </div>
+    </div>
+
+    <!-- EX 2 -->
+    <div class="example-card" id="ex2">
+      <div class="example-num">EXEMPLO 02</div>
+      <div class="example-title">Recebíveis com Tipo de Conta</div>
+      <div class="example-desc">Inclui a descrição legível do tipo de conta (boleto, cartão crédito, cheque etc.) em cada recebimento.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">tipo de conta</span>
+        <span class="tag-chip">boleto</span>
+        <span class="tag-chip">cartão</span>
+        <span class="tag-chip">cheque</span>
+        <span class="tag-chip">carnê</span>
+        <span class="tag-chip">forma de cobrança</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="sub-section-title">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Codigo_Sequencia</strong></td><td><code>Financeiro_Contas.Codigo_Sequencia</code></td><td>Identificador único da conta no sistema</td></tr>
+          <tr><td><strong>Tipo_Conta</strong></td><td>CASE em <code>Financeiro_Contas.Tipo_Conta</code></td><td>Descrição do tipo: Boleto, Cartão Crédito, Cheque etc.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>
+
+<span class="kw">SELECT</span>
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Codigo_Sequencia</span>,
+    <span class="kw">CASE</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span>
+        <span class="kw">WHEN</span> <span class="str">'A'</span> <span class="kw">THEN</span> <span class="str">'Conta Agrupada'</span>
+        <span class="kw">WHEN</span> <span class="str">'B'</span> <span class="kw">THEN</span> <span class="str">'Boleto'</span>
+        <span class="kw">WHEN</span> <span class="str">'N'</span> <span class="kw">THEN</span> <span class="str">'Carnê'</span>
+        <span class="kw">WHEN</span> <span class="str">'R'</span> <span class="kw">THEN</span> <span class="str">'Carteira'</span>
+        <span class="kw">WHEN</span> <span class="str">'C'</span> <span class="kw">THEN</span> <span class="str">'Cartão Crédito'</span>
+        <span class="kw">WHEN</span> <span class="str">'D'</span> <span class="kw">THEN</span> <span class="str">'Cartão Débito'</span>
+        <span class="kw">WHEN</span> <span class="str">'O'</span> <span class="kw">THEN</span> <span class="str">'Cartão Convênio'</span>
+        <span class="kw">WHEN</span> <span class="str">'H'</span> <span class="kw">THEN</span> <span class="str">'Cheque'</span>
+        <span class="kw">WHEN</span> <span class="str">'E'</span> <span class="kw">THEN</span> <span class="str">'Conta Caderno'</span>
+        <span class="kw">WHEN</span> <span class="str">'F'</span> <span class="kw">THEN</span> <span class="str">'Diferença de Contas'</span>
+        <span class="kw">WHEN</span> <span class="str">'G'</span> <span class="kw">THEN</span> <span class="str">'Crédito Gerado Entrada/Saída'</span>
+        <span class="kw">ELSE</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span>
+    <span class="kw">END</span> <span class="kw">AS</span> <span class="col">Tipo_Conta</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Financeiro_Contas</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span> <span class="kw">ON</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Filial</span> <span class="op">=</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">D</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Pagar_Receber</span> <span class="op">=</span> <span class="str">'R'</span>
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="kw">IN</span> (<span class="str">'A'</span>,<span class="str">'B'</span>,<span class="str">'C'</span>,<span class="str">'D'</span>,<span class="str">'O'</span>,<span class="str">'N'</span>,<span class="str">'H'</span>,<span class="str">'R'</span>)
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Situacao</span> <span class="kw">IN</span> (<span class="str">'F'</span>,<span class="str">'Q'</span>,<span class="str">'I'</span>,<span class="str">'X'</span>)
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">&lt;&gt;</span> <span class="str">'T'</span>
+    <span class="kw">AND</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Filial</span> <span class="op">=</span> <span class="col">@Filial</span> <span class="kw">OR</span> <span class="col">@Filial</span> <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> (
+        <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="kw">NOT IN</span> (<span class="str">'A'</span>)
+        <span class="kw">OR</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="op">=</span> <span class="str">'A'</span> <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">=</span> <span class="str">'C'</span>
+             <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Pai</span> <span class="kw">IS NOT NULL</span>
+             <span class="kw">AND</span> <span class="kw">EXISTS</span> (<span class="kw">SELECT</span> <span class="num">1</span> <span class="kw">FROM</span> <span class="tbl">Financeiro_Contas</span> FC
+                         <span class="kw">WHERE</span> FC.<span class="col">Ordem_Renegociado_Agrupado</span> <span class="op">=</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Pai</span>
+                         <span class="kw">AND</span> FC.<span class="col">Tipo_Conta</span> <span class="kw">IN</span> (<span class="str">'B'</span>,<span class="str">'C'</span>,<span class="str">'D'</span>,<span class="str">'O'</span>,<span class="str">'N'</span>,<span class="str">'H'</span>,<span class="str">'R'</span>)))
+        <span class="kw">OR</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="op">=</span> <span class="str">'A'</span> <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">=</span> <span class="str">'C'</span>
+             <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tela_Origem</span> <span class="op">=</span> <span class="num">15</span>)
+    )
+<span class="kw">ORDER BY</span>
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Codigo_Sequencia</span>, <span class="col">Tipo_Conta</span></pre>
+      </div>
+    </div>
+
+    <!-- EX 3 -->
+    <div class="example-card" id="ex3">
+      <div class="example-num">EXEMPLO 03</div>
+      <div class="example-title">Recebíveis com Forma de Recebimento</div>
+      <div class="example-desc">Exibe como cada recebimento foi quitado: Dinheiro, Pix/Depósito, Crédito, Cheque, Vale etc. Inclui a parcela.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">forma de pagamento</span>
+        <span class="tag-chip">pix</span>
+        <span class="tag-chip">dinheiro</span>
+        <span class="tag-chip">depósito</span>
+        <span class="tag-chip">parcela</span>
+        <span class="tag-chip">método de recebimento</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="sub-section-title">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Codigo_Sequencia</strong></td><td><code>Financeiro_Contas.Codigo_Sequencia</code></td><td>Identificador único da conta</td></tr>
+          <tr><td><strong>Recebido_Em</strong></td><td>CASE em <code>Financeiro_Contas.Tipo_Recebido_Pago</code></td><td>Forma de recebimento: Dinheiro, Depósito, Crédito etc.</td></tr>
+          <tr><td><strong>Parcela</strong></td><td><code>Financeiro_Contas.Parcela_Descricao</code></td><td>Descrição da parcela (ex: 1/3, 2/3)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>
+
+<span class="kw">SELECT</span>
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Codigo_Sequencia</span>,
+    <span class="kw">CASE</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span>
+        <span class="kw">WHEN</span> <span class="str">'D'</span> <span class="kw">THEN</span> <span class="str">'Dinheiro'</span>
+        <span class="kw">WHEN</span> <span class="str">'B'</span> <span class="kw">THEN</span> <span class="str">'Depósito / Pix'</span>
+        <span class="kw">WHEN</span> <span class="str">'C'</span> <span class="kw">THEN</span> <span class="str">'Crédito'</span>
+        <span class="kw">WHEN</span> <span class="str">'H'</span> <span class="kw">THEN</span> <span class="str">'Cheque de Cliente'</span>
+        <span class="kw">WHEN</span> <span class="str">'V'</span> <span class="kw">THEN</span> <span class="str">'Vale'</span>
+        <span class="kw">WHEN</span> <span class="str">'F'</span> <span class="kw">THEN</span> <span class="str">'Descontado na Fonte'</span>
+        <span class="kw">WHEN</span> <span class="str">'R'</span> <span class="kw">THEN</span> <span class="str">'Conta Caderno'</span>
+        <span class="kw">WHEN</span> <span class="str">'A'</span> <span class="kw">THEN</span> <span class="str">'Várias Contas'</span>
+        <span class="kw">ELSE</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span>
+    <span class="kw">END</span> <span class="kw">AS</span> <span class="col">Recebido_Em</span>,
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Parcela_Descricao</span> <span class="kw">AS</span> <span class="col">Parcela</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Financeiro_Contas</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span> <span class="kw">ON</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Filial</span> <span class="op">=</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">D</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Pagar_Receber</span> <span class="op">=</span> <span class="str">'R'</span>
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="kw">IN</span> (<span class="str">'A'</span>,<span class="str">'B'</span>,<span class="str">'C'</span>,<span class="str">'D'</span>,<span class="str">'O'</span>,<span class="str">'N'</span>,<span class="str">'H'</span>,<span class="str">'R'</span>)
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Situacao</span> <span class="kw">IN</span> (<span class="str">'F'</span>,<span class="str">'Q'</span>,<span class="str">'I'</span>,<span class="str">'X'</span>)
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">&lt;&gt;</span> <span class="str">'T'</span>
+    <span class="kw">AND</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Filial</span> <span class="op">=</span> <span class="col">@Filial</span> <span class="kw">OR</span> <span class="col">@Filial</span> <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> (
+        <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="kw">NOT IN</span> (<span class="str">'A'</span>)
+        <span class="kw">OR</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="op">=</span> <span class="str">'A'</span> <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">=</span> <span class="str">'C'</span>
+             <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Pai</span> <span class="kw">IS NOT NULL</span>
+             <span class="kw">AND</span> <span class="kw">EXISTS</span> (<span class="kw">SELECT</span> <span class="num">1</span> <span class="kw">FROM</span> <span class="tbl">Financeiro_Contas</span> FC
+                         <span class="kw">WHERE</span> FC.<span class="col">Ordem_Renegociado_Agrupado</span> <span class="op">=</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Pai</span>
+                         <span class="kw">AND</span> FC.<span class="col">Tipo_Conta</span> <span class="kw">IN</span> (<span class="str">'B'</span>,<span class="str">'C'</span>,<span class="str">'D'</span>,<span class="str">'O'</span>,<span class="str">'N'</span>,<span class="str">'H'</span>,<span class="str">'R'</span>)))
+        <span class="kw">OR</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="op">=</span> <span class="str">'A'</span> <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">=</span> <span class="str">'C'</span>
+             <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tela_Origem</span> <span class="op">=</span> <span class="num">15</span>)
+    )
+<span class="kw">ORDER BY</span>
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Codigo_Sequencia</span>, <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span></pre>
+      </div>
+    </div>
+
+    <!-- EX 4 -->
+    <div class="example-card" id="ex4">
+      <div class="example-num">EXEMPLO 04</div>
+      <div class="example-title">Recebíveis com Cliente</div>
+      <div class="example-desc">Inclui os dados do cliente (nome e código) vinculado a cada recebimento. Permite filtrar por cliente específico.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">cliente</span>
+        <span class="tag-chip">nome do cliente</span>
+        <span class="tag-chip">recebimentos por cliente</span>
+        <span class="tag-chip">extrato cliente</span>
+        <span class="tag-chip">Cli_For</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="sub-section-title">Parâmetros</div>
+      <div class="param-list">
+        <div class="param-item">
+          <span class="param-name">@Data_Inicial</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data inicial do período</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Data_Final</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data final do período</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Filial</span>
+          <span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem da filial</div><div class="param-note">NULL = todas as filiais</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Cliente</span>
+          <span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem do cliente (Cli_For.Ordem)</div><div class="param-note">NULL = todos os clientes</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section-title">Ligações</div>
+      <div class="join-block">
+        <span class="tname">Financeiro_Contas</span>
+        <span class="arrow">→</span>
+        <span class="tname">Filiais</span>
+        <span style="color:var(--text-muted)">ON Financeiro_Contas.Ordem_Filial = Filiais.Ordem</span>
+      </div>
+      <div class="join-block">
+        <span class="tname">Financeiro_Contas</span>
+        <span class="arrow">→</span>
+        <span class="tname">Cli_For</span>
+        <span style="color:var(--text-muted)">ON Cli_For.Ordem = Financeiro_Contas.Ordem_Cli_For</span>
+        <span class="purpose">Dados do cliente</span>
+      </div>
+
+      <div class="sub-section-title" style="margin-top:20px">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Codigo_Cliente</strong></td><td><code>Cli_For.Codigo</code></td><td>Código do cliente no cadastro</td></tr>
+          <tr><td><strong>Nome_Cliente</strong></td><td><code>Cli_For.Nome</code></td><td>Nome completo do cliente</td></tr>
+          <tr><td><strong>Data_Emissao</strong></td><td><code>Financeiro_Contas.Data_Emissao</code></td><td>Data de emissão</td></tr>
+          <tr><td><strong>Data_Vencimento</strong></td><td><code>Financeiro_Contas.Data_Vencimento</code></td><td>Data de vencimento</td></tr>
+          <tr><td><strong>Data_Quitacao</strong></td><td><code>Financeiro_Contas.Data_Quitacao</code></td><td>Data de quitação</td></tr>
+          <tr><td><strong>Valor_Bruto</strong></td><td><code>Financeiro_Contas.Valor_Base</code></td><td>Valor original sem ajustes</td></tr>
+          <tr><td><strong>Valor_Liquido</strong></td><td>Valor_Base + Juros + Multa − Desconto</td><td>Valor com todos os ajustes</td></tr>
+          <tr><td><strong>Valor_Quitado</strong></td><td><code>Financeiro_Contas.Valor_Quitado</code></td><td>Valor efetivamente recebido</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>,
+    <span class="col">@Cliente</span>       <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>  <span class="cmt">-- NULL = todos os clientes</span>
+
+<span class="kw">SELECT</span>
+    <span class="tbl">Cli_For</span>.<span class="col">Codigo</span>                                                       <span class="kw">AS</span> <span class="col">Codigo_Cliente</span>,
+    <span class="tbl">Cli_For</span>.<span class="col">Nome</span>                                                         <span class="kw">AS</span> <span class="col">Nome_Cliente</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Emissao</span>,   <span class="num">103</span>)          <span class="kw">AS</span> <span class="col">Data_Emissao</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Vencimento</span>, <span class="num">103</span>)          <span class="kw">AS</span> <span class="col">Data_Vencimento</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span>,   <span class="num">103</span>)          <span class="kw">AS</span> <span class="col">Data_Quitacao</span>,
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Base</span>                                          <span class="kw">AS</span> <span class="col">Valor_Bruto</span>,
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Base</span>
+        <span class="op">+</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Juros</span>
+        <span class="op">+</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Multa</span>
+        <span class="op">-</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Desconto</span>                                  <span class="kw">AS</span> <span class="col">Valor_Liquido</span>,
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Quitado</span>                                       <span class="kw">AS</span> <span class="col">Valor_Quitado</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Financeiro_Contas</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span>  <span class="kw">ON</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Filial</span>  <span class="op">=</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Cli_For</span>  <span class="kw">ON</span> <span class="tbl">Cli_For</span>.<span class="col">Ordem</span>              <span class="op">=</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Cli_For</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">D</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Pagar_Receber</span> <span class="op">=</span> <span class="str">'R'</span>
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="kw">IN</span> (<span class="str">'A'</span>,<span class="str">'B'</span>,<span class="str">'C'</span>,<span class="str">'D'</span>,<span class="str">'O'</span>,<span class="str">'N'</span>,<span class="str">'H'</span>,<span class="str">'R'</span>)
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Situacao</span> <span class="kw">IN</span> (<span class="str">'F'</span>,<span class="str">'Q'</span>,<span class="str">'I'</span>,<span class="str">'X'</span>)
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">&lt;&gt;</span> <span class="str">'T'</span>
+    <span class="kw">AND</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Filial</span>  <span class="op">=</span> <span class="col">@Filial</span>   <span class="kw">OR</span> <span class="col">@Filial</span>   <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Cli_For</span> <span class="op">=</span> <span class="col">@Cliente</span>  <span class="kw">OR</span> <span class="col">@Cliente</span>  <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> (
+        <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="kw">NOT IN</span> (<span class="str">'A'</span>)
+        <span class="kw">OR</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="op">=</span> <span class="str">'A'</span> <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">=</span> <span class="str">'C'</span>
+             <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Pai</span> <span class="kw">IS NOT NULL</span>
+             <span class="kw">AND</span> <span class="kw">EXISTS</span> (<span class="kw">SELECT</span> <span class="num">1</span> <span class="kw">FROM</span> <span class="tbl">Financeiro_Contas</span> FC
+                         <span class="kw">WHERE</span> FC.<span class="col">Ordem_Renegociado_Agrupado</span> <span class="op">=</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Pai</span>
+                         <span class="kw">AND</span> FC.<span class="col">Tipo_Conta</span> <span class="kw">IN</span> (<span class="str">'B'</span>,<span class="str">'C'</span>,<span class="str">'D'</span>,<span class="str">'O'</span>,<span class="str">'N'</span>,<span class="str">'H'</span>,<span class="str">'R'</span>)))
+        <span class="kw">OR</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="op">=</span> <span class="str">'A'</span> <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">=</span> <span class="str">'C'</span>
+             <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tela_Origem</span> <span class="op">=</span> <span class="num">15</span>)
+    )
+<span class="kw">ORDER BY</span>
+    <span class="tbl">Cli_For</span>.<span class="col">Codigo</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">DATE</span>, <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span>)</pre>
+      </div>
+    </div>
+
+    <!-- EX 5 -->
+    <div class="example-card" id="ex5">
+      <div class="example-num">EXEMPLO 05</div>
+      <div class="example-title">Recebíveis com Vendedor e Comissão</div>
+      <div class="example-desc">Exibe os recebimentos com dados do vendedor responsável, incluindo o percentual de comissão cadastrado e o valor calculado da comissão.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">vendedor</span>
+        <span class="tag-chip">comissão</span>
+        <span class="tag-chip">funcionários</span>
+        <span class="tag-chip">comissão vendedor</span>
+        <span class="tag-chip">recebimentos por vendedor</span>
+        <span class="tag-chip">Funcionarios</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="rule-block">
+        <strong>REGRA — Cálculo de Comissão</strong>
+        <ul>
+          <li>O campo <code style="font-family:var(--mono);font-size:11px">Funcionarios.Comissao_Venda</code> armazena o percentual (ex: <code style="font-family:var(--mono);font-size:11px">5.00</code> = 5%).</li>
+          <li>Fórmula: <code style="font-family:var(--mono);font-size:11px">Valor_Quitado × (Comissao_Venda / 100.0)</code></li>
+          <li>Use <code style="font-family:var(--mono);font-size:11px">NULLIF(..., 0)</code> para evitar divisão por zero e <code style="font-family:var(--mono);font-size:11px">ISNULL(..., 0)</code> para tratar nulos.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section-title">Parâmetros</div>
+      <div class="param-list">
+        <div class="param-item">
+          <span class="param-name">@Data_Inicial</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data inicial do período</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Data_Final</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data final do período</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Filial</span>
+          <span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem da filial</div><div class="param-note">NULL = todas as filiais</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Vendedor</span>
+          <span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem do vendedor (Funcionarios.Ordem)</div><div class="param-note">NULL = todos os vendedores</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section-title">Ligações</div>
+      <div class="join-block">
+        <span class="tname">Financeiro_Contas</span>
+        <span class="arrow">→</span>
+        <span class="tname">Filiais</span>
+        <span style="color:var(--text-muted)">ON Financeiro_Contas.Ordem_Filial = Filiais.Ordem</span>
+      </div>
+      <div class="join-block">
+        <span class="tname">Financeiro_Contas</span>
+        <span class="arrow">→</span>
+        <span class="tname">Funcionarios</span>
+        <span style="color:var(--text-muted)">ON Funcionarios.Ordem = Financeiro_Contas.Ordem_Vendedor1</span>
+        <span class="purpose">Vendedor + comissão</span>
+      </div>
+
+      <div class="sub-section-title" style="margin-top:20px">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Codigo_Vendedor</strong></td><td><code>Funcionarios.Codigo</code></td><td>Código do vendedor no cadastro</td></tr>
+          <tr><td><strong>Nome_Vendedor</strong></td><td><code>Funcionarios.Apelido</code></td><td>Nome/apelido do vendedor</td></tr>
+          <tr><td><strong>Data_Emissao</strong></td><td><code>Financeiro_Contas.Data_Emissao</code></td><td>Data de emissão</td></tr>
+          <tr><td><strong>Data_Vencimento</strong></td><td><code>Financeiro_Contas.Data_Vencimento</code></td><td>Data de vencimento</td></tr>
+          <tr><td><strong>Data_Quitacao</strong></td><td><code>Financeiro_Contas.Data_Quitacao</code></td><td>Data de quitação</td></tr>
+          <tr><td><strong>Valor_Bruto</strong></td><td><code>Financeiro_Contas.Valor_Base</code></td><td>Valor original sem ajustes</td></tr>
+          <tr><td><strong>Valor_Liquido</strong></td><td>Valor_Base + Juros + Multa − Desconto</td><td>Valor com todos os ajustes</td></tr>
+          <tr><td><strong>Valor_Quitado</strong></td><td><code>Financeiro_Contas.Valor_Quitado</code></td><td>Valor efetivamente recebido</td></tr>
+          <tr><td><strong>Percentual_Comissao</strong></td><td><code>Funcionarios.Comissao_Venda</code></td><td>% de comissão do vendedor (ex: 5.00 = 5%)</td></tr>
+          <tr><td><strong>Valor_Comissao</strong></td><td>Valor_Quitado × (Comissao_Venda / 100)</td><td>Valor calculado da comissão</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>,
+    <span class="col">@Vendedor</span>      <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>  <span class="cmt">-- NULL = todos os vendedores</span>
+
+<span class="kw">SELECT</span>
+    <span class="tbl">Funcionarios</span>.<span class="col">Codigo</span>                                                  <span class="kw">AS</span> <span class="col">Codigo_Vendedor</span>,
+    <span class="tbl">Funcionarios</span>.<span class="col">Apelido</span>                                                 <span class="kw">AS</span> <span class="col">Nome_Vendedor</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Emissao</span>,   <span class="num">103</span>)          <span class="kw">AS</span> <span class="col">Data_Emissao</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Vencimento</span>, <span class="num">103</span>)          <span class="kw">AS</span> <span class="col">Data_Vencimento</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span>,   <span class="num">103</span>)          <span class="kw">AS</span> <span class="col">Data_Quitacao</span>,
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Base</span>                                          <span class="kw">AS</span> <span class="col">Valor_Bruto</span>,
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Base</span>
+        <span class="op">+</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Juros</span>
+        <span class="op">+</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Multa</span>
+        <span class="op">-</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Desconto</span>                                  <span class="kw">AS</span> <span class="col">Valor_Liquido</span>,
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Quitado</span>                                       <span class="kw">AS</span> <span class="col">Valor_Quitado</span>,
+    <span class="tbl">Funcionarios</span>.<span class="col">Comissao_Venda</span>                                          <span class="kw">AS</span> <span class="col">Percentual_Comissao</span>,
+    <span class="fn">ISNULL</span>(
+        <span class="tbl">Financeiro_Contas</span>.<span class="col">Valor_Quitado</span> <span class="op">*</span> (<span class="fn">NULLIF</span>(<span class="tbl">Funcionarios</span>.<span class="col">Comissao_Venda</span>, <span class="num">0</span>) <span class="op">/</span> <span class="num">100.0</span>),
+    <span class="num">0</span>)                                                                      <span class="kw">AS</span> <span class="col">Valor_Comissao</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Financeiro_Contas</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span>      <span class="kw">ON</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Filial</span>    <span class="op">=</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Funcionarios</span> <span class="kw">ON</span> <span class="tbl">Funcionarios</span>.<span class="col">Ordem</span>             <span class="op">=</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Vendedor1</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">D</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Pagar_Receber</span> <span class="op">=</span> <span class="str">'R'</span>
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="kw">IN</span> (<span class="str">'A'</span>,<span class="str">'B'</span>,<span class="str">'C'</span>,<span class="str">'D'</span>,<span class="str">'O'</span>,<span class="str">'N'</span>,<span class="str">'H'</span>,<span class="str">'R'</span>)
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Situacao</span> <span class="kw">IN</span> (<span class="str">'F'</span>,<span class="str">'Q'</span>,<span class="str">'I'</span>,<span class="str">'X'</span>)
+    <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">&lt;&gt;</span> <span class="str">'T'</span>
+    <span class="kw">AND</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Filial</span>  <span class="op">=</span> <span class="col">@Filial</span>   <span class="kw">OR</span> <span class="col">@Filial</span>   <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> (<span class="tbl">Funcionarios</span>.<span class="col">Ordem</span>            <span class="op">=</span> <span class="col">@Vendedor</span> <span class="kw">OR</span> <span class="col">@Vendedor</span> <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> (
+        <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="kw">NOT IN</span> (<span class="str">'A'</span>)
+        <span class="kw">OR</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="op">=</span> <span class="str">'A'</span> <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">=</span> <span class="str">'C'</span>
+             <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Pai</span> <span class="kw">IS NOT NULL</span>
+             <span class="kw">AND</span> <span class="kw">EXISTS</span> (<span class="kw">SELECT</span> <span class="num">1</span> <span class="kw">FROM</span> <span class="tbl">Financeiro_Contas</span> FC
+                         <span class="kw">WHERE</span> FC.<span class="col">Ordem_Renegociado_Agrupado</span> <span class="op">=</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Ordem_Pai</span>
+                         <span class="kw">AND</span> FC.<span class="col">Tipo_Conta</span> <span class="kw">IN</span> (<span class="str">'B'</span>,<span class="str">'C'</span>,<span class="str">'D'</span>,<span class="str">'O'</span>,<span class="str">'N'</span>,<span class="str">'H'</span>,<span class="str">'R'</span>)))
+        <span class="kw">OR</span> (<span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Conta</span> <span class="op">=</span> <span class="str">'A'</span> <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tipo_Recebido_Pago</span> <span class="op">=</span> <span class="str">'C'</span>
+             <span class="kw">AND</span> <span class="tbl">Financeiro_Contas</span>.<span class="col">Tela_Origem</span> <span class="op">=</span> <span class="num">15</span>)
+    )
+<span class="kw">ORDER BY</span>
+    <span class="tbl">Funcionarios</span>.<span class="col">Codigo</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">DATE</span>, <span class="tbl">Financeiro_Contas</span>.<span class="col">Data_Quitacao</span>)</pre>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-wrap').querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'COPIADO!';
+      btn.style.color = 'var(--accent)';
+      setTimeout(() => { btn.textContent = 'COPIAR'; btn.style.color = ''; }, 2000);
+    });
+  }
+
+  // Active sidebar links on scroll
+  const sections = document.querySelectorAll('[id]');
+  const links = document.querySelectorAll('.sidebar-link');
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.sidebar-link[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
