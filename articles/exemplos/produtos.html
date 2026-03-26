@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prod_Serv — Documentação Text-to-SQL</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@400;600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0d0f14; --surface: #13161e; --surface2: #1a1e29; --border: #252a38;
+    --accent: #4ade80; --accent2: #38bdf8; --accent3: #f59e0b; --accent4: #f87171;
+    --text: #e2e8f0; --text-muted: #64748b; --text-dim: #94a3b8;
+    --mono: 'IBM Plex Mono', monospace; --sans: 'Inter', sans-serif; --display: 'Syne', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.7; }
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar { width: 260px; min-width: 260px; background: var(--surface); border-right: 1px solid var(--border); padding: 28px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; flex-shrink: 0; }
+  .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .sidebar-logo .tag { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+  .sidebar-logo h1 { font-family: var(--display); font-size: 16px; font-weight: 800; color: var(--text); }
+  .sidebar-section { padding: 0 20px; margin-bottom: 24px; }
+  .sidebar-section-title { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+  .sidebar-link { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; color: var(--text-dim); text-decoration: none; font-size: 13px; transition: all 0.15s; margin-bottom: 2px; }
+  .sidebar-link:hover { background: var(--surface2); color: var(--text); }
+  .sidebar-link.active { background: rgba(74,222,128,0.1); color: var(--accent); }
+  .sidebar-link .num { font-family: var(--mono); font-size: 10px; color: var(--text-muted); min-width: 18px; }
+  .main { flex: 1; padding: 40px 48px; max-width: 960px; }
+  .page-header { margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+  .breadcrumb { font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 1px; }
+  .breadcrumb span { color: var(--accent); }
+  .page-title { font-family: var(--display); font-size: 36px; font-weight: 800; color: var(--text); margin-bottom: 8px; line-height: 1.2; }
+  .page-subtitle { color: var(--text-dim); font-size: 15px; max-width: 560px; }
+  .meta-row { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+  .meta-pill { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+  .meta-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .section { margin-bottom: 52px; }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .section-tag { font-family: var(--mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+  .tag-global  { background: rgba(74,222,128,0.12);  color: var(--accent); }
+  .tag-example { background: rgba(56,189,248,0.12);  color: var(--accent2); }
+  .tag-rule    { background: rgba(245,158,11,0.12);  color: var(--accent3); }
+  .section-title { font-family: var(--display); font-size: 20px; font-weight: 700; color: var(--text); }
+  .callout { border-left: 3px solid var(--accent); background: rgba(74,222,128,0.05); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 20px; font-size: 13px; color: var(--text-dim); }
+  .callout.warn  { border-color: var(--accent3); background: rgba(245,158,11,0.05); }
+  .callout.info  { border-color: var(--accent2); background: rgba(56,189,248,0.05); }
+  .callout strong { color: var(--text); }
+  .enum-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; margin-bottom: 20px; }
+  .enum-item { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+  .enum-key { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--accent2); background: rgba(56,189,248,0.08); padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+  .enum-val { font-size: 13px; color: var(--text-dim); }
+  .doc-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+  .doc-table th { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); padding: 8px 14px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .doc-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-dim); vertical-align: top; }
+  .doc-table tr:last-child td { border-bottom: none; }
+  .doc-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .doc-table td code { font-family: var(--mono); font-size: 11px; color: var(--accent2); background: rgba(56,189,248,0.08); padding: 2px 6px; border-radius: 4px; }
+  .doc-table td strong { color: var(--text); }
+  .code-wrap { position: relative; margin-bottom: 20px; }
+  .code-label { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; background: var(--surface2); padding: 6px 14px; border: 1px solid var(--border); border-bottom: none; border-radius: 8px 8px 0 0; display: flex; align-items: center; justify-content: space-between; }
+  .copy-btn { cursor: pointer; color: var(--text-muted); background: none; border: none; font-family: var(--mono); font-size: 10px; letter-spacing: 1px; transition: color 0.15s; padding: 0; }
+  .copy-btn:hover { color: var(--accent); }
+  pre { background: var(--surface); border: 1px solid var(--border); border-radius: 0 0 8px 8px; padding: 18px 20px; overflow-x: auto; font-family: var(--mono); font-size: 12.5px; line-height: 1.7; color: var(--text-dim); }
+  .kw { color: #c792ea; } .fn { color: #82aaff; } .str { color: #c3e88d; }
+  .cmt { color: #546e7a; font-style: italic; } .col { color: var(--text); }
+  .tbl { color: var(--accent2); } .num { color: var(--accent3); } .op { color: #89ddff; }
+  .example-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 32px; position: relative; overflow: hidden; }
+  .example-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent2), transparent); }
+  .example-num { font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 1px; }
+  .example-title { font-family: var(--display); font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .example-desc { color: var(--text-dim); font-size: 13px; margin-bottom: 20px; }
+  .tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+  .tag-chip { font-family: var(--mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); letter-spacing: 0.5px; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+  .sub-section-title { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+  .rule-block { background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.2); border-radius: 8px; padding: 16px 18px; margin-bottom: 16px; font-size: 13px; color: var(--text-dim); }
+  .rule-block strong { color: var(--accent3); font-family: var(--mono); font-size: 12px; }
+  .rule-block ul { margin-top: 8px; padding-left: 18px; }
+  .rule-block ul li { margin-bottom: 4px; }
+  .param-list { margin-bottom: 20px; }
+  .param-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .param-item:last-child { border-bottom: none; }
+  .param-name { font-family: var(--mono); font-size: 12px; color: var(--accent2); min-width: 140px; flex-shrink: 0; }
+  .param-type { font-family: var(--mono); font-size: 11px; color: var(--accent3); min-width: 50px; flex-shrink: 0; padding-top: 1px; }
+  .param-desc { color: var(--text-dim); font-size: 13px; }
+  .param-note { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="tag">Text-to-SQL Docs</span>
+      <h1>Prod_Serv</h1>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Referência Global</div>
+      <a href="#filtros-padrao" class="sidebar-link"><span class="num">◆</span> Filtros Padrão</a>
+      <a href="#regra-precos" class="sidebar-link"><span class="num">◆</span> Regra: Tabelas de Preço</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Exemplos</div>
+      <a href="#ex1" class="sidebar-link"><span class="num">01</span> Produtos Cadastrados</a>
+      <a href="#ex2" class="sidebar-link"><span class="num">02</span> Preços de Uma Tabela</a>
+      <a href="#ex3" class="sidebar-link"><span class="num">03</span> Preços de Várias Tabelas</a>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <div class="page-header">
+      <div class="breadcrumb">dynamics / tabelas / <span>Prod_Serv</span></div>
+      <h1 class="page-title">Produtos</h1>
+      <p class="page-subtitle">Documentação AI-friendly e Text-to-SQL para consultas na tabela <code style="font-family:var(--mono);font-size:13px;color:var(--accent2)">Prod_Serv</code>, cobrindo cadastro de produtos e consultas de tabelas de preço.</p>
+      <div class="meta-row">
+        <span class="meta-pill"><span class="dot"></span> SQL Server (T-SQL)</span>
+        <span class="meta-pill"><span class="dot" style="background:var(--accent2)"></span> 3 Exemplos</span>
+        <span class="meta-pill"><span class="dot" style="background:var(--accent3)"></span> Módulo: Produtos</span>
+      </div>
+    </div>
+
+    <!-- FILTROS PADRÃO -->
+    <div class="section" id="filtros-padrao">
+      <div class="section-header">
+        <span class="section-tag tag-global">Global</span>
+        <h2 class="section-title">Filtros Padrão de Produtos</h2>
+      </div>
+
+      <div class="callout">
+        <strong>Use sempre este bloco WHERE como base em consultas de produtos.</strong> Ele exclui automaticamente itens inativos, bloqueados, de uso interno e registros de sistema (Codigo ≤ '0').
+      </div>
+
+      <div class="sub-section-title">Campos de controle relevantes</div>
+      <table class="doc-table">
+        <thead><tr><th>Campo</th><th>Tipo</th><th>Regra</th></tr></thead>
+        <tbody>
+          <tr><td><code>Prod_Serv.Inativo</code></td><td>bit</td><td>Filtrar <code>= 0</code> — excluir produtos inativos</td></tr>
+          <tr><td><code>Prod_Serv.Bloqueado_Movimento</code></td><td>bit</td><td>Filtrar <code>= 0</code> — excluir produtos bloqueados para movimentação</td></tr>
+          <tr><td><code>Prod_Serv.Bloqueado_Venda</code></td><td>bit</td><td>Filtrar <code>= 0</code> — excluir produtos bloqueados para venda</td></tr>
+          <tr><td><code>Prod_Serv.Uso_Interno</code></td><td>bit</td><td>Filtrar <code>= 0</code> — excluir produtos de uso interno</td></tr>
+          <tr><td><code>Prod_Serv.Codigo</code></td><td>varchar</td><td>Filtrar <code>> '0'</code> — excluir registros de sistema sem código válido</td></tr>
+          <tr><td><code>Prod_Serv.Codigo_Ordenacao</code></td><td>varchar</td><td>Use no <code>ORDER BY</code> para ordenação correta (não use <code>Codigo</code> diretamente)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap">
+        <div class="code-label"><span>T-SQL — WHERE base para produtos</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">WHERE</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Inativo</span>              <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Bloqueado_Movimento</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Bloqueado_Venda</span>     <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Uso_Interno</span>         <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>              <span class="op">&gt;</span> <span class="str">'0'</span>
+<span class="kw">ORDER BY</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo_Ordenacao</span></pre>
+      </div>
+    </div>
+
+    <!-- REGRA PREÇOS -->
+    <div class="section" id="regra-precos">
+      <div class="section-header">
+        <span class="section-tag tag-rule">Regra de Negócio</span>
+        <h2 class="section-title">Tabelas de Preço — OUTER APPLY</h2>
+      </div>
+
+      <div class="callout warn">
+        <strong>Não usar JOIN convencional com Prod_Serv_Precos.</strong> A tabela <code style="font-family:var(--mono);font-size:11px">Prod_Serv_Precos</code> pode retornar múltiplas linhas por produto. Um INNER JOIN geraria duplicatas. Use sempre <code style="font-family:var(--mono);font-size:11px">OUTER APPLY</code> com filtro de tabela de preço dentro do subselect.
+      </div>
+
+      <div class="rule-block">
+        <strong>PADRÃO — Um OUTER APPLY por tabela de preço</strong>
+        <ul>
+          <li>Cada tabela de preço a exibir exige seu próprio bloco <code style="font-family:var(--mono);font-size:11px">OUTER APPLY</code> com alias distinto (<code style="font-family:var(--mono);font-size:11px">Preco_1</code>, <code style="font-family:var(--mono);font-size:11px">Preco_2</code> etc.).</li>
+          <li>O filtro <code style="font-family:var(--mono);font-size:11px">Tabelas_Preco.Ordem = @Tabela_N</code> deve estar dentro do <code style="font-family:var(--mono);font-size:11px">OUTER APPLY</code>, no <code style="font-family:var(--mono);font-size:11px">INNER JOIN</code> de <code style="font-family:var(--mono);font-size:11px">Tabelas_Preco</code>.</li>
+          <li>Com múltiplos <code style="font-family:var(--mono);font-size:11px">OUTER APPLY</code>, incluir todos os campos no <code style="font-family:var(--mono);font-size:11px">GROUP BY</code>.</li>
+          <li><code style="font-family:var(--mono);font-size:11px">OUTER APPLY</code> retorna <code style="font-family:var(--mono);font-size:11px">NULL</code> quando o produto não tem preço cadastrado na tabela solicitada — comportamento correto, não é um erro.</li>
+        </ul>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label"><span>T-SQL — Padrão OUTER APPLY para uma tabela de preço</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">OUTER APPLY</span> (
+    <span class="kw">SELECT</span> <span class="col">Preco</span>, <span class="col">Nome</span>
+    <span class="kw">FROM</span> <span class="tbl">Prod_Serv_Precos</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Tabelas_Preco</span>
+        <span class="kw">ON</span>  <span class="tbl">Tabelas_Preco</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="tbl">Prod_Serv_Precos</span>.<span class="col">Ordem_Tabela_Preco</span>
+        <span class="kw">AND</span> <span class="tbl">Tabelas_Preco</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="col">@Tabela_1</span>
+    <span class="kw">WHERE</span> <span class="tbl">Prod_Serv_Precos</span>.<span class="col">Ordem_Prod_Serv</span> <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem</span>
+) <span class="col">Preco_1</span></pre>
+      </div>
+    </div>
+
+    <!-- EXEMPLOS -->
+    <div class="section-header" style="margin-bottom:24px">
+      <span class="section-tag tag-example">Exemplos</span>
+      <h2 class="section-title">Consultas de Referência</h2>
+    </div>
+
+    <!-- EX 1 -->
+    <div class="example-card" id="ex1">
+      <div class="example-num">EXEMPLO 01</div>
+      <div class="example-title">Relatório de Produtos Cadastrados</div>
+      <div class="example-desc">Lista as mercadorias ativas no cadastro. Exclui produtos inativos, bloqueados e de uso interno.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">cadastro</span>
+        <span class="tag-chip">produtos ativos</span>
+        <span class="tag-chip">mercadorias</span>
+        <span class="tag-chip">data de cadastro</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="sub-section-title">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Codigo_Produto</strong></td><td><code>Prod_Serv.Codigo</code></td><td>Código do produto no cadastro</td></tr>
+          <tr><td><strong>Nome_Produto</strong></td><td><code>Prod_Serv.Nome</code></td><td>Nome do produto</td></tr>
+          <tr><td><strong>Data_Cadastro</strong></td><td><code>Prod_Serv.Data_Cadastro</code></td><td>Data de cadastro do produto (formato DD/MM/AAAA)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">SELECT</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>                                              <span class="kw">AS</span> <span class="col">Codigo_Produto</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Nome</span>                                                <span class="kw">AS</span> <span class="col">Nome_Produto</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Prod_Serv</span>.<span class="col">Data_Cadastro</span>, <span class="num">103</span>)             <span class="kw">AS</span> <span class="col">Data_Cadastro</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Prod_Serv</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Inativo</span>              <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Bloqueado_Movimento</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Bloqueado_Venda</span>     <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Uso_Interno</span>         <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>              <span class="op">&gt;</span> <span class="str">'0'</span>
+<span class="kw">ORDER BY</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo_Ordenacao</span></pre>
+      </div>
+    </div>
+
+    <!-- EX 2 -->
+    <div class="example-card" id="ex2">
+      <div class="example-num">EXEMPLO 02</div>
+      <div class="example-title">Relatório de Preços de Produtos — Uma Tabela</div>
+      <div class="example-desc">Retorna o preço de cada produto para uma tabela de preço específica. Usa <code style="font-family:var(--mono);font-size:12px;color:var(--accent2)">OUTER APPLY</code> para evitar duplicatas.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">tabela de preço</span>
+        <span class="tag-chip">preços</span>
+        <span class="tag-chip">OUTER APPLY</span>
+        <span class="tag-chip">Prod_Serv_Precos</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="sub-section-title">Parâmetros</div>
+      <div class="param-list">
+        <div class="param-item">
+          <span class="param-name">@Tabela_1</span>
+          <span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem da tabela de preço (Tabelas_Preco.Ordem)</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section-title">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Codigo_Produto</strong></td><td><code>Prod_Serv.Codigo</code></td><td>Código do produto</td></tr>
+          <tr><td><strong>Nome_Produto</strong></td><td><code>Prod_Serv.Nome</code></td><td>Nome do produto</td></tr>
+          <tr><td><strong>Preco_1</strong></td><td><code>Preco_1.Preco</code> (OUTER APPLY)</td><td>Valor do preço na tabela solicitada. <code>NULL</code> se não cadastrado.</td></tr>
+          <tr><td><strong>Tabela_1</strong></td><td><code>Preco_1.Nome</code> (OUTER APPLY)</td><td>Nome da tabela de preço</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Tabela_1</span>  <span class="fn">INT</span> <span class="op">=</span> <span class="num">1</span>  <span class="cmt">-- Ordem da tabela de preço desejada</span>
+
+<span class="kw">SELECT</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>   <span class="kw">AS</span> <span class="col">Codigo_Produto</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Nome</span>     <span class="kw">AS</span> <span class="col">Nome_Produto</span>,
+    <span class="col">Preco_1</span>.<span class="col">Preco</span>     <span class="kw">AS</span> <span class="col">Preco_1</span>,
+    <span class="col">Preco_1</span>.<span class="col">Nome</span>      <span class="kw">AS</span> <span class="col">Tabela_1</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Prod_Serv</span>
+    <span class="kw">OUTER APPLY</span> (
+        <span class="kw">SELECT</span> <span class="col">Preco</span>, <span class="col">Nome</span>
+        <span class="kw">FROM</span> <span class="tbl">Prod_Serv_Precos</span>
+        <span class="kw">INNER JOIN</span> <span class="tbl">Tabelas_Preco</span>
+            <span class="kw">ON</span>  <span class="tbl">Tabelas_Preco</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="tbl">Prod_Serv_Precos</span>.<span class="col">Ordem_Tabela_Preco</span>
+            <span class="kw">AND</span> <span class="tbl">Tabelas_Preco</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="col">@Tabela_1</span>
+        <span class="kw">WHERE</span> <span class="tbl">Prod_Serv_Precos</span>.<span class="col">Ordem_Prod_Serv</span> <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem</span>
+    ) <span class="col">Preco_1</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Inativo</span>              <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Bloqueado_Movimento</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Bloqueado_Venda</span>     <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Uso_Interno</span>         <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>              <span class="op">&gt;</span> <span class="str">'0'</span>
+<span class="kw">ORDER BY</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo_Ordenacao</span></pre>
+      </div>
+    </div>
+
+    <!-- EX 3 -->
+    <div class="example-card" id="ex3">
+      <div class="example-num">EXEMPLO 03</div>
+      <div class="example-title">Relatório de Preços de Produtos — Várias Tabelas</div>
+      <div class="example-desc">Exibe o preço de cada produto em até quatro tabelas de preço simultaneamente, cada uma em sua própria coluna. Requer um <code style="font-family:var(--mono);font-size:12px;color:var(--accent2)">OUTER APPLY</code> e alias distinto por tabela, além de <code style="font-family:var(--mono);font-size:12px;color:var(--accent2)">GROUP BY</code> com todos os campos.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">tabela de preço</span>
+        <span class="tag-chip">múltiplas tabelas</span>
+        <span class="tag-chip">comparativo de preços</span>
+        <span class="tag-chip">OUTER APPLY</span>
+        <span class="tag-chip">GROUP BY</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="rule-block">
+        <strong>REGRA — GROUP BY obrigatório com múltiplos OUTER APPLY</strong>
+        <ul>
+          <li>Com dois ou mais <code style="font-family:var(--mono);font-size:11px">OUTER APPLY</code>, inclua todos os campos do SELECT no <code style="font-family:var(--mono);font-size:11px">GROUP BY</code> para evitar linhas duplicadas geradas pela combinação dos subselects.</li>
+          <li>Inclua também <code style="font-family:var(--mono);font-size:11px">Prod_Serv.Codigo_Ordenacao</code> no GROUP BY para manter a ordenação correta.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section-title">Parâmetros</div>
+      <div class="param-list">
+        <div class="param-item"><span class="param-name">@Tabela_1</span><span class="param-type">INT</span><div><div class="param-desc">Ordem da 1ª tabela de preço</div></div></div>
+        <div class="param-item"><span class="param-name">@Tabela_2</span><span class="param-type">INT</span><div><div class="param-desc">Ordem da 2ª tabela de preço</div></div></div>
+        <div class="param-item"><span class="param-name">@Tabela_3</span><span class="param-type">INT</span><div><div class="param-desc">Ordem da 3ª tabela de preço</div></div></div>
+        <div class="param-item"><span class="param-name">@Tabela_4</span><span class="param-type">INT</span><div><div class="param-desc">Ordem da 4ª tabela de preço</div></div></div>
+      </div>
+
+      <div class="sub-section-title">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Codigo_Produto</strong></td><td><code>Prod_Serv.Codigo</code></td><td>Código do produto</td></tr>
+          <tr><td><strong>Nome_Produto</strong></td><td><code>Prod_Serv.Nome</code></td><td>Nome do produto</td></tr>
+          <tr><td><strong>Preco_1 … Preco_4</strong></td><td><code>Preco_N.Preco</code> (OUTER APPLY)</td><td>Valor na tabela N. <code>NULL</code> se não cadastrado.</td></tr>
+          <tr><td><strong>Tabela_1 … Tabela_4</strong></td><td><code>Preco_N.Nome</code> (OUTER APPLY)</td><td>Nome da tabela de preço N</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Tabela_1</span>  <span class="fn">INT</span> <span class="op">=</span> <span class="num">1</span>,
+    <span class="col">@Tabela_2</span>  <span class="fn">INT</span> <span class="op">=</span> <span class="num">2</span>,
+    <span class="col">@Tabela_3</span>  <span class="fn">INT</span> <span class="op">=</span> <span class="num">3</span>,
+    <span class="col">@Tabela_4</span>  <span class="fn">INT</span> <span class="op">=</span> <span class="num">4</span>
+
+<span class="kw">SELECT</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>   <span class="kw">AS</span> <span class="col">Codigo_Produto</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Nome</span>     <span class="kw">AS</span> <span class="col">Nome_Produto</span>,
+    <span class="col">Preco_1</span>.<span class="col">Preco</span>     <span class="kw">AS</span> <span class="col">Preco_1</span>,
+    <span class="col">Preco_1</span>.<span class="col">Nome</span>      <span class="kw">AS</span> <span class="col">Tabela_1</span>,
+    <span class="col">Preco_2</span>.<span class="col">Preco</span>     <span class="kw">AS</span> <span class="col">Preco_2</span>,
+    <span class="col">Preco_2</span>.<span class="col">Nome</span>      <span class="kw">AS</span> <span class="col">Tabela_2</span>,
+    <span class="col">Preco_3</span>.<span class="col">Preco</span>     <span class="kw">AS</span> <span class="col">Preco_3</span>,
+    <span class="col">Preco_3</span>.<span class="col">Nome</span>      <span class="kw">AS</span> <span class="col">Tabela_3</span>,
+    <span class="col">Preco_4</span>.<span class="col">Preco</span>     <span class="kw">AS</span> <span class="col">Preco_4</span>,
+    <span class="col">Preco_4</span>.<span class="col">Nome</span>      <span class="kw">AS</span> <span class="col">Tabela_4</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Prod_Serv</span>
+    <span class="kw">OUTER APPLY</span> (
+        <span class="kw">SELECT</span> <span class="col">Preco</span>, <span class="col">Nome</span> <span class="kw">FROM</span> <span class="tbl">Prod_Serv_Precos</span>
+        <span class="kw">INNER JOIN</span> <span class="tbl">Tabelas_Preco</span> <span class="kw">ON</span> <span class="tbl">Tabelas_Preco</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="tbl">Prod_Serv_Precos</span>.<span class="col">Ordem_Tabela_Preco</span> <span class="kw">AND</span> <span class="tbl">Tabelas_Preco</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="col">@Tabela_1</span>
+        <span class="kw">WHERE</span> <span class="tbl">Prod_Serv_Precos</span>.<span class="col">Ordem_Prod_Serv</span> <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem</span>
+    ) <span class="col">Preco_1</span>
+    <span class="kw">OUTER APPLY</span> (
+        <span class="kw">SELECT</span> <span class="col">Preco</span>, <span class="col">Nome</span> <span class="kw">FROM</span> <span class="tbl">Prod_Serv_Precos</span>
+        <span class="kw">INNER JOIN</span> <span class="tbl">Tabelas_Preco</span> <span class="kw">ON</span> <span class="tbl">Tabelas_Preco</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="tbl">Prod_Serv_Precos</span>.<span class="col">Ordem_Tabela_Preco</span> <span class="kw">AND</span> <span class="tbl">Tabelas_Preco</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="col">@Tabela_2</span>
+        <span class="kw">WHERE</span> <span class="tbl">Prod_Serv_Precos</span>.<span class="col">Ordem_Prod_Serv</span> <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem</span>
+    ) <span class="col">Preco_2</span>
+    <span class="kw">OUTER APPLY</span> (
+        <span class="kw">SELECT</span> <span class="col">Preco</span>, <span class="col">Nome</span> <span class="kw">FROM</span> <span class="tbl">Prod_Serv_Precos</span>
+        <span class="kw">INNER JOIN</span> <span class="tbl">Tabelas_Preco</span> <span class="kw">ON</span> <span class="tbl">Tabelas_Preco</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="tbl">Prod_Serv_Precos</span>.<span class="col">Ordem_Tabela_Preco</span> <span class="kw">AND</span> <span class="tbl">Tabelas_Preco</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="col">@Tabela_3</span>
+        <span class="kw">WHERE</span> <span class="tbl">Prod_Serv_Precos</span>.<span class="col">Ordem_Prod_Serv</span> <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem</span>
+    ) <span class="col">Preco_3</span>
+    <span class="kw">OUTER APPLY</span> (
+        <span class="kw">SELECT</span> <span class="col">Preco</span>, <span class="col">Nome</span> <span class="kw">FROM</span> <span class="tbl">Prod_Serv_Precos</span>
+        <span class="kw">INNER JOIN</span> <span class="tbl">Tabelas_Preco</span> <span class="kw">ON</span> <span class="tbl">Tabelas_Preco</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="tbl">Prod_Serv_Precos</span>.<span class="col">Ordem_Tabela_Preco</span> <span class="kw">AND</span> <span class="tbl">Tabelas_Preco</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="col">@Tabela_4</span>
+        <span class="kw">WHERE</span> <span class="tbl">Prod_Serv_Precos</span>.<span class="col">Ordem_Prod_Serv</span> <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem</span>
+    ) <span class="col">Preco_4</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Inativo</span>              <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Bloqueado_Movimento</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Bloqueado_Venda</span>     <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Uso_Interno</span>         <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>              <span class="op">&gt;</span> <span class="str">'0'</span>
+<span class="kw">GROUP BY</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo_Ordenacao</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Nome</span>,
+    <span class="col">Preco_1</span>.<span class="col">Preco</span>, <span class="col">Preco_1</span>.<span class="col">Nome</span>,
+    <span class="col">Preco_2</span>.<span class="col">Preco</span>, <span class="col">Preco_2</span>.<span class="col">Nome</span>,
+    <span class="col">Preco_3</span>.<span class="col">Preco</span>, <span class="col">Preco_3</span>.<span class="col">Nome</span>,
+    <span class="col">Preco_4</span>.<span class="col">Preco</span>, <span class="col">Preco_4</span>.<span class="col">Nome</span>
+<span class="kw">ORDER BY</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo_Ordenacao</span></pre>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-wrap').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'COPIADO!'; btn.style.color = 'var(--accent)';
+      setTimeout(() => { btn.textContent = 'COPIAR'; btn.style.color = ''; }, 2000);
+    });
+  }
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.sidebar-link[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('[id]').forEach(s => obs.observe(s));
+</script>
+</body>
+</html>

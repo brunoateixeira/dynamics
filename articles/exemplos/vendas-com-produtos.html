@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Movimento + Produtos — Documentação Text-to-SQL</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@400;600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e29;
+    --border: #252a38;
+    --accent: #4ade80;
+    --accent2: #38bdf8;
+    --accent3: #f59e0b;
+    --accent4: #f87171;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --text-dim: #94a3b8;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Inter', sans-serif;
+    --display: 'Syne', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 28px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .sidebar-logo {
+    padding: 0 20px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  .sidebar-logo .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .sidebar-logo h1 {
+    font-family: var(--display);
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  .sidebar-section {
+    padding: 0 20px;
+    margin-bottom: 24px;
+  }
+
+  .sidebar-section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+
+  .sidebar-link:hover { background: var(--surface2); color: var(--text); }
+  .sidebar-link.active { background: rgba(74,222,128,0.1); color: var(--accent); }
+
+  .sidebar-link .num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    min-width: 18px;
+  }
+
+  .main {
+    flex: 1;
+    padding: 40px 48px;
+    max-width: 960px;
+  }
+
+  .page-header {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .breadcrumb {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  .breadcrumb span { color: var(--accent); }
+
+  .page-title {
+    font-family: var(--display);
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    color: var(--text-dim);
+    font-size: 15px;
+    max-width: 560px;
+  }
+
+  .meta-row {
+    display: flex;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .meta-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .meta-pill .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .section { margin-bottom: 52px; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .tag-global  { background: rgba(74,222,128,0.12);  color: var(--accent); }
+  .tag-example { background: rgba(56,189,248,0.12);  color: var(--accent2); }
+  .tag-rule    { background: rgba(245,158,11,0.12);  color: var(--accent3); }
+  .tag-bug     { background: rgba(248,113,113,0.12); color: var(--accent4); }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: rgba(74,222,128,0.05);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .callout.warn  { border-color: var(--accent3); background: rgba(245,158,11,0.05); }
+  .callout.info  { border-color: var(--accent2); background: rgba(56,189,248,0.05); }
+  .callout strong { color: var(--text); }
+
+  .enum-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .enum-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+
+  .enum-key {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent2);
+    min-width: 28px;
+    background: rgba(56,189,248,0.08);
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .enum-val { font-size: 13px; color: var(--text-dim); }
+
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+
+  .doc-table th {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 8px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .doc-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+    vertical-align: top;
+  }
+
+  .doc-table tr:last-child td { border-bottom: none; }
+  .doc-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .doc-table td code {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent2);
+    background: rgba(56,189,248,0.08);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .doc-table td strong { color: var(--text); }
+
+  .code-wrap { position: relative; margin-bottom: 20px; }
+
+  .code-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: var(--surface2);
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .copy-btn {
+    cursor: pointer;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    transition: color 0.15s;
+    padding: 0;
+  }
+  .copy-btn:hover { color: var(--accent); }
+
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0 0 8px 8px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--text-dim);
+  }
+
+  .kw  { color: #c792ea; }
+  .fn  { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .cmt { color: #546e7a; font-style: italic; }
+  .col { color: var(--text); }
+  .tbl { color: var(--accent2); }
+  .num { color: var(--accent3); }
+  .op  { color: #89ddff; }
+
+  .example-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .example-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent2), transparent);
+  }
+
+  .example-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+
+  .example-title {
+    font-family: var(--display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .example-desc {
+    color: var(--text-dim);
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+
+  .tag-chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--surface2);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    letter-spacing: 0.5px;
+  }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  .sub-section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .rule-block {
+    background: rgba(245,158,11,0.05);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .rule-block strong { color: var(--accent3); font-family: var(--mono); font-size: 12px; }
+  .rule-block ul { margin-top: 8px; padding-left: 18px; }
+  .rule-block ul li { margin-bottom: 4px; }
+
+  .join-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    flex-wrap: wrap;
+  }
+
+  .join-block .arrow { color: var(--accent); font-size: 16px; }
+  .join-block .tname { color: var(--accent2); }
+  .join-block .purpose { font-family: var(--sans); font-size: 11px; color: var(--text-muted); margin-left: auto; }
+
+  .param-list { margin-bottom: 20px; }
+
+  .param-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .param-item:last-child { border-bottom: none; }
+
+  .param-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent2);
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+
+  .param-type {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent3);
+    min-width: 50px;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+
+  .param-desc { color: var(--text-dim); font-size: 13px; }
+  .param-note { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="tag">Text-to-SQL Docs</span>
+      <h1>Movimento + Produtos</h1>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Referência Global</div>
+      <a href="#joins" class="sidebar-link">
+        <span class="num">◆</span> Ligações Disponíveis
+      </a>
+      <a href="#regra-valores" class="sidebar-link">
+        <span class="num">◆</span> Regra: Campos de Valor
+      </a>
+      <a href="#regra-classificacoes" class="sidebar-link">
+        <span class="num">◆</span> Regra: Classificações
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Exemplos</div>
+      <a href="#ex1" class="sidebar-link">
+        <span class="num">01</span> Vendas com Produtos
+      </a>
+      <a href="#ex2" class="sidebar-link">
+        <span class="num">02</span> Com Devolução
+      </a>
+      <a href="#ex3" class="sidebar-link">
+        <span class="num">03</span> Com Vendedor
+      </a>
+      <a href="#ex4" class="sidebar-link">
+        <span class="num">04</span> Com Classificação
+      </a>
+      <a href="#ex5" class="sidebar-link">
+        <span class="num">05</span> Valor Bruto e Líquido
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="page-header">
+      <div class="breadcrumb">dynamics / tabelas / <span>Movimento + Movimento_Prod_Serv</span></div>
+      <h1 class="page-title">Vendas com Produtos</h1>
+      <p class="page-subtitle">Documentação AI-friendly e Text-to-SQL para consultas que combinam <code style="font-family:var(--mono);font-size:13px;color:var(--accent2)">Movimento</code> e <code style="font-family:var(--mono);font-size:13px;color:var(--accent2)">Movimento_Prod_Serv</code>, detalhando os produtos vendidos em cada movimentação.</p>
+      <div class="meta-row">
+        <span class="meta-pill"><span class="dot"></span> SQL Server (T-SQL)</span>
+        <span class="meta-pill"><span class="dot" style="background:var(--accent2)"></span> 5 Exemplos</span>
+        <span class="meta-pill"><span class="dot" style="background:var(--accent3)"></span> Módulo: Vendas / Produtos</span>
+      </div>
+    </div>
+
+    <!-- ═══ LIGAÇÕES ═══ -->
+    <div class="section" id="joins">
+      <div class="section-header">
+        <span class="section-tag tag-global">Global</span>
+        <h2 class="section-title">Ligações Disponíveis</h2>
+      </div>
+
+      <div class="callout info">
+        Use apenas os JOINs necessários para o dado solicitado. As ligações de classificações de produto (<code style="font-family:var(--mono);font-size:11px">Classes</code>, <code style="font-family:var(--mono);font-size:11px">Subclasses</code> etc.) devem ser sempre <code style="font-family:var(--mono);font-size:11px">LEFT JOIN</code> para não excluir produtos sem classificação cadastrada.
+      </div>
+
+      <table class="doc-table">
+        <thead>
+          <tr><th>Tabela</th><th>Chave de Ligação</th><th>Tipo de JOIN</th><th>Quando Usar</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Filiais</code></td>
+            <td><code>Movimento.Ordem_Filial = Filiais.Ordem</code></td>
+            <td>INNER JOIN</td>
+            <td>Sempre — para exibir ou filtrar por filial</td>
+          </tr>
+          <tr>
+            <td><code>Movimento_Prod_Serv</code></td>
+            <td><code>Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento</code></td>
+            <td>INNER JOIN</td>
+            <td>Sempre — é a tabela de itens da movimentação</td>
+          </tr>
+          <tr>
+            <td><code>Prod_Serv</code></td>
+            <td><code>Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem</code></td>
+            <td>INNER JOIN</td>
+            <td>Sempre — para obter código e nome do produto</td>
+          </tr>
+          <tr>
+            <td><code>Funcionarios</code></td>
+            <td><code>Movimento_Prod_Serv.Ordem_Vendedor = Funcionarios.Ordem</code></td>
+            <td>INNER JOIN</td>
+            <td>Quando precisar do vendedor <strong>por item</strong>. Use <code>Movimento_Prod_Serv.Ordem_Vendedor</code>, não <code>Movimento.Ordem_Vendedor1</code></td>
+          </tr>
+          <tr>
+            <td><code>Classes</code></td>
+            <td><code>Classes.Ordem = Prod_Serv.Ordem_Classe</code></td>
+            <td>LEFT JOIN</td>
+            <td>Quando precisar filtrar ou exibir a classe do produto</td>
+          </tr>
+          <tr>
+            <td><code>Subclasses</code></td>
+            <td><code>Subclasses.Ordem = Prod_Serv.Ordem_Subclasse</code></td>
+            <td>LEFT JOIN</td>
+            <td>Quando precisar filtrar ou exibir a subclasse do produto</td>
+          </tr>
+          <tr>
+            <td><code>Grupos</code></td>
+            <td><code>Grupos.Ordem = Prod_Serv.Ordem_Grupo</code></td>
+            <td>LEFT JOIN</td>
+            <td>Quando precisar filtrar ou exibir o grupo do produto</td>
+          </tr>
+          <tr>
+            <td><code>Familias</code></td>
+            <td><code>Familias.Ordem = Prod_Serv.Ordem_Familia</code></td>
+            <td>LEFT JOIN</td>
+            <td>Quando precisar filtrar ou exibir a família do produto</td>
+          </tr>
+          <tr>
+            <td><code>Fabricantes</code></td>
+            <td><code>Fabricantes.Ordem = Prod_Serv.Ordem_Fabricante</code></td>
+            <td>LEFT JOIN</td>
+            <td>Quando precisar filtrar ou exibir o fabricante do produto</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ REGRA VALORES ═══ -->
+    <div class="section" id="regra-valores">
+      <div class="section-header">
+        <span class="section-tag tag-rule">Regra de Negócio</span>
+        <h2 class="section-title">Campos de Valor em Consultas com Produtos</h2>
+      </div>
+
+      <div class="callout warn">
+        <strong>Atenção:</strong> ao listar produtos, os campos de valor devem vir de <code style="font-family:var(--mono);font-size:11px">Movimento_Prod_Serv</code>, não de <code style="font-family:var(--mono);font-size:11px">Movimento</code>. Como a consulta gera múltiplas linhas por movimentação (uma por item), os valores de <code style="font-family:var(--mono);font-size:11px">Movimento</code> seriam duplicados.
+      </div>
+
+      <table class="doc-table">
+        <thead>
+          <tr><th>Campo</th><th>Tabela</th><th>Descrição</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Preco_Final_Relatorio</code></td>
+            <td><code>Movimento_Prod_Serv</code></td>
+            <td><strong>Valor líquido do item</strong> — campo principal para exibir o valor do produto vendido. Inclui descontos. Use <code>SUM()</code> ao agrupar.</td>
+          </tr>
+          <tr>
+            <td><code>Preco_Total_Sem_Desconto</code></td>
+            <td><code>Movimento_Prod_Serv</code></td>
+            <td>Valor bruto do item, sem descontos aplicados. Use <code>SUM()</code> ao agrupar.</td>
+          </tr>
+          <tr>
+            <td><code>Quantidade</code></td>
+            <td><code>Movimento_Prod_Serv</code></td>
+            <td>Quantidade vendida do item. Use <code>SUM()</code> ao agrupar.</td>
+          </tr>
+          <tr>
+            <td><code>Desconto_Percentual</code></td>
+            <td><code>Movimento_Prod_Serv</code></td>
+            <td>Percentual de desconto já aplicado ao item (ex: <code>10.00</code> = 10%). Não requer cálculo adicional. Não usar com <code>SUM()</code> — deve estar no GROUP BY.</td>
+          </tr>
+          <tr>
+            <td><code>Linha_Excluida</code></td>
+            <td><code>Movimento_Prod_Serv</code></td>
+            <td>Indica se o item foi excluído da movimentação. Sempre filtrar <code>Linha_Excluida = 0</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="rule-block">
+        <strong>REGRA — Devoluções com valores negativos</strong>
+        <ul>
+          <li>Ao incluir <code style="font-family:var(--mono);font-size:11px">'DEV'</code> e <code style="font-family:var(--mono);font-size:11px">'CVE'</code>, aplique o padrão abaixo em todos os campos de valor e quantidade:</li>
+        </ul>
+        <div style="margin-top:10px">
+          <code style="font-family:var(--mono);font-size:11px;color:var(--accent2)">SUM(CASE WHEN Movimento.Tipo_Operacao IN ('VND','VPC','VEF') THEN campo ELSE -campo END)</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ REGRA CLASSIFICAÇÕES ═══ -->
+    <div class="section" id="regra-classificacoes">
+      <div class="section-header">
+        <span class="section-tag tag-rule">Regra de Negócio</span>
+        <h2 class="section-title">Classificações de Produto</h2>
+      </div>
+
+      <div class="callout">
+        <strong>Classificações são opcionais no cadastro do produto.</strong> Use sempre <code style="font-family:var(--mono);font-size:11px">LEFT JOIN</code> para não excluir produtos sem classificação. Nos filtros, sempre inclua o padrão <code style="font-family:var(--mono);font-size:11px">OR @Filtro IS NULL</code> para permitir que o parâmetro seja opcional.
+      </div>
+
+      <div class="rule-block">
+        <strong>PADRÃO de filtro para classificações</strong>
+        <ul>
+          <li>Classe: <code style="font-family:var(--mono);font-size:11px">(Prod_Serv.Ordem_Classe = @Classe OR @Classe IS NULL)</code></li>
+          <li>Subclasse: <code style="font-family:var(--mono);font-size:11px">(Prod_Serv.Ordem_Subclasse = @Subclasse OR @Subclasse IS NULL)</code></li>
+          <li>Grupo: <code style="font-family:var(--mono);font-size:11px">(Prod_Serv.Ordem_Grupo = @Grupo OR @Grupo IS NULL)</code></li>
+          <li>Família: <code style="font-family:var(--mono);font-size:11px">(Prod_Serv.Ordem_Familia = @Família OR @Família IS NULL)</code></li>
+          <li>Fabricante: <code style="font-family:var(--mono);font-size:11px">(Prod_Serv.Ordem_Fabricante = @Fabricante OR @Fabricante IS NULL)</code></li>
+        </ul>
+      </div>
+
+      <div class="rule-block">
+        <strong>CAMPOS úteis de classificação nas tabelas de lookup</strong>
+        <ul>
+          <li>Todas as tabelas de classificação possuem <code style="font-family:var(--mono);font-size:11px">.Codigo</code> e <code style="font-family:var(--mono);font-size:11px">.Nome</code> para exibição.</li>
+          <li>A ligação ao produto se dá sempre por <code style="font-family:var(--mono);font-size:11px">Tabela.Ordem = Prod_Serv.Ordem_[Tabela]</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ═══ EXEMPLOS ═══ -->
+    <div class="section-header" style="margin-bottom:24px">
+      <span class="section-tag tag-example">Exemplos</span>
+      <h2 class="section-title">Consultas de Referência</h2>
+    </div>
+
+    <!-- EX 1 -->
+    <div class="example-card" id="ex1">
+      <div class="example-num">EXEMPLO 01</div>
+      <div class="example-title">Relatório de Vendas com Produtos</div>
+      <div class="example-desc">Lista os produtos vendidos no período com quantidade e valor total por produto. Sem abater devoluções.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">produtos vendidos</span>
+        <span class="tag-chip">quantidade</span>
+        <span class="tag-chip">valor por produto</span>
+        <span class="tag-chip">ranking de produtos</span>
+        <span class="tag-chip">Movimento_Prod_Serv</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="sub-section-title">Observações</div>
+      <div class="rule-block">
+        <strong>NOTA</strong>
+        <ul>
+          <li>Use <code style="font-family:var(--mono);font-size:11px">SUM(Movimento_Prod_Serv.Preco_Final_Relatorio)</code> — nunca <code style="font-family:var(--mono);font-size:11px">Movimento.Preco_Final_Somado</code> — em consultas que listam produtos.</li>
+          <li>Sempre filtrar <code style="font-family:var(--mono);font-size:11px">Movimento_Prod_Serv.Linha_Excluida = 0</code> para ignorar itens excluídos da movimentação.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section-title">Parâmetros</div>
+      <div class="param-list">
+        <div class="param-item">
+          <span class="param-name">@Data_Inicial</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data inicial do período (por data de efetivação de estoque)</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Data_Final</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data final do período (por data de efetivação de estoque)</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Filial</span>
+          <span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem da filial</div><div class="param-note">NULL = todas as filiais</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section-title">Ligações</div>
+      <div class="join-block"><span class="tname">Movimento</span><span class="arrow">→</span><span class="tname">Filiais</span><span style="color:var(--text-muted)">ON Movimento.Ordem_Filial = Filiais.Ordem</span></div>
+      <div class="join-block"><span class="tname">Movimento</span><span class="arrow">→</span><span class="tname">Movimento_Prod_Serv</span><span style="color:var(--text-muted)">ON Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento</span><span class="purpose">Itens da venda</span></div>
+      <div class="join-block"><span class="tname">Movimento_Prod_Serv</span><span class="arrow">→</span><span class="tname">Prod_Serv</span><span style="color:var(--text-muted)">ON Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem</span><span class="purpose">Dados do produto</span></div>
+
+      <div class="sub-section-title" style="margin-top:20px">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Codigo_Produto</strong></td><td><code>Prod_Serv.Codigo</code></td><td>Código do produto no cadastro</td></tr>
+          <tr><td><strong>Nome_Produto</strong></td><td><code>Prod_Serv.Nome</code></td><td>Nome do produto</td></tr>
+          <tr><td><strong>Quantidade_Produto_Somado</strong></td><td><code>SUM(Movimento_Prod_Serv.Quantidade)</code></td><td>Quantidade total vendida no período</td></tr>
+          <tr><td><strong>Valor_Produto_Somado</strong></td><td><code>SUM(Movimento_Prod_Serv.Preco_Final_Relatorio)</code></td><td>Valor líquido total vendido no período</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>
+
+<span class="kw">SELECT</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>                                         <span class="kw">AS</span> <span class="col">Codigo_Produto</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Nome</span>                                           <span class="kw">AS</span> <span class="col">Nome_Produto</span>,
+    <span class="fn">SUM</span>(<span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Quantidade</span>)                       <span class="kw">AS</span> <span class="col">Quantidade_Produto_Somado</span>,
+    <span class="fn">SUM</span>(<span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Preco_Final_Relatorio</span>)            <span class="kw">AS</span> <span class="col">Valor_Produto_Somado</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Movimento</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span>            <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Filial</span>          <span class="op">=</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Movimento_Prod_Serv</span> <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem</span>               <span class="op">=</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Ordem_Movimento</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Prod_Serv</span>          <span class="kw">ON</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Ordem_Prod_Serv</span> <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Movimento</span>.<span class="col">Apagado</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Situacao_Expedicao</span> <span class="op">&lt;&gt;</span> <span class="str">'A'</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Desefetivacao_Estoque</span> <span class="kw">IS NULL</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">DAY</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>, <span class="str">'VPC'</span>, <span class="str">'VEF'</span>)
+    <span class="kw">AND</span> (<span class="tbl">Filiais</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="col">@Filial</span> <span class="kw">OR</span> <span class="col">@Filial</span> <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Linha_Excluida</span> <span class="op">=</span> <span class="num">0</span>
+<span class="kw">GROUP BY</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Nome</span>
+<span class="kw">ORDER BY</span>
+    <span class="col">Valor_Produto_Somado</span> <span class="kw">DESC</span></pre>
+      </div>
+    </div>
+
+    <!-- EX 2 -->
+    <div class="example-card" id="ex2">
+      <div class="example-num">EXEMPLO 02</div>
+      <div class="example-title">Relatório de Vendas com Produtos Considerando Devolução</div>
+      <div class="example-desc">Lista os produtos vendidos abatendo devoluções. Itens de movimentações DEV e CVE entram com quantidade e valor negativos.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">produtos vendidos</span>
+        <span class="tag-chip">devolução</span>
+        <span class="tag-chip">cancelamento</span>
+        <span class="tag-chip">quantidade líquida</span>
+        <span class="tag-chip">valor líquido</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="rule-block">
+        <strong>REGRA — Valores negativos para devoluções em itens</strong>
+        <ul>
+          <li>Aplicar <code style="font-family:var(--mono);font-size:11px">CASE WHEN Movimento.Tipo_Operacao IN ('VND','VPC','VEF') THEN campo ELSE -campo END</code> dentro do <code style="font-family:var(--mono);font-size:11px">SUM()</code> tanto em <code style="font-family:var(--mono);font-size:11px">Quantidade</code> quanto em <code style="font-family:var(--mono);font-size:11px">Preco_Final_Relatorio</code>.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section-title">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Codigo_Produto</strong></td><td><code>Prod_Serv.Codigo</code></td><td>Código do produto</td></tr>
+          <tr><td><strong>Nome_Produto</strong></td><td><code>Prod_Serv.Nome</code></td><td>Nome do produto</td></tr>
+          <tr><td><strong>Quantidade_Produto_Somado</strong></td><td>SUM CASE em <code>Movimento_Prod_Serv.Quantidade</code></td><td>Quantidade líquida (negativa em devoluções)</td></tr>
+          <tr><td><strong>Valor_Produto_Somado</strong></td><td>SUM CASE em <code>Movimento_Prod_Serv.Preco_Final_Relatorio</code></td><td>Valor líquido (negativo em devoluções)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>
+
+<span class="kw">SELECT</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>                                                          <span class="kw">AS</span> <span class="col">Codigo_Produto</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Nome</span>                                                            <span class="kw">AS</span> <span class="col">Nome_Produto</span>,
+    <span class="fn">SUM</span>(<span class="kw">CASE</span> <span class="kw">WHEN</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>,<span class="str">'VPC'</span>,<span class="str">'VEF'</span>)
+             <span class="kw">THEN</span>  <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Quantidade</span>
+             <span class="kw">ELSE</span> <span class="op">-</span><span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Quantidade</span>
+        <span class="kw">END</span>)                                                                     <span class="kw">AS</span> <span class="col">Quantidade_Produto_Somado</span>,
+    <span class="fn">SUM</span>(<span class="kw">CASE</span> <span class="kw">WHEN</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>,<span class="str">'VPC'</span>,<span class="str">'VEF'</span>)
+             <span class="kw">THEN</span>  <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Preco_Final_Relatorio</span>
+             <span class="kw">ELSE</span> <span class="op">-</span><span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Preco_Final_Relatorio</span>
+        <span class="kw">END</span>)                                                                     <span class="kw">AS</span> <span class="col">Valor_Produto_Somado</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Movimento</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span>            <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Filial</span>          <span class="op">=</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Movimento_Prod_Serv</span> <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem</span>               <span class="op">=</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Ordem_Movimento</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Prod_Serv</span>          <span class="kw">ON</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Ordem_Prod_Serv</span> <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Movimento</span>.<span class="col">Apagado</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Situacao_Expedicao</span> <span class="op">&lt;&gt;</span> <span class="str">'A'</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Desefetivacao_Estoque</span> <span class="kw">IS NULL</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">DAY</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>, <span class="str">'VPC'</span>, <span class="str">'VEF'</span>, <span class="str">'DEV'</span>, <span class="str">'CVE'</span>)
+    <span class="kw">AND</span> (<span class="tbl">Filiais</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="col">@Filial</span> <span class="kw">OR</span> <span class="col">@Filial</span> <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Linha_Excluida</span> <span class="op">=</span> <span class="num">0</span>
+<span class="kw">GROUP BY</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Nome</span>
+<span class="kw">ORDER BY</span>
+    <span class="col">Valor_Produto_Somado</span> <span class="kw">DESC</span></pre>
+      </div>
+    </div>
+
+    <!-- EX 3 -->
+    <div class="example-card" id="ex3">
+      <div class="example-num">EXEMPLO 03</div>
+      <div class="example-title">Relatório de Vendas com Produtos e Vendedor</div>
+      <div class="example-desc">Lista os produtos vendidos agrupados por vendedor. Usa o campo de vendedor do item (<code style="font-family:var(--mono);font-size:12px;color:var(--accent2)">Movimento_Prod_Serv.Ordem_Vendedor</code>), que pode diferir do vendedor da movimentação.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">vendedor</span>
+        <span class="tag-chip">produtos por vendedor</span>
+        <span class="tag-chip">comissão</span>
+        <span class="tag-chip">Funcionarios</span>
+        <span class="tag-chip">Movimento_Prod_Serv</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="rule-block">
+        <strong>REGRA — Vendedor em consultas com produtos</strong>
+        <ul>
+          <li>Use <code style="font-family:var(--mono);font-size:11px">Movimento_Prod_Serv.Ordem_Vendedor</code> (não <code style="font-family:var(--mono);font-size:11px">Movimento.Ordem_Vendedor1</code>) para ligar à tabela <code style="font-family:var(--mono);font-size:11px">Funcionarios</code>. O vendedor pode ser diferente por item.</li>
+          <li>Prefira <code style="font-family:var(--mono);font-size:11px">Funcionarios.Apelido</code> ao invés de <code style="font-family:var(--mono);font-size:11px">Funcionarios.Nome</code> pelo tamanho do campo.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section-title">Parâmetros</div>
+      <div class="param-list">
+        <div class="param-item">
+          <span class="param-name">@Data_Inicial</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data inicial do período</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Data_Final</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data final do período</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Filial</span>
+          <span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem da filial</div><div class="param-note">NULL = todas as filiais</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Vendedor</span>
+          <span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem do vendedor (Funcionarios.Ordem)</div><div class="param-note">NULL = todos os vendedores</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section-title">Ligações</div>
+      <div class="join-block"><span class="tname">Movimento</span><span class="arrow">→</span><span class="tname">Filiais</span><span style="color:var(--text-muted)">ON Movimento.Ordem_Filial = Filiais.Ordem</span></div>
+      <div class="join-block"><span class="tname">Movimento</span><span class="arrow">→</span><span class="tname">Movimento_Prod_Serv</span><span style="color:var(--text-muted)">ON Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento</span></div>
+      <div class="join-block"><span class="tname">Movimento_Prod_Serv</span><span class="arrow">→</span><span class="tname">Prod_Serv</span><span style="color:var(--text-muted)">ON Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem</span></div>
+      <div class="join-block"><span class="tname">Movimento_Prod_Serv</span><span class="arrow">→</span><span class="tname">Funcionarios</span><span style="color:var(--text-muted)">ON Movimento_Prod_Serv.Ordem_Vendedor = Funcionarios.Ordem</span><span class="purpose">Vendedor do item</span></div>
+
+      <div class="sub-section-title" style="margin-top:20px">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Codigo_Funcionário</strong></td><td><code>Funcionarios.Codigo</code></td><td>Código do vendedor</td></tr>
+          <tr><td><strong>Nome_Funcionário</strong></td><td><code>Funcionarios.Apelido</code></td><td>Apelido do vendedor</td></tr>
+          <tr><td><strong>Codigo_Produto</strong></td><td><code>Prod_Serv.Codigo</code></td><td>Código do produto</td></tr>
+          <tr><td><strong>Nome_Produto</strong></td><td><code>Prod_Serv.Nome</code></td><td>Nome do produto</td></tr>
+          <tr><td><strong>Quantidade_Produto_Somado</strong></td><td>SUM CASE em <code>Movimento_Prod_Serv.Quantidade</code></td><td>Quantidade líquida vendida</td></tr>
+          <tr><td><strong>Valor_Produto_Somado</strong></td><td>SUM CASE em <code>Movimento_Prod_Serv.Preco_Final_Relatorio</code></td><td>Valor líquido vendido</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>,
+    <span class="col">@Vendedor</span>      <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>  <span class="cmt">-- NULL = todos os vendedores</span>
+
+<span class="kw">SELECT</span>
+    <span class="tbl">Funcionarios</span>.<span class="col">Codigo</span>                                                    <span class="kw">AS</span> <span class="col">Codigo_Funcionário</span>,
+    <span class="tbl">Funcionarios</span>.<span class="col">Apelido</span>                                                   <span class="kw">AS</span> <span class="col">Nome_Funcionário</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>                                                       <span class="kw">AS</span> <span class="col">Codigo_Produto</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Nome</span>                                                         <span class="kw">AS</span> <span class="col">Nome_Produto</span>,
+    <span class="fn">SUM</span>(<span class="kw">CASE</span> <span class="kw">WHEN</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>,<span class="str">'VPC'</span>,<span class="str">'VEF'</span>)
+             <span class="kw">THEN</span>  <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Quantidade</span>
+             <span class="kw">ELSE</span> <span class="op">-</span><span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Quantidade</span>
+        <span class="kw">END</span>)                                                                   <span class="kw">AS</span> <span class="col">Quantidade_Produto_Somado</span>,
+    <span class="fn">SUM</span>(<span class="kw">CASE</span> <span class="kw">WHEN</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>,<span class="str">'VPC'</span>,<span class="str">'VEF'</span>)
+             <span class="kw">THEN</span>  <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Preco_Final_Relatorio</span>
+             <span class="kw">ELSE</span> <span class="op">-</span><span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Preco_Final_Relatorio</span>
+        <span class="kw">END</span>)                                                                   <span class="kw">AS</span> <span class="col">Valor_Produto_Somado</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Movimento</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span>            <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Filial</span>               <span class="op">=</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Movimento_Prod_Serv</span> <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem</span>                    <span class="op">=</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Ordem_Movimento</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Prod_Serv</span>          <span class="kw">ON</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Ordem_Prod_Serv</span>  <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Funcionarios</span>       <span class="kw">ON</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Ordem_Vendedor</span>   <span class="op">=</span> <span class="tbl">Funcionarios</span>.<span class="col">Ordem</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Movimento</span>.<span class="col">Apagado</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Situacao_Expedicao</span> <span class="op">&lt;&gt;</span> <span class="str">'A'</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Desefetivacao_Estoque</span> <span class="kw">IS NULL</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">DAY</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>, <span class="str">'VPC'</span>, <span class="str">'VEF'</span>, <span class="str">'DEV'</span>, <span class="str">'CVE'</span>)
+    <span class="kw">AND</span> (<span class="tbl">Filiais</span>.<span class="col">Ordem</span>        <span class="op">=</span> <span class="col">@Filial</span>   <span class="kw">OR</span> <span class="col">@Filial</span>   <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> (<span class="tbl">Funcionarios</span>.<span class="col">Ordem</span>  <span class="op">=</span> <span class="col">@Vendedor</span> <span class="kw">OR</span> <span class="col">@Vendedor</span> <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Linha_Excluida</span> <span class="op">=</span> <span class="num">0</span>
+<span class="kw">GROUP BY</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Nome</span>,
+    <span class="tbl">Funcionarios</span>.<span class="col">Codigo</span>,
+    <span class="tbl">Funcionarios</span>.<span class="col">Apelido</span>
+<span class="kw">ORDER BY</span>
+    <span class="tbl">Funcionarios</span>.<span class="col">Codigo</span>,
+    <span class="col">Valor_Produto_Somado</span> <span class="kw">DESC</span></pre>
+      </div>
+    </div>
+
+    <!-- EX 4 -->
+    <div class="example-card" id="ex4">
+      <div class="example-num">EXEMPLO 04</div>
+      <div class="example-title">Relatório de Vendas com Classificação de Produtos</div>
+      <div class="example-desc">Lista os produtos vendidos com dados de classificação (Classe, Subclasse, Grupo, Família, Fabricante). Todos os filtros de classificação são opcionais.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">classificação</span>
+        <span class="tag-chip">classe</span>
+        <span class="tag-chip">subclasse</span>
+        <span class="tag-chip">grupo</span>
+        <span class="tag-chip">família</span>
+        <span class="tag-chip">fabricante</span>
+        <span class="tag-chip">LEFT JOIN</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="rule-block">
+        <strong>REGRA — LEFT JOIN para classificações</strong>
+        <ul>
+          <li>Use <code style="font-family:var(--mono);font-size:11px">LEFT JOIN</code> em todas as ligações de classificação para incluir produtos sem classificação cadastrada.</li>
+          <li>Todos os parâmetros de classificação aceitam <code style="font-family:var(--mono);font-size:11px">NULL</code> para retornar todos.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section-title">Parâmetros</div>
+      <div class="param-list">
+        <div class="param-item">
+          <span class="param-name">@Data_Inicial</span><span class="param-type">DATE</span>
+          <div><div class="param-desc">Data inicial do período</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Data_Final</span><span class="param-type">DATE</span>
+          <div><div class="param-desc">Data final do período</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Filial</span><span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem da filial</div><div class="param-note">NULL = todas as filiais</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Classe</span><span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem da classe do produto</div><div class="param-note">NULL = todas as classes</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Subclasse</span><span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem da subclasse do produto</div><div class="param-note">NULL = todas as subclasses</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Grupo</span><span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem do grupo do produto</div><div class="param-note">NULL = todos os grupos</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Família</span><span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem da família do produto</div><div class="param-note">NULL = todas as famílias</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Fabricante</span><span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem do fabricante do produto</div><div class="param-note">NULL = todos os fabricantes</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section-title">Ligações</div>
+      <div class="join-block"><span class="tname">Movimento</span><span class="arrow">→</span><span class="tname">Filiais</span><span style="color:var(--text-muted)">ON Movimento.Ordem_Filial = Filiais.Ordem</span></div>
+      <div class="join-block"><span class="tname">Movimento</span><span class="arrow">→</span><span class="tname">Movimento_Prod_Serv</span><span style="color:var(--text-muted)">ON Movimento.Ordem = Movimento_Prod_Serv.Ordem_Movimento</span></div>
+      <div class="join-block"><span class="tname">Movimento_Prod_Serv</span><span class="arrow">→</span><span class="tname">Prod_Serv</span><span style="color:var(--text-muted)">ON Movimento_Prod_Serv.Ordem_Prod_Serv = Prod_Serv.Ordem</span></div>
+      <div class="join-block"><span class="tname">Prod_Serv</span><span class="arrow">→</span><span class="tname">Classes</span><span style="color:var(--text-muted)">LEFT JOIN — Classes.Ordem = Prod_Serv.Ordem_Classe</span></div>
+      <div class="join-block"><span class="tname">Prod_Serv</span><span class="arrow">→</span><span class="tname">Subclasses</span><span style="color:var(--text-muted)">LEFT JOIN — Subclasses.Ordem = Prod_Serv.Ordem_Subclasse</span></div>
+      <div class="join-block"><span class="tname">Prod_Serv</span><span class="arrow">→</span><span class="tname">Grupos</span><span style="color:var(--text-muted)">LEFT JOIN — Grupos.Ordem = Prod_Serv.Ordem_Grupo</span></div>
+      <div class="join-block"><span class="tname">Prod_Serv</span><span class="arrow">→</span><span class="tname">Familias</span><span style="color:var(--text-muted)">LEFT JOIN — Familias.Ordem = Prod_Serv.Ordem_Familia</span></div>
+      <div class="join-block"><span class="tname">Prod_Serv</span><span class="arrow">→</span><span class="tname">Fabricantes</span><span style="color:var(--text-muted)">LEFT JOIN — Fabricantes.Ordem = Prod_Serv.Ordem_Fabricante</span></div>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>,
+    <span class="col">@Classe</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>,
+    <span class="col">@Subclasse</span>     <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>,
+    <span class="col">@Grupo</span>         <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>,
+    <span class="col">@Família</span>       <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>,
+    <span class="col">@Fabricante</span>    <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>
+
+<span class="kw">SELECT</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>                                                          <span class="kw">AS</span> <span class="col">Codigo_Produto</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Nome</span>                                                            <span class="kw">AS</span> <span class="col">Nome_Produto</span>,
+    <span class="tbl">Classes</span>.<span class="col">Codigo</span>                                                            <span class="kw">AS</span> <span class="col">Codigo_Classe</span>,
+    <span class="tbl">Classes</span>.<span class="col">Nome</span>                                                              <span class="kw">AS</span> <span class="col">Nome_Classe</span>,
+    <span class="fn">SUM</span>(<span class="kw">CASE</span> <span class="kw">WHEN</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>,<span class="str">'VPC'</span>,<span class="str">'VEF'</span>)
+             <span class="kw">THEN</span>  <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Quantidade</span>
+             <span class="kw">ELSE</span> <span class="op">-</span><span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Quantidade</span>
+        <span class="kw">END</span>)                                                                     <span class="kw">AS</span> <span class="col">Quantidade_Produto_Somado</span>,
+    <span class="fn">SUM</span>(<span class="kw">CASE</span> <span class="kw">WHEN</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>,<span class="str">'VPC'</span>,<span class="str">'VEF'</span>)
+             <span class="kw">THEN</span>  <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Preco_Final_Relatorio</span>
+             <span class="kw">ELSE</span> <span class="op">-</span><span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Preco_Final_Relatorio</span>
+        <span class="kw">END</span>)                                                                     <span class="kw">AS</span> <span class="col">Valor_Produto_Somado</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Movimento</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span>            <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Filial</span>               <span class="op">=</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Movimento_Prod_Serv</span> <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem</span>                    <span class="op">=</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Ordem_Movimento</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Prod_Serv</span>          <span class="kw">ON</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Ordem_Prod_Serv</span>  <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem</span>
+    <span class="kw">LEFT JOIN</span>  <span class="tbl">Classes</span>            <span class="kw">ON</span> <span class="tbl">Classes</span>.<span class="col">Ordem</span>                     <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem_Classe</span>
+    <span class="kw">LEFT JOIN</span>  <span class="tbl">Subclasses</span>         <span class="kw">ON</span> <span class="tbl">Subclasses</span>.<span class="col">Ordem</span>                  <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem_Subclasse</span>
+    <span class="kw">LEFT JOIN</span>  <span class="tbl">Grupos</span>             <span class="kw">ON</span> <span class="tbl">Grupos</span>.<span class="col">Ordem</span>                      <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem_Grupo</span>
+    <span class="kw">LEFT JOIN</span>  <span class="tbl">Familias</span>           <span class="kw">ON</span> <span class="tbl">Familias</span>.<span class="col">Ordem</span>                    <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem_Familia</span>
+    <span class="kw">LEFT JOIN</span>  <span class="tbl">Fabricantes</span>        <span class="kw">ON</span> <span class="tbl">Fabricantes</span>.<span class="col">Ordem</span>                 <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem_Fabricante</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Movimento</span>.<span class="col">Apagado</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Situacao_Expedicao</span> <span class="op">&lt;&gt;</span> <span class="str">'A'</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Desefetivacao_Estoque</span> <span class="kw">IS NULL</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">DAY</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>, <span class="str">'VPC'</span>, <span class="str">'VEF'</span>, <span class="str">'DEV'</span>, <span class="str">'CVE'</span>)
+    <span class="kw">AND</span> (<span class="tbl">Filiais</span>.<span class="col">Ordem</span>           <span class="op">=</span> <span class="col">@Filial</span>     <span class="kw">OR</span> <span class="col">@Filial</span>     <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Linha_Excluida</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> (<span class="tbl">Prod_Serv</span>.<span class="col">Ordem_Classe</span>      <span class="op">=</span> <span class="col">@Classe</span>     <span class="kw">OR</span> <span class="col">@Classe</span>     <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> (<span class="tbl">Prod_Serv</span>.<span class="col">Ordem_Subclasse</span>   <span class="op">=</span> <span class="col">@Subclasse</span>  <span class="kw">OR</span> <span class="col">@Subclasse</span>  <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> (<span class="tbl">Prod_Serv</span>.<span class="col">Ordem_Grupo</span>       <span class="op">=</span> <span class="col">@Grupo</span>      <span class="kw">OR</span> <span class="col">@Grupo</span>      <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> (<span class="tbl">Prod_Serv</span>.<span class="col">Ordem_Familia</span>     <span class="op">=</span> <span class="col">@Família</span>    <span class="kw">OR</span> <span class="col">@Família</span>    <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> (<span class="tbl">Prod_Serv</span>.<span class="col">Ordem_Fabricante</span>  <span class="op">=</span> <span class="col">@Fabricante</span> <span class="kw">OR</span> <span class="col">@Fabricante</span> <span class="kw">IS NULL</span>)
+<span class="kw">GROUP BY</span>
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Nome</span>,
+    <span class="tbl">Classes</span>.<span class="col">Codigo</span>,
+    <span class="tbl">Classes</span>.<span class="col">Nome</span>
+<span class="kw">ORDER BY</span>
+    <span class="col">Valor_Produto_Somado</span> <span class="kw">DESC</span></pre>
+      </div>
+    </div>
+
+    <!-- EX 5 -->
+    <div class="example-card" id="ex5">
+      <div class="example-num">EXEMPLO 05</div>
+      <div class="example-title">Relatório de Vendas com Valor Bruto e Valor Líquido por Produto</div>
+      <div class="example-desc">Exibe o valor bruto (sem desconto), o percentual de desconto aplicado e o valor líquido de cada produto vendido, por número de movimentação.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">valor bruto</span>
+        <span class="tag-chip">valor líquido</span>
+        <span class="tag-chip">desconto</span>
+        <span class="tag-chip">percentual de desconto</span>
+        <span class="tag-chip">margens</span>
+        <span class="tag-chip">Preco_Total_Sem_Desconto</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="rule-block">
+        <strong>REGRA — Desconto_Percentual não usa SUM()</strong>
+        <ul>
+          <li><code style="font-family:var(--mono);font-size:11px">Movimento_Prod_Serv.Desconto_Percentual</code> já contém o percentual aplicado (ex: <code style="font-family:var(--mono);font-size:11px">10.00</code> = 10%). Não requer cálculo.</li>
+          <li>Por não ser um valor agregável, deve ser incluído no <code style="font-family:var(--mono);font-size:11px">GROUP BY</code>, não em <code style="font-family:var(--mono);font-size:11px">SUM()</code>.</li>
+        </ul>
+      </div>
+
+      <div class="rule-block">
+        <strong>NOTA — Data utilizada neste exemplo</strong>
+        <ul>
+          <li>Este exemplo filtra por <code style="font-family:var(--mono);font-size:11px">Data_Efetivado_Financeiro</code> (data de efetivação financeira) em vez de <code style="font-family:var(--mono);font-size:11px">Data_Passou_Efetivacao_Estoque</code>. Use conforme o contexto do relatório desejado.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section-title">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Sequencia</strong></td><td><code>Movimento.Sequencia</code></td><td>Número da movimentação</td></tr>
+          <tr><td><strong>Codigo_Produto</strong></td><td><code>Prod_Serv.Codigo</code></td><td>Código do produto</td></tr>
+          <tr><td><strong>Nome_Produto</strong></td><td><code>Prod_Serv.Nome</code></td><td>Nome do produto</td></tr>
+          <tr><td><strong>Valor_Bruto_Produto</strong></td><td>SUM CASE em <code>Movimento_Prod_Serv.Preco_Total_Sem_Desconto</code></td><td>Valor sem descontos (negativo em devoluções)</td></tr>
+          <tr><td><strong>Percentual_Desconto_Produto</strong></td><td><code>Movimento_Prod_Serv.Desconto_Percentual</code></td><td>% de desconto aplicado ao item</td></tr>
+          <tr><td><strong>Valor_Liquido_Produto</strong></td><td>SUM CASE em <code>Movimento_Prod_Serv.Preco_Final_Relatorio</code></td><td>Valor com descontos (negativo em devoluções)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>
+
+<span class="kw">SELECT</span>
+    <span class="tbl">Movimento</span>.<span class="col">Sequencia</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>                                                          <span class="kw">AS</span> <span class="col">Codigo_Produto</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Nome</span>                                                            <span class="kw">AS</span> <span class="col">Nome_Produto</span>,
+    <span class="fn">SUM</span>(<span class="kw">CASE</span> <span class="kw">WHEN</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>, <span class="str">'VPC'</span>, <span class="str">'VEF'</span>)
+             <span class="kw">THEN</span>  <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Preco_Total_Sem_Desconto</span>
+             <span class="kw">ELSE</span> <span class="op">-</span><span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Preco_Total_Sem_Desconto</span>
+        <span class="kw">END</span>)                                                                     <span class="kw">AS</span> <span class="col">Valor_Bruto_Produto</span>,
+    <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Desconto_Percentual</span>                                   <span class="kw">AS</span> <span class="col">Percentual_Desconto_Produto</span>,
+    <span class="fn">SUM</span>(<span class="kw">CASE</span> <span class="kw">WHEN</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>, <span class="str">'VPC'</span>, <span class="str">'VEF'</span>)
+             <span class="kw">THEN</span>  <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Preco_Final_Relatorio</span>
+             <span class="kw">ELSE</span> <span class="op">-</span><span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Preco_Final_Relatorio</span>
+        <span class="kw">END</span>)                                                                     <span class="kw">AS</span> <span class="col">Valor_Liquido_Produto</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Movimento</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Movimento_Prod_Serv</span> <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem</span>               <span class="op">=</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Ordem_Movimento</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Prod_Serv</span>          <span class="kw">ON</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Ordem_Prod_Serv</span> <span class="op">=</span> <span class="tbl">Prod_Serv</span>.<span class="col">Ordem</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span>            <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Filial</span>           <span class="op">=</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Movimento</span>.<span class="col">Apagado</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Situacao_Expedicao</span> <span class="op">&lt;&gt;</span> <span class="str">'A'</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Desefetivacao_Estoque</span> <span class="kw">IS NULL</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Efetivado_Financeiro</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Efetivado_Financeiro</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">DAY</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>, <span class="str">'VPC'</span>, <span class="str">'VEF'</span>, <span class="str">'DEV'</span>, <span class="str">'CVE'</span>)
+    <span class="kw">AND</span> <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Linha_Excluida</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> (<span class="tbl">Filiais</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="col">@Filial</span> <span class="kw">OR</span> <span class="col">@Filial</span> <span class="kw">IS NULL</span>)
+<span class="kw">GROUP BY</span>
+    <span class="tbl">Movimento</span>.<span class="col">Sequencia</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Nome</span>,
+    <span class="tbl">Movimento_Prod_Serv</span>.<span class="col">Desconto_Percentual</span>
+<span class="kw">ORDER BY</span>
+    <span class="tbl">Movimento</span>.<span class="col">Sequencia</span></pre>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-wrap').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'COPIADO!';
+      btn.style.color = 'var(--accent)';
+      setTimeout(() => { btn.textContent = 'COPIAR'; btn.style.color = ''; }, 2000);
+    });
+  }
+
+  const sections = document.querySelectorAll('[id]');
+  const links    = document.querySelectorAll('.sidebar-link');
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.sidebar-link[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>

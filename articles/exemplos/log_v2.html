@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Log_V2 — Documentação Text-to-SQL</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@400;600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0d0f14; --surface: #13161e; --surface2: #1a1e29; --border: #252a38;
+    --accent: #4ade80; --accent2: #38bdf8; --accent3: #f59e0b; --accent4: #f87171;
+    --text: #e2e8f0; --text-muted: #64748b; --text-dim: #94a3b8;
+    --mono: 'IBM Plex Mono', monospace; --sans: 'Inter', sans-serif; --display: 'Syne', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.7; }
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar { width: 260px; min-width: 260px; background: var(--surface); border-right: 1px solid var(--border); padding: 28px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; flex-shrink: 0; }
+  .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .sidebar-logo .tag { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+  .sidebar-logo h1 { font-family: var(--display); font-size: 16px; font-weight: 800; color: var(--text); }
+  .sidebar-section { padding: 0 20px; margin-bottom: 24px; }
+  .sidebar-section-title { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+  .sidebar-link { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; color: var(--text-dim); text-decoration: none; font-size: 13px; transition: all 0.15s; margin-bottom: 2px; }
+  .sidebar-link:hover { background: var(--surface2); color: var(--text); }
+  .sidebar-link.active { background: rgba(74,222,128,0.1); color: var(--accent); }
+  .sidebar-link .num { font-family: var(--mono); font-size: 10px; color: var(--text-muted); min-width: 18px; }
+  .main { flex: 1; padding: 40px 48px; max-width: 960px; }
+  .page-header { margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+  .breadcrumb { font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 1px; }
+  .breadcrumb span { color: var(--accent); }
+  .page-title { font-family: var(--display); font-size: 36px; font-weight: 800; color: var(--text); margin-bottom: 8px; line-height: 1.2; }
+  .page-subtitle { color: var(--text-dim); font-size: 15px; max-width: 560px; }
+  .meta-row { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+  .meta-pill { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+  .meta-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .section { margin-bottom: 52px; }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .section-tag { font-family: var(--mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+  .tag-global  { background: rgba(74,222,128,0.12);  color: var(--accent); }
+  .tag-example { background: rgba(56,189,248,0.12);  color: var(--accent2); }
+  .tag-rule    { background: rgba(245,158,11,0.12);  color: var(--accent3); }
+  .tag-warn    { background: rgba(248,113,113,0.12); color: var(--accent4); }
+  .section-title { font-family: var(--display); font-size: 20px; font-weight: 700; color: var(--text); }
+  .callout { border-left: 3px solid var(--accent); background: rgba(74,222,128,0.05); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 20px; font-size: 13px; color: var(--text-dim); }
+  .callout.warn  { border-color: var(--accent3); background: rgba(245,158,11,0.05); }
+  .callout.danger { border-color: var(--accent4); background: rgba(248,113,113,0.05); }
+  .callout.info  { border-color: var(--accent2); background: rgba(56,189,248,0.05); }
+  .callout strong { color: var(--text); }
+  .doc-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+  .doc-table th { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); padding: 8px 14px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .doc-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-dim); vertical-align: top; }
+  .doc-table tr:last-child td { border-bottom: none; }
+  .doc-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .doc-table td code { font-family: var(--mono); font-size: 11px; color: var(--accent2); background: rgba(56,189,248,0.08); padding: 2px 6px; border-radius: 4px; }
+  .doc-table td strong { color: var(--text); }
+  .code-wrap { position: relative; margin-bottom: 20px; }
+  .code-label { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; background: var(--surface2); padding: 6px 14px; border: 1px solid var(--border); border-bottom: none; border-radius: 8px 8px 0 0; display: flex; align-items: center; justify-content: space-between; }
+  .copy-btn { cursor: pointer; color: var(--text-muted); background: none; border: none; font-family: var(--mono); font-size: 10px; letter-spacing: 1px; transition: color 0.15s; padding: 0; }
+  .copy-btn:hover { color: var(--accent); }
+  pre { background: var(--surface); border: 1px solid var(--border); border-radius: 0 0 8px 8px; padding: 18px 20px; overflow-x: auto; font-family: var(--mono); font-size: 12.5px; line-height: 1.7; color: var(--text-dim); }
+  .kw { color: #c792ea; } .fn { color: #82aaff; } .str { color: #c3e88d; }
+  .cmt { color: #546e7a; font-style: italic; } .col { color: var(--text); }
+  .tbl { color: var(--accent2); } .num { color: var(--accent3); } .op { color: #89ddff; }
+  .example-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 32px; position: relative; overflow: hidden; }
+  .example-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent4), transparent); }
+  .example-num { font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 1px; }
+  .example-title { font-family: var(--display); font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .example-desc { color: var(--text-dim); font-size: 13px; margin-bottom: 20px; }
+  .tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+  .tag-chip { font-family: var(--mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); letter-spacing: 0.5px; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+  .sub-section-title { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+  .rule-block { background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.2); border-radius: 8px; padding: 16px 18px; margin-bottom: 16px; font-size: 13px; color: var(--text-dim); }
+  .rule-block.danger { background: rgba(248,113,113,0.05); border-color: rgba(248,113,113,0.25); }
+  .rule-block strong { color: var(--accent3); font-family: var(--mono); font-size: 12px; }
+  .rule-block.danger strong { color: var(--accent4); }
+  .rule-block ul { margin-top: 8px; padding-left: 18px; }
+  .rule-block ul li { margin-bottom: 4px; }
+  .join-block { display: flex; align-items: center; gap: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; font-family: var(--mono); font-size: 12px; color: var(--text-dim); flex-wrap: wrap; }
+  .join-block .arrow { color: var(--accent); font-size: 16px; }
+  .join-block .tname { color: var(--accent2); }
+  .join-block .purpose { font-family: var(--sans); font-size: 11px; color: var(--text-muted); margin-left: auto; }
+  .param-list { margin-bottom: 20px; }
+  .param-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .param-item:last-child { border-bottom: none; }
+  .param-name { font-family: var(--mono); font-size: 12px; color: var(--accent2); min-width: 140px; flex-shrink: 0; }
+  .param-type { font-family: var(--mono); font-size: 11px; color: var(--accent3); min-width: 50px; flex-shrink: 0; padding-top: 1px; }
+  .param-desc { color: var(--text-dim); font-size: 13px; }
+  .param-note { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="tag">Text-to-SQL Docs</span>
+      <h1>Log_V2</h1>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Referência Global</div>
+      <a href="#avisos" class="sidebar-link"><span class="num">◆</span> Avisos de Uso</a>
+      <a href="#charindex" class="sidebar-link"><span class="num">◆</span> Extração via CHARINDEX</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Exemplos</div>
+      <a href="#ex1" class="sidebar-link"><span class="num">01</span> Produtos Excluídos de Vendas</a>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <div class="page-header">
+      <div class="breadcrumb">dynamics / tabelas / <span>Log_V2</span></div>
+      <h1 class="page-title">Log de Auditoria</h1>
+      <p class="page-subtitle">Documentação AI-friendly e Text-to-SQL para consultas na tabela <code style="font-family:var(--mono);font-size:13px;color:var(--accent2)">Log_V2</code>, usada para rastrear ações de usuários que não ficam registradas em outras tabelas.</p>
+      <div class="meta-row">
+        <span class="meta-pill"><span class="dot"></span> SQL Server (T-SQL)</span>
+        <span class="meta-pill"><span class="dot" style="background:var(--accent2)"></span> 1 Exemplo</span>
+        <span class="meta-pill"><span class="dot" style="background:var(--accent4)"></span> Módulo: Auditoria</span>
+      </div>
+    </div>
+
+    <!-- AVISOS -->
+    <div class="section" id="avisos">
+      <div class="section-header">
+        <span class="section-tag tag-warn">Atenção</span>
+        <h2 class="section-title">Avisos de Uso</h2>
+      </div>
+
+      <div class="callout danger">
+        <strong>Log_V2 é uma tabela de uso especial.</strong> Recorra a ela apenas quando a informação necessária não estiver disponível em nenhuma outra tabela transacional.
+      </div>
+
+      <div class="rule-block danger">
+        <strong>LIMITAÇÕES CRÍTICAS</strong>
+        <ul>
+          <li><strong>Performance:</strong> consultas em <code style="font-family:var(--mono);font-size:11px">Log_V2</code> são significativamente mais lentas. Sempre filtre por data e filial para reduzir o volume de dados varrido.</li>
+          <li><strong>Ligações por Codigo, não por Ordem:</strong> por não haver chaves estrangeiras diretas, ligações com outras tabelas são feitas via <code style="font-family:var(--mono);font-size:11px">.Codigo</code> (texto extraído do campo <code style="font-family:var(--mono);font-size:11px">Detalhe</code>). Isso é menos confiável que ligações por <code style="font-family:var(--mono);font-size:11px">.Ordem</code>.</li>
+          <li><strong>Dados textuais:</strong> as informações relevantes estão dentro do campo <code style="font-family:var(--mono);font-size:11px">Detalhe</code> (texto livre). É necessário usar <code style="font-family:var(--mono);font-size:11px">CHARINDEX</code> e <code style="font-family:var(--mono);font-size:11px">SUBSTRING</code> para extrair cada valor.</li>
+          <li><strong>Use como CTE ao combinar com outras queries:</strong> se precisar cruzar dados do Log_V2 com outra consulta, isole-o em um CTE para manter performance e legibilidade.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section-title">Campos de controle disponíveis</div>
+      <table class="doc-table">
+        <thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><code>Log_V2.Data_Servidor</code></td><td>datetime</td><td>Data e hora do evento no servidor. Use para filtrar o período.</td></tr>
+          <tr><td><code>Log_V2.Ordem_Filial</code></td><td>int</td><td>Filial onde o evento ocorreu. Ligar a <code>Filiais.Ordem</code>.</td></tr>
+          <tr><td><code>Log_V2.Ordem_Funcionario</code></td><td>int</td><td>Funcionário que executou a ação. Ligar a <code>Funcionarios.Ordem</code>.</td></tr>
+          <tr><td><code>Log_V2.Tela</code></td><td>varchar</td><td>Nome da tela do sistema onde a ação ocorreu. Use no WHERE externo para filtrar o contexto (ex: <code>'Tela de Saídas'</code>).</td></tr>
+          <tr><td><code>Log_V2.Detalhe</code></td><td>varchar</td><td>Texto livre com os detalhes do evento. Toda extração de dados é feita a partir deste campo via <code>CHARINDEX</code>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CHARINDEX -->
+    <div class="section" id="charindex">
+      <div class="section-header">
+        <span class="section-tag tag-rule">Regra de Negócio</span>
+        <h2 class="section-title">Extração de Dados via CHARINDEX</h2>
+      </div>
+
+      <div class="callout info">
+        <strong>Como funciona:</strong> o campo <code style="font-family:var(--mono);font-size:11px">Detalhe</code> contém texto no formato <code style="font-family:var(--mono);font-size:11px">"... Código 001 (Nome do Produto), Quantidade: 2, R$ Unit.: 15,00 ..."</code>. Cada valor é extraído localizando o início do marcador de texto e recortando até o delimitador seguinte.
+      </div>
+
+      <div class="rule-block">
+        <strong>PADRÃO DE EXTRAÇÃO — CHARINDEX + SUBSTRING</strong>
+        <ul>
+          <li>Use <code style="font-family:var(--mono);font-size:11px">CHARINDEX('marcador', Detalhe)</code> para localizar a posição do início de cada campo.</li>
+          <li>Use <code style="font-family:var(--mono);font-size:11px">SUBSTRING(Detalhe, início, comprimento)</code> para recortar o valor.</li>
+          <li>Sempre proteja com <code style="font-family:var(--mono);font-size:11px">CASE WHEN CHARINDEX(...) > 0 ... ELSE NULL END</code> para evitar erros em registros que não contêm o campo.</li>
+          <li>Use <code style="font-family:var(--mono);font-size:11px">TRIM()</code> ao redor do resultado para remover espaços residuais.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section-title">Marcadores conhecidos no campo Detalhe</div>
+      <table class="doc-table">
+        <thead><tr><th>Dado</th><th>Marcador de início</th><th>Delimitador de fim</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Código do Produto</strong></td><td><code>'Código '</code></td><td>Próximo <code>'('</code> após o marcador</td></tr>
+          <tr><td><strong>Quantidade</strong></td><td><code>'Quantidade: '</code></td><td>Próxima <code>','</code> após o marcador</td></tr>
+          <tr><td><strong>Valor Unitário</strong></td><td><code>'R$ Unit.: '</code></td><td>Próximo <code>')'</code> após o marcador</td></tr>
+          <tr><td><strong>Sequência da Venda</strong></td><td><code>'sequência '</code></td><td>Limite fixo de 20 caracteres</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout warn">
+        <strong>Filtros no campo Detalhe:</strong> use <code style="font-family:var(--mono);font-size:11px">Detalhe LIKE '%marcador%'</code> para garantir que a linha contém o dado antes de tentar extraí-lo. Isso melhora a performance e evita resultados nulos inesperados.
+      </div>
+    </div>
+
+    <!-- EXEMPLOS -->
+    <div class="section-header" style="margin-bottom:24px">
+      <span class="section-tag tag-example">Exemplos</span>
+      <h2 class="section-title">Consultas de Referência</h2>
+    </div>
+
+    <!-- EX 1 -->
+    <div class="example-card" id="ex1">
+      <div class="example-num">EXEMPLO 01</div>
+      <div class="example-title">Relatório de Produtos Excluídos de Vendas</div>
+      <div class="example-desc">Lista os itens que foram removidos de movimentações de saída, com funcionário responsável, data, hora, produto, quantidade e valor unitário. Usa <code style="font-family:var(--mono);font-size:12px;color:var(--accent2)">Log_V2</code> como fonte pois <code style="font-family:var(--mono);font-size:12px;color:var(--accent2)">Movimento_Prod_Serv</code> não registra quem realizou a exclusão.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">auditoria</span>
+        <span class="tag-chip">exclusão de produto</span>
+        <span class="tag-chip">itens removidos</span>
+        <span class="tag-chip">tela de saídas</span>
+        <span class="tag-chip">CHARINDEX</span>
+        <span class="tag-chip">subquery</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="rule-block danger">
+        <strong>AVISOS DESTA CONSULTA</strong>
+        <ul>
+          <li>A ligação com <code style="font-family:var(--mono);font-size:11px">Prod_Serv</code> é feita via <code style="font-family:var(--mono);font-size:11px">Prod_Serv.Codigo = A.Codigo_Produto</code> (texto), não por Ordem. Isso é uma exceção — não replicar este padrão em outras tabelas.</li>
+          <li>O filtro <code style="font-family:var(--mono);font-size:11px">Tela = 'Tela de Saídas'</code> deve estar no WHERE externo (após a subquery), pois é um campo da subquery, não da tabela original.</li>
+          <li>Se for combinar esta consulta com outras, encapsule-a como CTE para isolar o custo de processamento do Log_V2.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section-title">Parâmetros</div>
+      <div class="param-list">
+        <div class="param-item">
+          <span class="param-name">@Data_Inicial</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data inicial do período (por <code>Log_V2.Data_Servidor</code>)</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Data_Final</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data final do período</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Filial</span>
+          <span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem da filial</div><div class="param-note">NULL = todas as filiais</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section-title">Ligações</div>
+      <div class="join-block"><span class="tname">Log_V2</span><span class="arrow">→</span><span class="tname">Filiais</span><span style="color:var(--text-muted)">ON Filiais.Ordem = Log_V2.Ordem_Filial</span></div>
+      <div class="join-block"><span class="tname">Log_V2</span><span class="arrow">→</span><span class="tname">Funcionarios</span><span style="color:var(--text-muted)">ON Funcionarios.Ordem = Log_V2.Ordem_Funcionario</span></div>
+      <div class="join-block"><span class="tname">Subquery (A)</span><span class="arrow">→</span><span class="tname">Prod_Serv</span><span style="color:var(--text-muted)">ON Prod_Serv.Codigo = A.Codigo_Produto</span><span class="purpose">⚠ ligação por Codigo (texto)</span></div>
+
+      <div class="sub-section-title" style="margin-top:20px">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Filial</strong></td><td><code>Filiais.Codigo</code></td><td>Código da filial onde ocorreu a exclusão</td></tr>
+          <tr><td><strong>Data</strong></td><td><code>Log_V2.Data_Servidor</code> (formato 103)</td><td>Data do evento (DD/MM/AAAA)</td></tr>
+          <tr><td><strong>Hora</strong></td><td><code>Log_V2.Data_Servidor</code> (formato 108)</td><td>Hora do evento (HH:MM:SS)</td></tr>
+          <tr><td><strong>Funcionario</strong></td><td><code>CONCAT(Funcionarios.Codigo, ' - ', Funcionarios.Apelido)</code></td><td>Código e nome do funcionário que excluiu o item</td></tr>
+          <tr><td><strong>Sequencia</strong></td><td>CHARINDEX em <code>Log_V2.Detalhe</code></td><td>Número da movimentação de onde o item foi removido</td></tr>
+          <tr><td><strong>Codigo_Produto</strong></td><td>CHARINDEX em <code>Log_V2.Detalhe</code></td><td>Código do produto excluído (extraído do texto)</td></tr>
+          <tr><td><strong>Nome_Produto</strong></td><td><code>Prod_Serv.Nome</code></td><td>Nome do produto (via JOIN por Codigo)</td></tr>
+          <tr><td><strong>Quantidade</strong></td><td>CHARINDEX em <code>Log_V2.Detalhe</code></td><td>Quantidade do item no momento da exclusão</td></tr>
+          <tr><td><strong>Valor_Unitario</strong></td><td>CHARINDEX em <code>Log_V2.Detalhe</code></td><td>Valor unitário do item no momento da exclusão</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>
+
+<span class="kw">SELECT</span>
+    <span class="col">A</span>.<span class="col">Filial</span>,
+    <span class="col">A</span>.<span class="col">Data</span>,
+    <span class="col">A</span>.<span class="col">Hora</span>,
+    <span class="col">A</span>.<span class="col">Funcionario</span>,
+    <span class="col">A</span>.<span class="col">Sequencia</span>,
+    <span class="col">A</span>.<span class="col">Codigo_Produto</span>,
+    <span class="tbl">Prod_Serv</span>.<span class="col">Nome</span>  <span class="kw">AS</span> <span class="col">Nome_Produto</span>,
+    <span class="col">A</span>.<span class="col">Quantidade</span>,
+    <span class="col">A</span>.<span class="col">Valor_Unitario</span>
+<span class="kw">FROM</span> (
+    <span class="kw">SELECT</span>
+        <span class="tbl">Log_V2</span>.<span class="col">Tela</span>,
+        <span class="tbl">Filiais</span>.<span class="col">Codigo</span>                                                    <span class="kw">AS</span> <span class="col">Filial</span>,
+
+        <span class="cmt">-- Código do Produto</span>
+        <span class="kw">CASE</span>
+            <span class="kw">WHEN</span> <span class="fn">CHARINDEX</span>(<span class="str">'Código '</span>, <span class="col">Detalhe</span>) <span class="op">&gt;</span> <span class="num">0</span>
+             <span class="kw">AND</span> <span class="fn">CHARINDEX</span>(<span class="str">'('</span>, <span class="col">Detalhe</span>, <span class="fn">CHARINDEX</span>(<span class="str">'Código '</span>, <span class="col">Detalhe</span>)) <span class="op">&gt;</span> <span class="fn">CHARINDEX</span>(<span class="str">'Código '</span>, <span class="col">Detalhe</span>)
+            <span class="kw">THEN</span> <span class="fn">TRIM</span>(
+                <span class="fn">SUBSTRING</span>(
+                    <span class="col">Detalhe</span>,
+                    <span class="fn">CHARINDEX</span>(<span class="str">'Código '</span>, <span class="col">Detalhe</span>) <span class="op">+</span> <span class="fn">LEN</span>(<span class="str">'Código '</span>),
+                    <span class="fn">CHARINDEX</span>(<span class="str">'('</span>, <span class="col">Detalhe</span>, <span class="fn">CHARINDEX</span>(<span class="str">'Código '</span>, <span class="col">Detalhe</span>))
+                    <span class="op">-</span> (<span class="fn">CHARINDEX</span>(<span class="str">'Código '</span>, <span class="col">Detalhe</span>) <span class="op">+</span> <span class="fn">LEN</span>(<span class="str">'Código '</span>))
+                )
+            )
+            <span class="kw">ELSE</span> <span class="kw">NULL</span>
+        <span class="kw">END</span>                                                                    <span class="kw">AS</span> <span class="col">Codigo_Produto</span>,
+
+        <span class="cmt">-- Quantidade</span>
+        <span class="kw">CASE</span>
+            <span class="kw">WHEN</span> <span class="fn">CHARINDEX</span>(<span class="str">'Quantidade: '</span>, <span class="col">Detalhe</span>) <span class="op">&gt;</span> <span class="num">0</span>
+             <span class="kw">AND</span> <span class="fn">CHARINDEX</span>(<span class="str">','</span>, <span class="col">Detalhe</span>, <span class="fn">CHARINDEX</span>(<span class="str">'Quantidade: '</span>, <span class="col">Detalhe</span>)) <span class="op">&gt;</span> <span class="fn">CHARINDEX</span>(<span class="str">'Quantidade: '</span>, <span class="col">Detalhe</span>)
+            <span class="kw">THEN</span> <span class="fn">TRIM</span>(
+                <span class="fn">SUBSTRING</span>(
+                    <span class="col">Detalhe</span>,
+                    <span class="fn">CHARINDEX</span>(<span class="str">'Quantidade: '</span>, <span class="col">Detalhe</span>) <span class="op">+</span> <span class="num">12</span>,
+                    <span class="fn">CHARINDEX</span>(<span class="str">','</span>, <span class="col">Detalhe</span>, <span class="fn">CHARINDEX</span>(<span class="str">'Quantidade: '</span>, <span class="col">Detalhe</span>))
+                    <span class="op">-</span> (<span class="fn">CHARINDEX</span>(<span class="str">'Quantidade: '</span>, <span class="col">Detalhe</span>) <span class="op">+</span> <span class="num">12</span>)
+                )
+            )
+            <span class="kw">ELSE</span> <span class="kw">NULL</span>
+        <span class="kw">END</span>                                                                    <span class="kw">AS</span> <span class="col">Quantidade</span>,
+
+        <span class="cmt">-- Valor Unitário</span>
+        <span class="kw">CASE</span>
+            <span class="kw">WHEN</span> <span class="fn">CHARINDEX</span>(<span class="str">'R$ Unit.: '</span>, <span class="col">Detalhe</span>) <span class="op">&gt;</span> <span class="num">0</span>
+             <span class="kw">AND</span> <span class="fn">CHARINDEX</span>(<span class="str">')'</span>, <span class="col">Detalhe</span>, <span class="fn">CHARINDEX</span>(<span class="str">'R$ Unit.: '</span>, <span class="col">Detalhe</span>)) <span class="op">&gt;</span> <span class="fn">CHARINDEX</span>(<span class="str">'R$ Unit.: '</span>, <span class="col">Detalhe</span>)
+            <span class="kw">THEN</span> <span class="fn">TRIM</span>(
+                <span class="fn">SUBSTRING</span>(
+                    <span class="col">Detalhe</span>,
+                    <span class="fn">CHARINDEX</span>(<span class="str">'R$ Unit.: '</span>, <span class="col">Detalhe</span>) <span class="op">+</span> <span class="num">10</span>,
+                    <span class="fn">CHARINDEX</span>(<span class="str">')'</span>, <span class="col">Detalhe</span>, <span class="fn">CHARINDEX</span>(<span class="str">'R$ Unit.: '</span>, <span class="col">Detalhe</span>))
+                    <span class="op">-</span> (<span class="fn">CHARINDEX</span>(<span class="str">'R$ Unit.: '</span>, <span class="col">Detalhe</span>) <span class="op">+</span> <span class="num">10</span>)
+                )
+            )
+            <span class="kw">ELSE</span> <span class="kw">NULL</span>
+        <span class="kw">END</span>                                                                    <span class="kw">AS</span> <span class="col">Valor_Unitario</span>,
+
+        <span class="cmt">-- Sequência da venda</span>
+        <span class="kw">CASE</span>
+            <span class="kw">WHEN</span> <span class="fn">CHARINDEX</span>(<span class="str">'sequência '</span>, <span class="col">Detalhe</span>) <span class="op">&gt;</span> <span class="num">0</span>
+            <span class="kw">THEN</span> <span class="fn">TRIM</span>(
+                <span class="fn">SUBSTRING</span>(
+                    <span class="col">Detalhe</span>,
+                    <span class="fn">CHARINDEX</span>(<span class="str">'sequência '</span>, <span class="col">Detalhe</span>) <span class="op">+</span> <span class="fn">LEN</span>(<span class="str">'sequência '</span>),
+                    <span class="num">20</span>
+                )
+            )
+            <span class="kw">ELSE</span> <span class="kw">NULL</span>
+        <span class="kw">END</span>                                                                    <span class="kw">AS</span> <span class="col">Sequencia</span>,
+
+        <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Log_V2</span>.<span class="col">Data_Servidor</span>, <span class="num">103</span>)                    <span class="kw">AS</span> <span class="col">Data</span>,
+        <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Log_V2</span>.<span class="col">Data_Servidor</span>, <span class="num">108</span>)                    <span class="kw">AS</span> <span class="col">Hora</span>,
+        <span class="fn">CONCAT</span>(<span class="tbl">Funcionarios</span>.<span class="col">Codigo</span>, <span class="str">' - '</span>, <span class="tbl">Funcionarios</span>.<span class="col">Apelido</span>)           <span class="kw">AS</span> <span class="col">Funcionario</span>
+
+    <span class="kw">FROM</span> <span class="tbl">Log_V2</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span>      <span class="kw">ON</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>      <span class="op">=</span> <span class="tbl">Log_V2</span>.<span class="col">Ordem_Filial</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Funcionarios</span> <span class="kw">ON</span> <span class="tbl">Funcionarios</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="tbl">Log_V2</span>.<span class="col">Ordem_Funcionario</span>
+    <span class="kw">WHERE</span>
+        <span class="col">Detalhe</span> <span class="kw">LIKE</span> <span class="str">'%foi marcado como excluído na%'</span>
+        <span class="kw">AND</span> <span class="col">Detalhe</span> <span class="kw">LIKE</span> <span class="str">'%Código %'</span>
+        <span class="kw">AND</span> <span class="tbl">Log_V2</span>.<span class="col">Data_Servidor</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+        <span class="kw">AND</span> <span class="tbl">Log_V2</span>.<span class="col">Data_Servidor</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">DAY</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+        <span class="kw">AND</span> (<span class="tbl">Filiais</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="col">@Filial</span> <span class="kw">OR</span> <span class="col">@Filial</span> <span class="kw">IS NULL</span>)
+) <span class="col">A</span>
+<span class="kw">INNER JOIN</span> <span class="tbl">Prod_Serv</span> <span class="kw">ON</span> <span class="tbl">Prod_Serv</span>.<span class="col">Codigo</span> <span class="op">=</span> <span class="col">A</span>.<span class="col">Codigo_Produto</span>  <span class="cmt">-- ligação por Codigo (exceção)</span>
+<span class="kw">WHERE</span>
+    <span class="col">A</span>.<span class="col">Tela</span> <span class="op">=</span> <span class="str">'Tela de Saídas'</span>
+<span class="kw">ORDER BY</span>
+    <span class="col">A</span>.<span class="col">Funcionario</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">DATE</span>, <span class="col">A</span>.<span class="col">Data</span>, <span class="num">103</span>),
+    <span class="col">A</span>.<span class="col">Sequencia</span>,
+    <span class="col">A</span>.<span class="col">Codigo_Produto</span></pre>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-wrap').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'COPIADO!'; btn.style.color = 'var(--accent)';
+      setTimeout(() => { btn.textContent = 'COPIAR'; btn.style.color = ''; }, 2000);
+    });
+  }
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.sidebar-link[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('[id]').forEach(s => obs.observe(s));
+</script>
+</body>
+</html>

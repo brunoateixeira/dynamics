@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Movimento — Documentação Text-to-SQL</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@400;600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e29;
+    --border: #252a38;
+    --accent: #4ade80;
+    --accent2: #38bdf8;
+    --accent3: #f59e0b;
+    --accent4: #f87171;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --text-dim: #94a3b8;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Inter', sans-serif;
+    --display: 'Syne', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* SIDEBAR */
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 28px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .sidebar-logo {
+    padding: 0 20px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  .sidebar-logo .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .sidebar-logo h1 {
+    font-family: var(--display);
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  .sidebar-section {
+    padding: 0 20px;
+    margin-bottom: 24px;
+  }
+
+  .sidebar-section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+
+  .sidebar-link:hover { background: var(--surface2); color: var(--text); }
+  .sidebar-link.active { background: rgba(74,222,128,0.1); color: var(--accent); }
+
+  .sidebar-link .num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    min-width: 18px;
+  }
+
+  /* MAIN */
+  .main {
+    flex: 1;
+    padding: 40px 48px;
+    max-width: 960px;
+  }
+
+  /* PAGE HEADER */
+  .page-header {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .breadcrumb {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  .breadcrumb span { color: var(--accent); }
+
+  .page-title {
+    font-family: var(--display);
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    color: var(--text-dim);
+    font-size: 15px;
+    max-width: 560px;
+  }
+
+  .meta-row {
+    display: flex;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .meta-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .meta-pill .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 52px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .tag-global { background: rgba(74,222,128,0.12); color: var(--accent); }
+  .tag-example { background: rgba(56,189,248,0.12); color: var(--accent2); }
+  .tag-rule { background: rgba(245,158,11,0.12); color: var(--accent3); }
+  .tag-bug { background: rgba(248,113,113,0.12); color: var(--accent4); }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* CALLOUT */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: rgba(74,222,128,0.05);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .callout.warn {
+    border-color: var(--accent3);
+    background: rgba(245,158,11,0.05);
+  }
+
+  .callout.info {
+    border-color: var(--accent2);
+    background: rgba(56,189,248,0.05);
+  }
+
+  .callout strong { color: var(--text); }
+
+  /* ENUM GRID */
+  .enum-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .enum-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+
+  .enum-key {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent2);
+    min-width: 28px;
+    background: rgba(56,189,248,0.08);
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .enum-val {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  /* TABLE */
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+
+  .doc-table th {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 8px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .doc-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+    vertical-align: top;
+  }
+
+  .doc-table tr:last-child td { border-bottom: none; }
+  .doc-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .doc-table td code {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent2);
+    background: rgba(56,189,248,0.08);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .doc-table td strong { color: var(--text); }
+
+  /* CODE BLOCK */
+  .code-wrap {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .code-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: var(--surface2);
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .copy-btn {
+    cursor: pointer;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    transition: color 0.15s;
+    padding: 0;
+  }
+
+  .copy-btn:hover { color: var(--accent); }
+
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0 0 8px 8px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--text-dim);
+  }
+
+  .kw { color: #c792ea; }
+  .fn { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .cmt { color: #546e7a; font-style: italic; }
+  .col { color: var(--text); }
+  .tbl { color: var(--accent2); }
+  .num { color: var(--accent3); }
+  .op  { color: #89ddff; }
+
+  /* EXAMPLE CARD */
+  .example-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .example-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent2), transparent);
+  }
+
+  .example-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+
+  .example-title {
+    font-family: var(--display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .example-desc {
+    color: var(--text-dim);
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+
+  .tag-chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--surface2);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    letter-spacing: 0.5px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 24px 0;
+  }
+
+  .sub-section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* RULE BLOCK */
+  .rule-block {
+    background: rgba(245,158,11,0.05);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .rule-block strong { color: var(--accent3); font-family: var(--mono); font-size: 12px; }
+
+  .rule-block ul {
+    margin-top: 8px;
+    padding-left: 18px;
+  }
+
+  .rule-block ul li { margin-bottom: 4px; }
+
+  /* JOIN BLOCK */
+  .join-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    flex-wrap: wrap;
+  }
+
+  .join-block .arrow { color: var(--accent); font-size: 16px; }
+  .join-block .tname { color: var(--accent2); }
+  .join-block .purpose { font-family: var(--sans); font-size: 11px; color: var(--text-muted); margin-left: auto; }
+
+  /* PARAM LIST */
+  .param-list { margin-bottom: 20px; }
+
+  .param-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .param-item:last-child { border-bottom: none; }
+
+  .param-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent2);
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+
+  .param-type {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent3);
+    min-width: 50px;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+
+  .param-desc { color: var(--text-dim); font-size: 13px; }
+  .param-note { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="tag">Text-to-SQL Docs</span>
+      <h1>Movimento</h1>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Referência Global</div>
+      <a href="#enums" class="sidebar-link">
+        <span class="num">◆</span> ENUMs &amp; Valores
+      </a>
+      <a href="#joins" class="sidebar-link">
+        <span class="num">◆</span> Ligações Disponíveis
+      </a>
+      <a href="#filtro-padrao" class="sidebar-link">
+        <span class="num">◆</span> Filtro Padrão de Vendas
+      </a>
+      <a href="#regra-datas" class="sidebar-link">
+        <span class="num">◆</span> Regra: Campos de Data
+      </a>
+      <a href="#regra-valores" class="sidebar-link">
+        <span class="num">◆</span> Regra: Campos de Valor
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Exemplos</div>
+      <a href="#ex1" class="sidebar-link">
+        <span class="num">01</span> Relatório de Vendas
+      </a>
+      <a href="#ex2" class="sidebar-link">
+        <span class="num">02</span> Com Devolução
+      </a>
+      <a href="#ex3" class="sidebar-link">
+        <span class="num">03</span> Com Cliente
+      </a>
+      <a href="#ex4" class="sidebar-link">
+        <span class="num">04</span> Com Vendedor
+      </a>
+      <a href="#ex5" class="sidebar-link">
+        <span class="num">05</span> Por Tipo de Recebimento
+      </a>
+      <a href="#ex6" class="sidebar-link">
+        <span class="num">06</span> Recebimento Detalhado por Parcela
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="breadcrumb">dynamics / tabelas / <span>Movimento</span></div>
+      <h1 class="page-title">Vendas</h1>
+      <p class="page-subtitle">Documentação AI-friendly e Text-to-SQL para consultas na tabela <code style="font-family:var(--mono);font-size:13px;color:var(--accent2)">Movimento</code>, focada em movimentações de venda efetivadas.</p>
+      <div class="meta-row">
+        <span class="meta-pill"><span class="dot"></span> SQL Server (T-SQL)</span>
+        <span class="meta-pill"><span class="dot" style="background:var(--accent2)"></span> 6 Exemplos</span>
+        <span class="meta-pill"><span class="dot" style="background:var(--accent3)"></span> Módulo: Vendas</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════ REFERÊNCIA GLOBAL ═══════════════════════ -->
+
+    <!-- ENUMS -->
+    <div class="section" id="enums">
+      <div class="section-header">
+        <span class="section-tag tag-global">Global</span>
+        <h2 class="section-title">ENUMs e Valores das Colunas</h2>
+      </div>
+
+      <div class="callout info">
+        <strong>Para uso em Text-to-SQL:</strong> sempre referencie estes mapeamentos ao gerar filtros ou CASE WHEN envolvendo as colunas abaixo. Nunca assuma valores não listados aqui.
+      </div>
+
+      <!-- Tipo_Operacao -->
+      <div class="sub-section-title">Movimento.Tipo_Operacao</div>
+      <div class="callout warn" style="margin-bottom:14px">
+        <strong>Atenção:</strong> use sempre <code style="font-family:var(--mono);font-size:11px">IN ('VND','VPC','VEF')</code> para filtrar apenas vendas. Inclua <code style="font-family:var(--mono);font-size:11px">'DEV'</code> e <code style="font-family:var(--mono);font-size:11px">'CVE'</code> quando for necessário abater devoluções.
+      </div>
+      <div class="enum-grid">
+        <div class="enum-item"><span class="enum-key">'VND'</span><span class="enum-val">Venda Normal</span></div>
+        <div class="enum-item"><span class="enum-key">'VPC'</span><span class="enum-val">Venda PDV / Caixa</span></div>
+        <div class="enum-item"><span class="enum-key">'VEF'</span><span class="enum-val">Venda Efetivada</span></div>
+        <div class="enum-item"><span class="enum-key">'DEV'</span><span class="enum-val">⚠ Devolução (valor negativo)</span></div>
+        <div class="enum-item"><span class="enum-key">'CVE'</span><span class="enum-val">⚠ Cancelamento de Venda Efetivada (valor negativo)</span></div>
+      </div>
+
+      <!-- Situacao_Expedicao -->
+      <div class="sub-section-title" style="margin-top:20px">Movimento.Situacao_Expedicao</div>
+      <div class="callout info" style="margin-bottom:14px">
+        Sempre excluir <code style="font-family:var(--mono);font-size:11px">Situacao_Expedicao = 'A'</code> (Aguardando) das consultas de vendas efetivadas.
+      </div>
+      <div class="enum-grid" style="max-width:360px">
+        <div class="enum-item"><span class="enum-key">'A'</span><span class="enum-val">⛔ Aguardando (excluir)</span></div>
+        <div class="enum-item"><span class="enum-key">outros</span><span class="enum-val">Expedidos / Finalizados</span></div>
+      </div>
+
+      <!-- Apagado -->
+      <div class="sub-section-title" style="margin-top:20px">Movimento.Apagado</div>
+      <div class="enum-grid" style="max-width:360px">
+        <div class="enum-item"><span class="enum-key">0</span><span class="enum-val">Ativo — incluir na consulta</span></div>
+        <div class="enum-item"><span class="enum-key">1</span><span class="enum-val">⛔ Apagado — sempre excluir</span></div>
+      </div>
+    </div>
+
+    <!-- JOINS -->
+    <div class="section" id="joins">
+      <div class="section-header">
+        <span class="section-tag tag-global">Global</span>
+        <h2 class="section-title">Ligações Disponíveis</h2>
+      </div>
+
+      <div class="callout info">
+        Use apenas os JOINs necessários para o dado solicitado. Incluir JOINs desnecessários pode causar duplicidade de registros.
+      </div>
+
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>Tabela</th>
+            <th>Chave de Ligação</th>
+            <th>Quando Usar</th>
+            <th>Colunas Úteis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Filiais</code></td>
+            <td><code>Movimento.Ordem_Filial = Filiais.Ordem</code></td>
+            <td>Quando precisar exibir ou filtrar por filial</td>
+            <td><code>Filiais.Nome</code>, <code>Filiais.Codigo</code></td>
+          </tr>
+          <tr>
+            <td><code>Cli_For</code></td>
+            <td><code>Movimento.Ordem_Cli_For = Cli_For.Ordem</code></td>
+            <td>Quando precisar de dados do cliente</td>
+            <td><code>Cli_For.Nome</code>, <code>Cli_For.Codigo</code>, <code>Cli_For.Cnpj_Cpf</code>, <code>Cli_For.Inativo</code></td>
+          </tr>
+          <tr>
+            <td><code>Funcionarios</code></td>
+            <td><code>Movimento.Ordem_Vendedor1 = Funcionarios.Ordem</code></td>
+            <td>Quando precisar de dados do vendedor</td>
+            <td><code>Funcionarios.Apelido</code>, <code>Funcionarios.Codigo</code>, <code>Funcionarios.Comissao_Venda</code></td>
+          </tr>
+          <tr>
+            <td><code>Financeiro_Formas_Recebimento_Pagamento_V2</code></td>
+            <td><code>Financeiro_Formas_Recebimento_Pagamento_V2.Ordem_Movimento = Movimento.Ordem</code></td>
+            <td>Quando precisar dos valores por forma de recebimento (dinheiro, PIX, cartão etc.)</td>
+            <td>Colunas de valor por tipo: <code>Dinheiro_Valor</code>, <code>Conta_Bancaria_Valor</code>, <code>Cartao_Credito_Valor</code> etc.</td>
+          </tr>
+          <tr>
+            <td><code>Financeiro_Formas_Recebimento_Pagamento_Contas_V2</code></td>
+            <td><code>Financeiro_Formas_Recebimento_Pagamento_Contas_V2.Ordem_Formas_Recebimento_Pagamento = Financeiro_Formas_Recebimento_Pagamento_V2.Ordem</code></td>
+            <td>Quando precisar detalhar parcelas de recebimentos parcelados (boleto, cartão de crédito etc.)</td>
+            <td><code>Tipo_Forma_Recebimento_Pagamento</code>, <code>Quantidade_Parcelas</code>, <code>Valor_Total</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FILTRO PADRÃO -->
+    <div class="section" id="filtro-padrao">
+      <div class="section-header">
+        <span class="section-tag tag-global">Global</span>
+        <h2 class="section-title">Filtro Padrão de Vendas</h2>
+      </div>
+
+      <div class="callout">
+        <strong>Use este bloco WHERE como base em todas as consultas de vendas.</strong> Ele garante que apenas movimentações efetivadas, válidas e sem duplicidade sejam retornadas.
+      </div>
+
+      <div class="rule-block">
+        <strong>REGRA — Parâmetro de filial opcional</strong>
+        <ul>
+          <li>Quando <code style="font-family:var(--mono);font-size:11px">@Filial</code> é <code style="font-family:var(--mono);font-size:11px">NULL</code> → retorna todas as filiais.</li>
+          <li>Quando <code style="font-family:var(--mono);font-size:11px">@Filial</code> é um inteiro → filtra pela filial específica.</li>
+        </ul>
+      </div>
+
+      <div class="rule-block">
+        <strong>REGRA — Tipo_Operacao para vendas sem devolução</strong>
+        <ul>
+          <li>Use <code style="font-family:var(--mono);font-size:11px">IN ('VND','VPC','VEF')</code> para relatórios de vendas brutas.</li>
+          <li>Adicione <code style="font-family:var(--mono);font-size:11px">'DEV', 'CVE'</code> quando o relatório deve abater devoluções. Nesses casos, aplique <code style="font-family:var(--mono);font-size:11px">CASE WHEN ... THEN valor ELSE -valor END</code> para que devoluções entrem como valores negativos.</li>
+        </ul>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">
+          <span>T-SQL — WHERE base para vendas (sem devolução)</span>
+          <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        </div>
+        <pre><span class="cmt">-- ─── PARÂMETROS ───────────────────────────────────────────────────</span>
+<span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>  <span class="cmt">-- NULL = todas as filiais</span>
+
+<span class="cmt">-- ─── WHERE BASE ────────────────────────────────────────────────────</span>
+<span class="kw">WHERE</span>
+    <span class="cmt">-- 1. Excluir movimentos apagados</span>
+    <span class="tbl">Movimento</span>.<span class="col">Apagado</span> <span class="op">=</span> <span class="num">0</span>
+
+    <span class="cmt">-- 2. Excluir movimentos em expedição pendente</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Situacao_Expedicao</span> <span class="op">&lt;&gt;</span> <span class="str">'A'</span>
+
+    <span class="cmt">-- 3. Excluir movimentos que foram desefetivados do estoque</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Desefetivacao_Estoque</span> <span class="kw">IS NULL</span>
+
+    <span class="cmt">-- 4. Filtrar pelo período (data de efetivação de estoque/financeiro)</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">DAY</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+
+    <span class="cmt">-- 5. Apenas vendas (sem devoluções)</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>, <span class="str">'VPC'</span>, <span class="str">'VEF'</span>)
+
+    <span class="cmt">-- 6. Filtro de filial (NULL = todas)</span>
+    <span class="kw">AND</span> (<span class="tbl">Filiais</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="col">@Filial</span> <span class="kw">OR</span> <span class="col">@Filial</span> <span class="kw">IS NULL</span>)</pre>
+      </div>
+    </div>
+
+    <!-- REGRA DATAS -->
+    <div class="section" id="regra-datas">
+      <div class="section-header">
+        <span class="section-tag tag-rule">Regra de Negócio</span>
+        <h2 class="section-title">Campos de Data</h2>
+      </div>
+
+      <div class="callout warn">
+        <strong>Prioridade de campos de data:</strong> use sempre <code style="font-family:var(--mono);font-size:11px">Data_Passou_Efetivacao_Estoque</code> como referência temporal em relatórios de vendas. Ela considera a data de efetivação de estoque e, quando não houver, a de efetivação financeira.
+      </div>
+
+      <div class="rule-block">
+        <strong>QUANDO usar cada campo de data</strong>
+        <ul>
+          <li><strong>Relatórios de Vendas:</strong> use <code style="font-family:var(--mono);font-size:11px">Data_Passou_Efetivacao_Estoque</code> — campo prioritário para filtrar e exibir datas de venda.</li>
+          <li><strong>Relatórios de Financeiro/Recebimento:</strong> use <code style="font-family:var(--mono);font-size:11px">Data_Efetivado_Financeiro</code>.</li>
+          <li><strong>Relatórios de Orçamentos / Movimentos não efetivados:</strong> use <code style="font-family:var(--mono);font-size:11px">Data</code> (data da última gravação).</li>
+        </ul>
+      </div>
+
+      <div class="rule-block">
+        <strong>FORMATAÇÃO — Converter datas para DD/MM/AAAA</strong>
+        <ul>
+          <li>Sempre use <code style="font-family:var(--mono);font-size:11px">CONVERT(VARCHAR(10), Campo_de_Data, 103)</code> para exibir datas no formato brasileiro.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- REGRA VALORES -->
+    <div class="section" id="regra-valores">
+      <div class="section-header">
+        <span class="section-tag tag-rule">Regra de Negócio</span>
+        <h2 class="section-title">Campos de Valor</h2>
+      </div>
+
+      <div class="callout">
+        <strong>Regra de Três Versões:</strong> alguns campos de valor existem em três variantes (Total Geral, só Produtos, só Serviços). Sempre priorize o campo que soma Produtos e Serviços.
+      </div>
+
+      <table class="doc-table">
+        <thead>
+          <tr><th>Campo Prioritário</th><th>Descrição</th><th>Não Usar Quando</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Preco_Final_Somado</code></td>
+            <td><strong>Valor total da movimentação</strong> — líquido, com impostos e descontos. Use para somar o total de vendas em relatórios sem detalhe de produtos.</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><code>Preco_Total_Sem_Desconto_Somado</code></td>
+            <td>Valor bruto — total de produtos e serviços sem desconto.</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><code>Desconto_Valor_Somado</code></td>
+            <td>Desconto total da movimentação (produtos + serviços).</td>
+            <td>Evitar <code>Desconto_Total_Prod</code> ou <code>Desconto_Total_Serv</code> isoladamente.</td>
+          </tr>
+          <tr>
+            <td><code>Frete_Valor_Somado</code></td>
+            <td>Frete incluso no total da movimentação.</td>
+            <td>Não confundir com <code>Frete_Valor_Separado_Somado</code> (pago à parte).</td>
+          </tr>
+          <tr>
+            <td><code>Qtde_Total_Geral</code></td>
+            <td>Quantidade total de itens (produtos + serviços).</td>
+            <td>Evitar <code>Qtde_Total_Prod</code> ou <code>Qtde_Total_Serv</code> isoladamente.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout warn">
+        <strong>Devoluções:</strong> ao incluir <code style="font-family:var(--mono);font-size:11px">'DEV'</code> e <code style="font-family:var(--mono);font-size:11px">'CVE'</code>, aplique <code style="font-family:var(--mono);font-size:11px">CASE WHEN Tipo_Operacao IN ('VND','VPC','VEF') THEN valor ELSE -valor END</code> nos campos de valor para que devoluções entrem como negativos no total.
+      </div>
+    </div>
+
+    <!-- ═══════════════════════ EXEMPLOS ═══════════════════════ -->
+
+    <div class="section-header" style="margin-bottom:24px">
+      <span class="section-tag tag-example">Exemplos</span>
+      <h2 class="section-title">Consultas de Referência</h2>
+    </div>
+
+    <!-- EX 1 -->
+    <div class="example-card" id="ex1">
+      <div class="example-num">EXEMPLO 01</div>
+      <div class="example-title">Relatório de Vendas</div>
+      <div class="example-desc">Base para qualquer relatório de vendas. Exibe totais e datas das movimentações efetivadas no período, sem abater devoluções.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">vendas</span>
+        <span class="tag-chip">total de vendas</span>
+        <span class="tag-chip">efetivadas</span>
+        <span class="tag-chip">fluxo de caixa</span>
+        <span class="tag-chip">relatório financeiro</span>
+        <span class="tag-chip">período</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="sub-section-title">Observações</div>
+      <div class="rule-block">
+        <strong>NOTA</strong>
+        <ul>
+          <li>Sempre utilize <code style="font-family:var(--mono);font-size:11px">Movimento.Preco_Final_Somado</code> para exibir o total da venda em relatórios que não exibem produtos individualmente.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section-title">Parâmetros</div>
+      <div class="param-list">
+        <div class="param-item">
+          <span class="param-name">@Data_Inicial</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data inicial do período (por data de efetivação de estoque)</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Data_Final</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data final do período (por data de efetivação de estoque)</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Filial</span>
+          <span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem da filial</div><div class="param-note">NULL = todas as filiais</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section-title">Ligações</div>
+      <div class="join-block">
+        <span class="tname">Movimento</span>
+        <span class="arrow">→</span>
+        <span class="tname">Filiais</span>
+        <span style="color:var(--text-muted)">ON Movimento.Ordem_Filial = Filiais.Ordem</span>
+        <span class="purpose">Exibir/filtrar filial</span>
+      </div>
+
+      <div class="sub-section-title" style="margin-top:20px">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Data_Criação</strong></td><td><code>Movimento.Data</code></td><td>Data da última gravação do movimento</td></tr>
+          <tr><td><strong>Data_Efetivação</strong></td><td><code>Movimento.Data_Passou_Efetivacao_Estoque</code></td><td>Data efetiva da venda (campo prioritário)</td></tr>
+          <tr><td><strong>Sequencia</strong></td><td><code>Movimento.Sequencia</code></td><td>Número identificador da movimentação</td></tr>
+          <tr><td><strong>Qtde_Produtos</strong></td><td><code>Movimento.Qtde_Total_Prod</code></td><td>Quantidade total de itens da movimentação</td></tr>
+          <tr><td><strong>Total</strong></td><td><code>Movimento.Preco_Final_Somado</code></td><td>Valor líquido total da movimentação</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>
+
+<span class="kw">SELECT</span>
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Movimento</span>.<span class="col">Data</span>,                             <span class="num">103</span>) <span class="kw">AS</span> <span class="col">Data_Criação</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span>,   <span class="num">103</span>) <span class="kw">AS</span> <span class="col">Data_Efetivação</span>,
+    <span class="tbl">Movimento</span>.<span class="col">Sequencia</span>,
+    <span class="tbl">Movimento</span>.<span class="col">Qtde_Total_Prod</span>        <span class="kw">AS</span> <span class="col">Qtde_Produtos</span>,
+    <span class="tbl">Movimento</span>.<span class="col">Preco_Final_Somado</span>     <span class="kw">AS</span> <span class="col">Total</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Movimento</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span> <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Filial</span> <span class="op">=</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Movimento</span>.<span class="col">Apagado</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Situacao_Expedicao</span> <span class="op">&lt;&gt;</span> <span class="str">'A'</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Desefetivacao_Estoque</span> <span class="kw">IS NULL</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">DAY</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>, <span class="str">'VPC'</span>, <span class="str">'VEF'</span>)
+    <span class="kw">AND</span> (<span class="tbl">Filiais</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="col">@Filial</span> <span class="kw">OR</span> <span class="col">@Filial</span> <span class="kw">IS NULL</span>)</pre>
+      </div>
+    </div>
+
+    <!-- EX 2 -->
+    <div class="example-card" id="ex2">
+      <div class="example-num">EXEMPLO 02</div>
+      <div class="example-title">Relatório de Vendas com Devolução</div>
+      <div class="example-desc">Retorna as movimentações de venda abatendo o valor de devoluções. Movimentações do tipo DEV e CVE aparecem com valores negativos.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">vendas</span>
+        <span class="tag-chip">devolução</span>
+        <span class="tag-chip">cancelamento</span>
+        <span class="tag-chip">venda líquida</span>
+        <span class="tag-chip">desconto total</span>
+        <span class="tag-chip">frete</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="rule-block">
+        <strong>REGRA — Valores negativos para devoluções</strong>
+        <ul>
+          <li>As operações <code style="font-family:var(--mono);font-size:11px">'DEV'</code> e <code style="font-family:var(--mono);font-size:11px">'CVE'</code> são incluídas no <code style="font-family:var(--mono);font-size:11px">Tipo_Operacao IN (...)</code>.</li>
+          <li>Use <code style="font-family:var(--mono);font-size:11px">CASE WHEN Tipo_Operacao IN ('VND','VPC','VEF') THEN valor ELSE -valor END</code> para todos os campos de valor.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section-title">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Data_Efetivação</strong></td><td><code>Movimento.Data_Passou_Efetivacao_Estoque</code></td><td>Data efetiva da venda ou devolução</td></tr>
+          <tr><td><strong>Sequencia</strong></td><td><code>Movimento.Sequencia</code></td><td>Número da movimentação</td></tr>
+          <tr><td><strong>Desconto_Total</strong></td><td>CASE em <code>Movimento.Desconto_Total_Geral</code></td><td>Desconto total (negativo em devoluções)</td></tr>
+          <tr><td><strong>Frete_Total</strong></td><td>CASE em <code>Movimento.Frete_Valor_Somado</code></td><td>Valor de frete (negativo em devoluções)</td></tr>
+          <tr><td><strong>Total</strong></td><td>CASE em <code>Movimento.Preco_Final_Somado</code></td><td>Valor total (negativo em devoluções)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>
+
+<span class="kw">SELECT</span>
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span>, <span class="num">103</span>) <span class="kw">AS</span> <span class="col">Data_Efetivação</span>,
+    <span class="tbl">Movimento</span>.<span class="col">Sequencia</span>,
+    <span class="kw">CASE</span> <span class="kw">WHEN</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>,<span class="str">'VPC'</span>,<span class="str">'VEF'</span>)
+         <span class="kw">THEN</span>  <span class="tbl">Movimento</span>.<span class="col">Desconto_Total_Geral</span>
+         <span class="kw">ELSE</span> <span class="op">-</span><span class="tbl">Movimento</span>.<span class="col">Desconto_Total_Geral</span>
+    <span class="kw">END</span> <span class="kw">AS</span> <span class="col">Desconto_Total</span>,
+    <span class="kw">CASE</span> <span class="kw">WHEN</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>,<span class="str">'VPC'</span>,<span class="str">'VEF'</span>)
+         <span class="kw">THEN</span>  <span class="tbl">Movimento</span>.<span class="col">Frete_Valor_Somado</span>
+         <span class="kw">ELSE</span> <span class="op">-</span><span class="tbl">Movimento</span>.<span class="col">Frete_Valor_Somado</span>
+    <span class="kw">END</span> <span class="kw">AS</span> <span class="col">Frete_Total</span>,
+    <span class="kw">CASE</span> <span class="kw">WHEN</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>,<span class="str">'VPC'</span>,<span class="str">'VEF'</span>)
+         <span class="kw">THEN</span>  <span class="tbl">Movimento</span>.<span class="col">Preco_Final_Somado</span>
+         <span class="kw">ELSE</span> <span class="op">-</span><span class="tbl">Movimento</span>.<span class="col">Preco_Final_Somado</span>
+    <span class="kw">END</span> <span class="kw">AS</span> <span class="col">Total</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Movimento</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span> <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Filial</span> <span class="op">=</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Movimento</span>.<span class="col">Apagado</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Situacao_Expedicao</span> <span class="op">&lt;&gt;</span> <span class="str">'A'</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Desefetivacao_Estoque</span> <span class="kw">IS NULL</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">DAY</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>, <span class="str">'VPC'</span>, <span class="str">'VEF'</span>, <span class="str">'DEV'</span>, <span class="str">'CVE'</span>)
+    <span class="kw">AND</span> (<span class="tbl">Filiais</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="col">@Filial</span> <span class="kw">OR</span> <span class="col">@Filial</span> <span class="kw">IS NULL</span>)</pre>
+      </div>
+    </div>
+
+    <!-- EX 3 -->
+    <div class="example-card" id="ex3">
+      <div class="example-num">EXEMPLO 03</div>
+      <div class="example-title">Relatório de Vendas com Cliente</div>
+      <div class="example-desc">Inclui os dados do cliente vinculado à movimentação. Clientes inativos são ignorados.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">cliente</span>
+        <span class="tag-chip">nome do cliente</span>
+        <span class="tag-chip">vendas por cliente</span>
+        <span class="tag-chip">extrato cliente</span>
+        <span class="tag-chip">Cli_For</span>
+        <span class="tag-chip">devolução</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="rule-block">
+        <strong>REGRA — Clientes inativos</strong>
+        <ul>
+          <li>Sempre incluir <code style="font-family:var(--mono);font-size:11px">AND Cli_For.Inativo = 0</code> para ignorar clientes inativos.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section-title">Parâmetros</div>
+      <div class="param-list">
+        <div class="param-item">
+          <span class="param-name">@Data_Inicial</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data inicial do período</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Data_Final</span>
+          <span class="param-type">DATE</span>
+          <div><div class="param-desc">Data final do período</div></div>
+        </div>
+        <div class="param-item">
+          <span class="param-name">@Filial</span>
+          <span class="param-type">INT</span>
+          <div><div class="param-desc">Ordem da filial</div><div class="param-note">NULL = todas as filiais</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section-title">Ligações</div>
+      <div class="join-block">
+        <span class="tname">Movimento</span>
+        <span class="arrow">→</span>
+        <span class="tname">Filiais</span>
+        <span style="color:var(--text-muted)">ON Movimento.Ordem_Filial = Filiais.Ordem</span>
+      </div>
+      <div class="join-block">
+        <span class="tname">Movimento</span>
+        <span class="arrow">→</span>
+        <span class="tname">Cli_For</span>
+        <span style="color:var(--text-muted)">ON Movimento.Ordem_Cli_For = Cli_For.Ordem</span>
+        <span class="purpose">Dados do cliente</span>
+      </div>
+
+      <div class="sub-section-title" style="margin-top:20px">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Codigo_Cliente</strong></td><td><code>Cli_For.Codigo</code></td><td>Código do cliente no cadastro</td></tr>
+          <tr><td><strong>Nome_Cliente</strong></td><td><code>Cli_For.Nome</code></td><td>Nome completo do cliente</td></tr>
+          <tr><td><strong>Data_Efetivação</strong></td><td><code>Movimento.Data_Passou_Efetivacao_Estoque</code></td><td>Data efetiva da venda</td></tr>
+          <tr><td><strong>Sequencia</strong></td><td><code>Movimento.Sequencia</code></td><td>Número da movimentação</td></tr>
+          <tr><td><strong>Total</strong></td><td>CASE em <code>Movimento.Preco_Final_Somado</code></td><td>Valor total (negativo em devoluções)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>
+
+<span class="kw">SELECT</span>
+    <span class="tbl">Cli_For</span>.<span class="col">Codigo</span>                                                       <span class="kw">AS</span> <span class="col">Codigo_Cliente</span>,
+    <span class="tbl">Cli_For</span>.<span class="col">Nome</span>                                                         <span class="kw">AS</span> <span class="col">Nome_Cliente</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span>, <span class="num">103</span>)    <span class="kw">AS</span> <span class="col">Data_Efetivação</span>,
+    <span class="tbl">Movimento</span>.<span class="col">Sequencia</span>,
+    <span class="kw">CASE</span> <span class="kw">WHEN</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>,<span class="str">'VPC'</span>,<span class="str">'VEF'</span>)
+         <span class="kw">THEN</span>  <span class="tbl">Movimento</span>.<span class="col">Preco_Final_Somado</span>
+         <span class="kw">ELSE</span> <span class="op">-</span><span class="tbl">Movimento</span>.<span class="col">Preco_Final_Somado</span>
+    <span class="kw">END</span> <span class="kw">AS</span> <span class="col">Total</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Movimento</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span> <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Filial</span>   <span class="op">=</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Cli_For</span> <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Cli_For</span> <span class="op">=</span> <span class="tbl">Cli_For</span>.<span class="col">Ordem</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Movimento</span>.<span class="col">Apagado</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Situacao_Expedicao</span> <span class="op">&lt;&gt;</span> <span class="str">'A'</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Desefetivacao_Estoque</span> <span class="kw">IS NULL</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">DAY</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>, <span class="str">'VPC'</span>, <span class="str">'VEF'</span>, <span class="str">'DEV'</span>, <span class="str">'CVE'</span>)
+    <span class="kw">AND</span> (<span class="tbl">Filiais</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="col">@Filial</span> <span class="kw">OR</span> <span class="col">@Filial</span> <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> <span class="tbl">Cli_For</span>.<span class="col">Inativo</span> <span class="op">=</span> <span class="num">0</span></pre>
+      </div>
+    </div>
+
+    <!-- EX 4 -->
+    <div class="example-card" id="ex4">
+      <div class="example-num">EXEMPLO 04</div>
+      <div class="example-title">Relatório de Vendas com Vendedor</div>
+      <div class="example-desc">Inclui os dados do vendedor responsável pela movimentação. Por conta do tamanho do campo, é preferível usar <code style="font-family:var(--mono);font-size:12px;color:var(--accent2)">Funcionarios.Apelido</code> ao invés de <code style="font-family:var(--mono);font-size:12px;color:var(--accent2)">Funcionarios.Nome</code>.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">vendedor</span>
+        <span class="tag-chip">funcionário</span>
+        <span class="tag-chip">vendas por vendedor</span>
+        <span class="tag-chip">Funcionarios</span>
+        <span class="tag-chip">devolução</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="sub-section-title">Ligações</div>
+      <div class="join-block">
+        <span class="tname">Movimento</span>
+        <span class="arrow">→</span>
+        <span class="tname">Filiais</span>
+        <span style="color:var(--text-muted)">ON Movimento.Ordem_Filial = Filiais.Ordem</span>
+      </div>
+      <div class="join-block">
+        <span class="tname">Movimento</span>
+        <span class="arrow">→</span>
+        <span class="tname">Funcionarios</span>
+        <span style="color:var(--text-muted)">ON Movimento.Ordem_Vendedor1 = Funcionarios.Ordem</span>
+        <span class="purpose">Dados do vendedor</span>
+      </div>
+
+      <div class="sub-section-title" style="margin-top:20px">Colunas de Saída</div>
+      <table class="doc-table">
+        <thead><tr><th>Coluna</th><th>Origem</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Codigo_Funcionário</strong></td><td><code>Funcionarios.Codigo</code></td><td>Código do vendedor no cadastro</td></tr>
+          <tr><td><strong>Nome_Funcionário</strong></td><td><code>Funcionarios.Apelido</code></td><td>Apelido do vendedor (campo preferido)</td></tr>
+          <tr><td><strong>Data_Efetivação</strong></td><td><code>Movimento.Data_Passou_Efetivacao_Estoque</code></td><td>Data efetiva da venda</td></tr>
+          <tr><td><strong>Sequencia</strong></td><td><code>Movimento.Sequencia</code></td><td>Número da movimentação</td></tr>
+          <tr><td><strong>Total</strong></td><td>CASE em <code>Movimento.Preco_Final_Somado</code></td><td>Valor total (negativo em devoluções)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>
+
+<span class="kw">SELECT</span>
+    <span class="tbl">Funcionarios</span>.<span class="col">Codigo</span>                                                  <span class="kw">AS</span> <span class="col">Codigo_Funcionário</span>,
+    <span class="tbl">Funcionarios</span>.<span class="col">Apelido</span>                                                 <span class="kw">AS</span> <span class="col">Nome_Funcionário</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span>, <span class="num">103</span>)    <span class="kw">AS</span> <span class="col">Data_Efetivação</span>,
+    <span class="tbl">Movimento</span>.<span class="col">Sequencia</span>,
+    <span class="kw">CASE</span> <span class="kw">WHEN</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>,<span class="str">'VPC'</span>,<span class="str">'VEF'</span>)
+         <span class="kw">THEN</span>  <span class="tbl">Movimento</span>.<span class="col">Preco_Final_Somado</span>
+         <span class="kw">ELSE</span> <span class="op">-</span><span class="tbl">Movimento</span>.<span class="col">Preco_Final_Somado</span>
+    <span class="kw">END</span> <span class="kw">AS</span> <span class="col">Total</span>
+<span class="kw">FROM</span>
+    <span class="tbl">Movimento</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span>      <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Filial</span>    <span class="op">=</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Funcionarios</span> <span class="kw">ON</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Vendedor1</span> <span class="op">=</span> <span class="tbl">Funcionarios</span>.<span class="col">Ordem</span>
+<span class="kw">WHERE</span>
+    <span class="tbl">Movimento</span>.<span class="col">Apagado</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Situacao_Expedicao</span> <span class="op">&lt;&gt;</span> <span class="str">'A'</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Desefetivacao_Estoque</span> <span class="kw">IS NULL</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Efetivacao_Estoque</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">DAY</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>, <span class="str">'VPC'</span>, <span class="str">'VEF'</span>, <span class="str">'DEV'</span>, <span class="str">'CVE'</span>)
+    <span class="kw">AND</span> (<span class="tbl">Filiais</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="col">@Filial</span> <span class="kw">OR</span> <span class="col">@Filial</span> <span class="kw">IS NULL</span>)</pre>
+      </div>
+    </div>
+
+    <!-- EX 5 -->
+    <div class="example-card" id="ex5">
+      <div class="example-num">EXEMPLO 05</div>
+      <div class="example-title">Relatório de Vendas por Tipo de Recebimento</div>
+      <div class="example-desc">Exibe como cada venda foi recebida e o valor por tipo de recebimento. Cada forma de recebimento é tratada como uma linha distinta via CROSS APPLY.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">forma de pagamento</span>
+        <span class="tag-chip">pix</span>
+        <span class="tag-chip">dinheiro</span>
+        <span class="tag-chip">cartão</span>
+        <span class="tag-chip">vale</span>
+        <span class="tag-chip">CROSS APPLY</span>
+        <span class="tag-chip">Financeiro_Formas_Recebimento</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="rule-block">
+        <strong>TÉCNICA — CROSS APPLY para transformar colunas em linhas</strong>
+        <ul>
+          <li>A tabela <code style="font-family:var(--mono);font-size:11px">Financeiro_Formas_Recebimento_Pagamento_V2</code> contém uma única linha por venda, com os valores de recebimento em colunas distintas.</li>
+          <li>Use <code style="font-family:var(--mono);font-size:11px">CROSS APPLY (VALUES ...)</code> para transformar essas colunas em linhas.</li>
+          <li>Sempre incluir <code style="font-family:var(--mono);font-size:11px">AND R.Valor IS NOT NULL AND R.Valor &lt;&gt; 0</code> para exibir apenas os recebimentos utilizados.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section-title">Formas de Recebimento Disponíveis</div>
+      <div class="enum-grid">
+        <div class="enum-item"><span class="enum-key" style="min-width:auto;font-size:10px">Dinheiro_Valor</span><span class="enum-val">Dinheiro</span></div>
+        <div class="enum-item"><span class="enum-key" style="min-width:auto;font-size:10px">Conta_Bancaria_Valor</span><span class="enum-val">Pix / Depósito</span></div>
+        <div class="enum-item"><span class="enum-key" style="min-width:auto;font-size:10px">Cartao_Credito_Valor</span><span class="enum-val">Cartão Crédito</span></div>
+        <div class="enum-item"><span class="enum-key" style="min-width:auto;font-size:10px">Cartao_Debito_Valor</span><span class="enum-val">Cartão Débito</span></div>
+        <div class="enum-item"><span class="enum-key" style="min-width:auto;font-size:10px">Cartao_Convenio_Valor</span><span class="enum-val">Cartão Convênio</span></div>
+        <div class="enum-item"><span class="enum-key" style="min-width:auto;font-size:10px">Cheque_Pre_Valor</span><span class="enum-val">Cheque Pré</span></div>
+        <div class="enum-item"><span class="enum-key" style="min-width:auto;font-size:10px">Cheque_Valor</span><span class="enum-val">Cheque</span></div>
+        <div class="enum-item"><span class="enum-key" style="min-width:auto;font-size:10px">Parcelado_Valor</span><span class="enum-val">Parcelado</span></div>
+        <div class="enum-item"><span class="enum-key" style="min-width:auto;font-size:10px">Credito_Valor</span><span class="enum-val">Crédito</span></div>
+        <div class="enum-item"><span class="enum-key" style="min-width:auto;font-size:10px">Vale_Valor</span><span class="enum-val">Vale</span></div>
+        <div class="enum-item"><span class="enum-key" style="min-width:auto;font-size:10px">Conta_Caderno_Valor</span><span class="enum-val">Conta Caderno</span></div>
+        <div class="enum-item"><span class="enum-key" style="min-width:auto;font-size:10px">Valor_Troco</span><span class="enum-val">Troco</span></div>
+      </div>
+
+      <div class="sub-section-title" style="margin-top:4px">Ligações</div>
+      <div class="join-block">
+        <span class="tname">Movimento</span><span class="arrow">→</span><span class="tname">Cli_For</span>
+        <span style="color:var(--text-muted)">ON Cli_For.Ordem = Movimento.Ordem_Cli_For</span>
+      </div>
+      <div class="join-block">
+        <span class="tname">Movimento</span><span class="arrow">→</span><span class="tname">Funcionarios</span>
+        <span style="color:var(--text-muted)">ON Funcionarios.Ordem = Movimento.Ordem_Vendedor1</span>
+      </div>
+      <div class="join-block">
+        <span class="tname">Movimento</span><span class="arrow">→</span><span class="tname">Filiais</span>
+        <span style="color:var(--text-muted)">ON Filiais.Ordem = Movimento.Ordem_Filial</span>
+      </div>
+      <div class="join-block">
+        <span class="tname">Movimento</span><span class="arrow">→</span><span class="tname">Financeiro_Formas_Recebimento_Pagamento_V2</span>
+        <span style="color:var(--text-muted)">ON ...Ordem_Movimento = Movimento.Ordem</span>
+        <span class="purpose">Valores por forma</span>
+      </div>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>
+
+<span class="kw">SELECT</span>
+    <span class="tbl">Cli_For</span>.<span class="col">Codigo</span>          <span class="kw">AS</span> <span class="col">Codigo_Cliente</span>,
+    <span class="tbl">Cli_For</span>.<span class="col">Nome</span>            <span class="kw">AS</span> <span class="col">Nome_Cliente</span>,
+    <span class="tbl">Funcionarios</span>.<span class="col">Apelido</span>    <span class="kw">AS</span> <span class="col">Nome_Vendedor</span>,
+    <span class="tbl">Filiais</span>.<span class="col">Codigo</span>          <span class="kw">AS</span> <span class="col">Codigo_Filial</span>,
+    <span class="tbl">Movimento</span>.<span class="col">Sequencia</span>     <span class="kw">AS</span> <span class="col">Sequência_de_Venda</span>,
+    <span class="col">R</span>.<span class="col">Tipo_Recebimento</span>,
+    <span class="col">R</span>.<span class="col">Valor</span>
+<span class="kw">FROM</span> <span class="tbl">Movimento</span>
+<span class="kw">INNER JOIN</span> <span class="tbl">Cli_For</span>       <span class="kw">ON</span> <span class="tbl">Cli_For</span>.<span class="col">Ordem</span>       <span class="op">=</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Cli_For</span>
+<span class="kw">INNER JOIN</span> <span class="tbl">Funcionarios</span>  <span class="kw">ON</span> <span class="tbl">Funcionarios</span>.<span class="col">Ordem</span>  <span class="op">=</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Vendedor1</span>
+<span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span>       <span class="kw">ON</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>       <span class="op">=</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Filial</span>
+<span class="kw">INNER JOIN</span> <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>
+    <span class="kw">ON</span> <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Ordem_Movimento</span> <span class="op">=</span> <span class="tbl">Movimento</span>.<span class="col">Ordem</span>
+<span class="kw">CROSS APPLY</span> (<span class="kw">VALUES</span>
+    (<span class="str">'Dinheiro'</span>,          <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Dinheiro_Valor</span>),
+    (<span class="str">'Parcelado'</span>,         <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Parcelado_Valor</span>),
+    (<span class="str">'Cartão Crédito'</span>,    <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Cartao_Credito_Valor</span>),
+    (<span class="str">'Cartão Débito'</span>,     <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Cartao_Debito_Valor</span>),
+    (<span class="str">'Cartão Convênio'</span>,   <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Cartao_Convenio_Valor</span>),
+    (<span class="str">'Cheque Pré'</span>,        <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Cheque_Pre_Valor</span>),
+    (<span class="str">'Cheque'</span>,            <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Cheque_Valor</span>),
+    (<span class="str">'Pix'</span>,               <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Conta_Bancaria_Valor</span>),
+    (<span class="str">'Conta Caderno'</span>,     <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Conta_Caderno_Valor</span>),
+    (<span class="str">'Crédito'</span>,           <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Credito_Valor</span>),
+    (<span class="str">'Não Identificado'</span>,  <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Nao_Identificado_Valor</span>),
+    (<span class="str">'Produtos Trocados'</span>, <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Produtos_Trocados_Valor</span>),
+    (<span class="str">'Vale'</span>,              <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Vale_Valor</span>),
+    (<span class="str">'Troco'</span>,             <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Valor_Troco</span>)
+) <span class="kw">AS</span> <span class="col">R</span>(<span class="col">Tipo_Recebimento</span>, <span class="col">Valor</span>)
+<span class="kw">WHERE</span>
+    <span class="tbl">Movimento</span>.<span class="col">Apagado</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Desefetivacao_Estoque</span> <span class="kw">IS NULL</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Efetivado_Financeiro</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Efetivado_Financeiro</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">D</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+    <span class="kw">AND</span> (<span class="tbl">Movimento</span>.<span class="col">Ordem_Filial</span> <span class="op">=</span> <span class="col">@Filial</span> <span class="kw">OR</span> <span class="col">@Filial</span> <span class="kw">IS NULL</span>)
+    <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>, <span class="str">'VPC'</span>, <span class="str">'VEF'</span>, <span class="str">'DEV'</span>, <span class="str">'CVE'</span>)
+    <span class="cmt">-- Exibir apenas formas de recebimento utilizadas</span>
+    <span class="kw">AND</span> <span class="col">R</span>.<span class="col">Valor</span> <span class="kw">IS NOT NULL</span>
+    <span class="kw">AND</span> <span class="col">R</span>.<span class="col">Valor</span> <span class="op">&lt;&gt;</span> <span class="num">0</span>
+<span class="kw">GROUP BY</span>
+    <span class="tbl">Cli_For</span>.<span class="col">Codigo</span>, <span class="tbl">Cli_For</span>.<span class="col">Nome</span>,
+    <span class="tbl">Funcionarios</span>.<span class="col">Apelido</span>,
+    <span class="tbl">Filiais</span>.<span class="col">Codigo</span>,
+    <span class="tbl">Movimento</span>.<span class="col">Sequencia</span>,
+    <span class="col">R</span>.<span class="col">Tipo_Recebimento</span>, <span class="col">R</span>.<span class="col">Valor</span>
+<span class="kw">ORDER BY</span>
+    <span class="tbl">Movimento</span>.<span class="col">Sequencia</span>, <span class="tbl">Filiais</span>.<span class="col">Codigo</span>, <span class="tbl">Cli_For</span>.<span class="col">Codigo</span></pre>
+      </div>
+    </div>
+
+    <!-- EX 6 -->
+    <div class="example-card" id="ex6">
+      <div class="example-num">EXEMPLO 06</div>
+      <div class="example-title">Relatório de Vendas por Tipo de Recebimento — Detalhado por Parcela</div>
+      <div class="example-desc">Semelhante ao Exemplo 05, porém detalha os parcelamentos (boleto, cartão de crédito etc.) com o tipo e a quantidade de parcelas. Utiliza CTE + CROSS APPLY para combinar as duas estruturas de tabela.</div>
+
+      <div class="tags-row">
+        <span class="tag-chip">parcelas</span>
+        <span class="tag-chip">parcelamento</span>
+        <span class="tag-chip">boleto</span>
+        <span class="tag-chip">cartão crédito</span>
+        <span class="tag-chip">CTE</span>
+        <span class="tag-chip">CROSS APPLY</span>
+        <span class="tag-chip">Financeiro_Formas_Recebimento_Contas</span>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="rule-block">
+        <strong>TÉCNICA — CTE + CROSS APPLY para detalhar parcelas</strong>
+        <ul>
+          <li><code style="font-family:var(--mono);font-size:11px">Financeiro_Formas_Recebimento_Pagamento_V2</code>: uma linha por venda, valores em colunas — usada para recebimentos não-parcelados.</li>
+          <li><code style="font-family:var(--mono);font-size:11px">Financeiro_Formas_Recebimento_Pagamento_Contas_V2</code>: uma linha por parcela — usada para detalhar boleto, cartão de crédito, carnê, cheque e carteira.</li>
+          <li>O CTE <code style="font-family:var(--mono);font-size:11px">VENDAS</code> une a movimentação à primeira tabela; o CTE <code style="font-family:var(--mono);font-size:11px">CONTAS</code> extrai as parcelas da segunda; o SELECT final combina ambos via <code style="font-family:var(--mono);font-size:11px">LEFT JOIN + CROSS APPLY</code>.</li>
+        </ul>
+      </div>
+
+      <div class="rule-block">
+        <strong>Tipos de forma de recebimento parcelável (Financeiro_Formas_Recebimento_Pagamento_Contas_V2.Tipo_Forma_Recebimento_Pagamento)</strong>
+        <ul>
+          <li><code style="font-family:var(--mono);font-size:11px">'B'</code> → Boleto</li>
+          <li><code style="font-family:var(--mono);font-size:11px">'C'</code> → Cartão de Crédito</li>
+          <li><code style="font-family:var(--mono);font-size:11px">'D'</code> → Cartão de Débito</li>
+          <li><code style="font-family:var(--mono);font-size:11px">'H'</code> → Cheque</li>
+          <li><code style="font-family:var(--mono);font-size:11px">'N'</code> → Carnê</li>
+          <li><code style="font-family:var(--mono);font-size:11px">'R'</code> → Carteira</li>
+        </ul>
+      </div>
+
+      <div class="sub-section-title">Ligações</div>
+      <div class="join-block">
+        <span class="tname">Movimento</span><span class="arrow">→</span><span class="tname">Cli_For</span>
+        <span style="color:var(--text-muted)">ON Cli_For.Ordem = Movimento.Ordem_Cli_For</span>
+      </div>
+      <div class="join-block">
+        <span class="tname">Movimento</span><span class="arrow">→</span><span class="tname">Funcionarios</span>
+        <span style="color:var(--text-muted)">ON Funcionarios.Ordem = Movimento.Ordem_Vendedor1</span>
+      </div>
+      <div class="join-block">
+        <span class="tname">Movimento</span><span class="arrow">→</span><span class="tname">Filiais</span>
+        <span style="color:var(--text-muted)">ON Filiais.Ordem = Movimento.Ordem_Filial</span>
+      </div>
+      <div class="join-block">
+        <span class="tname">Movimento</span><span class="arrow">→</span><span class="tname">Financeiro_Formas_Recebimento_Pagamento_V2</span>
+        <span style="color:var(--text-muted)">ON ...Ordem_Movimento = Movimento.Ordem</span>
+      </div>
+      <div class="join-block">
+        <span class="tname">Financeiro_Formas_Recebimento_Pagamento_Contas_V2</span><span class="arrow">→</span><span class="tname">VENDAS (CTE)</span>
+        <span style="color:var(--text-muted)">ON ...Ordem_Formas_Recebimento_Pagamento = VENDAS.Ordem</span>
+        <span class="purpose">Parcelas</span>
+      </div>
+
+      <div class="code-wrap" style="margin-top:20px">
+        <div class="code-label"><span>T-SQL</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+        <pre><span class="kw">DECLARE</span>
+    <span class="col">@Data_Inicial</span>  <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-01-01'</span>,
+    <span class="col">@Data_Final</span>    <span class="fn">DATE</span> <span class="op">=</span> <span class="str">'2026-03-31'</span>,
+    <span class="col">@Filial</span>        <span class="fn">INT</span>  <span class="op">=</span> <span class="kw">NULL</span>
+
+<span class="op">;</span><span class="kw">WITH</span> <span class="tbl">VENDAS</span> <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        <span class="tbl">Cli_For</span>.<span class="col">Codigo</span>          <span class="kw">AS</span> <span class="col">Codigo_Cliente</span>,
+        <span class="tbl">Cli_For</span>.<span class="col">Nome</span>            <span class="kw">AS</span> <span class="col">Nome_Cliente</span>,
+        <span class="tbl">Funcionarios</span>.<span class="col">Apelido</span>    <span class="kw">AS</span> <span class="col">Nome_Vendedor</span>,
+        <span class="tbl">Filiais</span>.<span class="col">Codigo</span>          <span class="kw">AS</span> <span class="col">Codigo_Filial</span>,
+        <span class="tbl">Movimento</span>.<span class="col">Sequencia</span>     <span class="kw">AS</span> <span class="col">Sequência_de_Venda</span>,
+        <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Ordem</span>
+            <span class="kw">AS</span> <span class="col">Ordem_Financeiro_Formas_Recebimento_Pagamento_V2</span>,
+        <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">*</span>
+    <span class="kw">FROM</span> <span class="tbl">Movimento</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Cli_For</span>      <span class="kw">ON</span> <span class="tbl">Cli_For</span>.<span class="col">Ordem</span>      <span class="op">=</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Cli_For</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Funcionarios</span> <span class="kw">ON</span> <span class="tbl">Funcionarios</span>.<span class="col">Ordem</span> <span class="op">=</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Vendedor1</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Filiais</span>      <span class="kw">ON</span> <span class="tbl">Filiais</span>.<span class="col">Ordem</span>      <span class="op">=</span> <span class="tbl">Movimento</span>.<span class="col">Ordem_Filial</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>
+        <span class="kw">ON</span> <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_V2</span>.<span class="col">Ordem_Movimento</span> <span class="op">=</span> <span class="tbl">Movimento</span>.<span class="col">Ordem</span>
+    <span class="kw">WHERE</span>
+        <span class="tbl">Movimento</span>.<span class="col">Apagado</span> <span class="op">=</span> <span class="num">0</span>
+        <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Passou_Desefetivacao_Estoque</span> <span class="kw">IS NULL</span>
+        <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Efetivado_Financeiro</span> <span class="op">&gt;=</span> <span class="col">@Data_Inicial</span>
+        <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Data_Efetivado_Financeiro</span> <span class="op">&lt;</span> <span class="fn">DATEADD</span>(<span class="col">D</span>, <span class="num">1</span>, <span class="col">@Data_Final</span>)
+        <span class="kw">AND</span> (<span class="tbl">Movimento</span>.<span class="col">Ordem_Filial</span> <span class="op">=</span> <span class="col">@Filial</span> <span class="kw">OR</span> <span class="col">@Filial</span> <span class="kw">IS NULL</span>)
+        <span class="kw">AND</span> <span class="tbl">Movimento</span>.<span class="col">Tipo_Operacao</span> <span class="kw">IN</span> (<span class="str">'VND'</span>, <span class="str">'VPC'</span>, <span class="str">'VEF'</span>, <span class="str">'DEV'</span>, <span class="str">'CVE'</span>)
+),
+
+<span class="tbl">CONTAS</span> <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_Contas_V2</span>.<span class="col">Ordem</span>,
+        <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_Contas_V2</span>.<span class="col">Ordem_Formas_Recebimento_Pagamento</span>,
+        <span class="kw">CASE</span> <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_Contas_V2</span>.<span class="col">Tipo_Forma_Recebimento_Pagamento</span>
+            <span class="kw">WHEN</span> <span class="str">'B'</span> <span class="kw">THEN</span> <span class="str">'Boleto'</span>
+            <span class="kw">WHEN</span> <span class="str">'C'</span> <span class="kw">THEN</span> <span class="str">'Cartão de Crédito'</span>
+            <span class="kw">WHEN</span> <span class="str">'D'</span> <span class="kw">THEN</span> <span class="str">'Cartão de Débito'</span>
+            <span class="kw">WHEN</span> <span class="str">'H'</span> <span class="kw">THEN</span> <span class="str">'Cheque'</span>
+            <span class="kw">WHEN</span> <span class="str">'N'</span> <span class="kw">THEN</span> <span class="str">'Carnê'</span>
+            <span class="kw">WHEN</span> <span class="str">'R'</span> <span class="kw">THEN</span> <span class="str">'Carteira'</span>
+        <span class="kw">END</span>                                                                   <span class="kw">AS</span> <span class="col">Tipo_Recebimento</span>,
+        <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_Contas_V2</span>.<span class="col">Quantidade_Parcelas</span>,
+        <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_Contas_V2</span>.<span class="col">Valor_Total</span>
+    <span class="kw">FROM</span> <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_Contas_V2</span>
+    <span class="kw">INNER JOIN</span> <span class="tbl">VENDAS</span>
+        <span class="kw">ON</span> <span class="tbl">Financeiro_Formas_Recebimento_Pagamento_Contas_V2</span>.<span class="col">Ordem_Formas_Recebimento_Pagamento</span>
+           <span class="op">=</span> <span class="tbl">VENDAS</span>.<span class="col">Ordem_Financeiro_Formas_Recebimento_Pagamento_V2</span>
+)
+
+<span class="kw">SELECT</span>
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="col">@Data_Inicial</span>, <span class="num">103</span>)  <span class="kw">AS</span> <span class="col">Data_Inicial</span>,
+    <span class="fn">CONVERT</span>(<span class="fn">VARCHAR</span>(<span class="num">10</span>), <span class="col">@Data_Final</span>,   <span class="num">103</span>)  <span class="kw">AS</span> <span class="col">Data_Final</span>,
+    <span class="col">Codigo_Cliente</span>, <span class="col">Nome_Cliente</span>, <span class="col">Nome_Vendedor</span>,
+    <span class="col">Codigo_Filial</span>, <span class="col">Sequência_de_Venda</span>,
+    <span class="col">R</span>.<span class="col">Tipo_Recebimento</span>,
+    <span class="col">R</span>.<span class="col">Parcelas</span>,
+    <span class="col">R</span>.<span class="col">Valor</span>
+<span class="kw">FROM</span> <span class="tbl">VENDAS</span>
+<span class="kw">LEFT JOIN</span> <span class="tbl">CONTAS</span>
+    <span class="kw">ON</span> <span class="tbl">CONTAS</span>.<span class="col">Ordem_Formas_Recebimento_Pagamento</span> <span class="op">=</span> <span class="tbl">VENDAS</span>.<span class="col">ORDEM</span>
+<span class="kw">CROSS APPLY</span> (<span class="kw">VALUES</span>
+    (<span class="tbl">CONTAS</span>.<span class="col">Tipo_Recebimento</span>,  <span class="tbl">CONTAS</span>.<span class="col">Quantidade_Parcelas</span>, <span class="tbl">CONTAS</span>.<span class="col">Valor_Total</span>),
+    (<span class="str">'Dinheiro'</span>,         <span class="num">1</span>, <span class="tbl">VENDAS</span>.<span class="col">Dinheiro_Valor</span>),
+    (<span class="str">'Cartão Convênio'</span>,  <span class="num">1</span>, <span class="tbl">VENDAS</span>.<span class="col">Cartao_Convenio_Valor</span>),
+    (<span class="str">'Pix'</span>,              <span class="num">1</span>, <span class="tbl">VENDAS</span>.<span class="col">Conta_Bancaria_Valor</span>),
+    (<span class="str">'Conta Caderno'</span>,    <span class="num">1</span>, <span class="tbl">VENDAS</span>.<span class="col">Conta_Caderno_Valor</span>),
+    (<span class="str">'Crédito'</span>,          <span class="num">1</span>, <span class="tbl">VENDAS</span>.<span class="col">Credito_Valor</span>),
+    (<span class="str">'Não Identificado'</span>, <span class="num">1</span>, <span class="tbl">VENDAS</span>.<span class="col">Nao_Identificado_Valor</span>),
+    (<span class="str">'Produtos Trocados'</span>,<span class="num">1</span>, <span class="tbl">VENDAS</span>.<span class="col">Produtos_Trocados_Valor</span>),
+    (<span class="str">'Vale'</span>,             <span class="num">1</span>, <span class="tbl">VENDAS</span>.<span class="col">Vale_Valor</span>),
+    (<span class="str">'Troco'</span>,            <span class="num">1</span>, <span class="tbl">VENDAS</span>.<span class="col">Valor_Troco</span>)
+) <span class="kw">AS</span> <span class="col">R</span>(<span class="col">Tipo_Recebimento</span>, <span class="col">Parcelas</span>, <span class="col">Valor</span>)
+<span class="kw">WHERE</span>
+    <span class="col">R</span>.<span class="col">Valor</span> <span class="kw">IS NOT NULL</span>
+    <span class="kw">AND</span> <span class="col">R</span>.<span class="col">Valor</span> <span class="op">&lt;&gt;</span> <span class="num">0</span>
+<span class="kw">GROUP BY</span>
+    <span class="col">Codigo_Cliente</span>, <span class="col">Nome_Cliente</span>, <span class="col">Nome_Vendedor</span>,
+    <span class="col">Codigo_Filial</span>, <span class="col">Sequência_de_Venda</span>,
+    <span class="col">R</span>.<span class="col">Tipo_Recebimento</span>, <span class="col">R</span>.<span class="col">Parcelas</span>, <span class="col">R</span>.<span class="col">Valor</span>
+<span class="kw">ORDER BY</span>
+    <span class="col">Codigo_Filial</span>, <span class="col">Sequência_de_Venda</span>,
+    <span class="col">Codigo_Cliente</span>, <span class="col">Nome_Cliente</span>, <span class="col">Nome_Vendedor</span>,
+    <span class="col">R</span>.<span class="col">Tipo_Recebimento</span>, <span class="col">R</span>.<span class="col">Parcelas</span>, <span class="col">R</span>.<span class="col">Valor</span></pre>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-wrap').querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'COPIADO!';
+      btn.style.color = 'var(--accent)';
+      setTimeout(() => { btn.textContent = 'COPIAR'; btn.style.color = ''; }, 2000);
+    });
+  }
+
+  // Active sidebar links on scroll
+  const sections = document.querySelectorAll('[id]');
+  const links = document.querySelectorAll('.sidebar-link');
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.sidebar-link[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
