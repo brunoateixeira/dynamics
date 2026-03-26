@@ -574,7 +574,7 @@
     <div class="page-header">
       <div class="breadcrumb">dynamics / tabelas / <span>Movimento</span></div>
       <h1 class="page-title">Vendas</h1>
-      <p class="page-subtitle">Documentação AI-friendly e Text-to-SQL para consultas na tabela <code style="font-family:var(--mono);font-size:13px;color:var(--accent2)">Movimento</code>, focada em movimentações de venda efetivadas.</p>
+      <p class="page-subtitle">Documentação AI-friendly e Text-to-SQL para consultas na tabela <code style="font-family:var(--mono);font-size:13px;color:var(--accent2)">Movimento</code>, focada em movimentações de saídas e entradas.</p>
       <div class="meta-row">
         <span class="meta-pill"><span class="dot"></span> SQL Server (T-SQL)</span>
         <span class="meta-pill"><span class="dot" style="background:var(--accent2)"></span> 6 Exemplos</span>
@@ -602,20 +602,20 @@
       </div>
       <div class="enum-grid">
         <div class="enum-item"><span class="enum-key">'VND'</span><span class="enum-val">Venda Normal</span></div>
-        <div class="enum-item"><span class="enum-key">'VPC'</span><span class="enum-val">Venda PDV / Caixa</span></div>
-        <div class="enum-item"><span class="enum-key">'VEF'</span><span class="enum-val">Venda Efetivada</span></div>
+        <div class="enum-item"><span class="enum-key">'VPC'</span><span class="enum-val">Venda de Produtos Consignados</span></div>
+        <div class="enum-item"><span class="enum-key">'VEF'</span><span class="enum-val">Venda de Entrega Futura</span></div>
         <div class="enum-item"><span class="enum-key">'DEV'</span><span class="enum-val">⚠ Devolução (valor negativo)</span></div>
-        <div class="enum-item"><span class="enum-key">'CVE'</span><span class="enum-val">⚠ Cancelamento de Venda Efetivada (valor negativo)</span></div>
+        <div class="enum-item"><span class="enum-key">'CVE'</span><span class="enum-val">⚠ Cancelamento de Venda de VEF (valor negativo)</span></div>
       </div>
 
       <!-- Situacao_Expedicao -->
       <div class="sub-section-title" style="margin-top:20px">Movimento.Situacao_Expedicao</div>
       <div class="callout info" style="margin-bottom:14px">
-        Sempre excluir <code style="font-family:var(--mono);font-size:11px">Situacao_Expedicao = 'A'</code> (Aguardando) das consultas de vendas efetivadas.
+        Sempre excluir <code style="font-family:var(--mono);font-size:11px">Situacao_Expedicao = 'A'</code> (Aguardando) das consultas de vendas efetivadas. Incluir apenas quando solicitado.
       </div>
       <div class="enum-grid" style="max-width:360px">
-        <div class="enum-item"><span class="enum-key">'A'</span><span class="enum-val">⛔ Aguardando (excluir)</span></div>
-        <div class="enum-item"><span class="enum-key">outros</span><span class="enum-val">Expedidos / Finalizados</span></div>
+        <div class="enum-item"><span class="enum-key">'A'</span><span class="enum-val">⛔ Aguardando / Em Aberto (excluir)</span></div>
+        <div class="enum-item"><span class="enum-key">'C'</span><span class="enum-val">Expedição Concluída</span></div>
       </div>
 
       <!-- Apagado -->
@@ -651,7 +651,7 @@
             <td><code>Filiais</code></td>
             <td><code>Movimento.Ordem_Filial = Filiais.Ordem</code></td>
             <td>Quando precisar exibir ou filtrar por filial</td>
-            <td><code>Filiais.Nome</code>, <code>Filiais.Codigo</code></td>
+            <td><code>Filiais.Nome</code>, <code>Filiais.Codigo</code>, <code>Filiais.Razao_Social</code>, <code>Filiais.Endereco</code>, <code>Filiais.Bairro</code>, <code>Filiais.Fone</code>, <code>Filiais.Cidade</code>, <code>Filiais.UF</code>, <code>Filiais.CEP</code>, <code>Filiais.CNPJ</code>, <code>Filiais.Inscricao_Estadual</code>, <code>Filiais.CRT</code></td>
           </tr>
           <tr>
             <td><code>Cli_For</code></td>
